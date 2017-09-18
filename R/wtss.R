@@ -17,8 +17,6 @@
 #' @import methods
 #' @import RCurl
 #' @import roxygen2
-#' @import spacetime
-#' @import sp
 #' @import lubridate
 #' @import zoo
 setClass(
@@ -476,50 +474,50 @@ setMethod("timeSeries","WTSS", function(object,coverages,attributes,longitude,la
   
 }
 
-#' ts to STFDF
-#'
-#' @description This function coerce data from the time series into STFDF data
+#' #' ts to STFDF
+#' #'
+#' #' @description This function coerce data from the time series into STFDF data
+#' #' 
+#' #' @param timeseries Time series.
+#' #' @docType methods
+#' #' @export
+#' #' @examples
+#' #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
+#' #' coverages  = listCoverages(ts.server)
+#' #' cv = describeCoverage(ts.server, coverages[5])
+#' #' attributes = cv[[1]]$attributes$name[1] 
+#' #' longitude = -47
+#' #' latitude = -21.7
+#' #' start_date = "2013-01-01"
+#' #' end_date =  ""2016-12-12"
+#' #' ts = timeSeries(ts.server, 
+#' #'                 names(cv), 
+#' #'                 attributes, 
+#' #'                 longitude,
+#' #'                 latitude,
+#' #'                 start_date,
+#' #'                 end_date)
+#' #' stfdf <- as.STFDF(ts)
+#' setGeneric("as.STFDF", function(timeseries){standardGeneric("as.STFDF")})
+#'  
+#' #' @rdname as.STFDF
+#' setMethod("as.STFDF","list", function(timeseries) {
+#'   .as.STFDF(timeseries)
+#' })
 #' 
-#' @param timeseries Time series.
-#' @docType methods
-#' @export
-#' @examples
-#' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-#' coverages  = listCoverages(ts.server)
-#' cv = describeCoverage(ts.server, coverages[5])
-#' attributes = cv[[1]]$attributes$name[1] 
-#' longitude = -47
-#' latitude = -21.7
-#' start_date = "2013-01-01"
-#' end_date =  ""2016-12-12"
-#' ts = timeSeries(ts.server, 
-#'                 names(cv), 
-#'                 attributes, 
-#'                 longitude,
-#'                 latitude,
-#'                 start_date,
-#'                 end_date)
-#' stfdf <- as.STFDF(ts)
-setGeneric("as.STFDF", function(timeseries){standardGeneric("as.STFDF")})
- 
-#' @rdname as.STFDF
-setMethod("as.STFDF","list", function(timeseries) {
-  .as.STFDF(timeseries)
-})
-
-.as.STFDF <- function(timeseries) 
-{
-  
-  if (length(zoo::index(timeseries[[1]]$attributes)) <= 1)
-    cat("It is not possible to coerce from data into STFDF.")
-  else {
-     # STFDF return
-     return(spacetime::STFDF(sp::SpatialPoints(timeseries[[1]]$center_coordinate), zoo::index(timeseries[[1]]$attributes), data.frame(zoo::coredata(timeseries[[1]]$attributes))))
-  }
-  
-  return (NULL)
- 
-}
+#' .as.STFDF <- function(timeseries) 
+#' {
+#'   
+#'   if (length(zoo::index(timeseries[[1]]$attributes)) <= 1)
+#'     cat("It is not possible to coerce from data into STFDF.")
+#'   else {
+#'      # STFDF return
+#'      return(spacetime::STFDF(sp::SpatialPoints(timeseries[[1]]$center_coordinate), zoo::index(timeseries[[1]]$attributes), data.frame(zoo::coredata(timeseries[[1]]$attributes))))
+#'   }
+#'   
+#'   return (NULL)
+#'  
+#' }
 
 .sendRequest <- function(request) {
   
