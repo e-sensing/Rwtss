@@ -31,9 +31,10 @@ timeSeries(object, coverages, attributes, longitude, latitude, start_date,
 This function retrieves the time series for a pair of coordinates.es
 }
 \examples{
+\donttest{
 ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 coverages = listCoverages(ts.server)
-cv = describeCoverage(ts.server, coverages[5])
+cv = describeCoverage(ts.server, coverages[1])
 name.cv = names(cv)
 attr = cv[[1]]$attributes$name[1]
 longitude = -45
@@ -47,4 +48,5 @@ ts = timeSeries(ts.server,
                 latitude, 
                 start_date, 
                 end_date)
+}
 }

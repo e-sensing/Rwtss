@@ -28,9 +28,10 @@ listTimeSeries(object, coverages, attributes, coordinates, start_date, end_date)
 This function retrieves the time series for a list of coordinates.
 }
 \examples{
+\donttest{
 ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 coverages = listCoverages(ts.server)
-cv = describeCoverage(ts.server, coverages[5])
+cv = describeCoverage(ts.server, coverages[1])
 name.cv = names(cv)
 coordinates = list(c(-45,-12),  c(-54,-11))
 attributes = cv[[1]]$attributes$name[1]
@@ -42,4 +43,5 @@ tsList = listTimeSeries(ts.server,
                         coordinates, 
                         start_date, 
                         end_date)
+}
 }
