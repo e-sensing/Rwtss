@@ -93,7 +93,9 @@ setMethod(
 #' @docType methods
 #' @export
 #' @examples
+#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
+#' }
 WTSS <- function(serverUrl) {
   
   methods::new (Class="WTSS", serverUrl = serverUrl)
@@ -174,8 +176,10 @@ setMethod("setServerUrl","WTSS", function(object, aServerUrl) {
 #' @docType methods
 #' @export
 #' @examples
+#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 #' coverages = listCoverages(ts.server)
+#' }
 setGeneric("listCoverages",function(object){standardGeneric ("listCoverages")})
 
 #' @rdname  listCoverages
@@ -220,8 +224,10 @@ setMethod("listCoverages","WTSS", function(object) {
 #' @docType methods
 #' @export
 #' @examples
+#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-#' cv = describeCoverage(ts.server, listCoverages(ts.server)[3])
+#' cv = describeCoverage(ts.server, c("mod13q1_512"))
+#' }
 setGeneric("describeCoverage",function(object,coverages){standardGeneric("describeCoverage")})
 
 

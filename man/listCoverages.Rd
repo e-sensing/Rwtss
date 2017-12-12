@@ -17,6 +17,8 @@ listCoverages(object)
 List coverages
 }
 \examples{
+\donttest{
 ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 coverages = listCoverages(ts.server)
+}
 }
