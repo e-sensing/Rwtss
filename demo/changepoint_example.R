@@ -1,24 +1,36 @@
+# Example of the WTSS package
+#
+# Retrieve an MOD13Q1 NDVI time series for a location in Brazilian Amazonia
+# 
+# Apply the Changepoint package to dectect breaks
+#
+
 # installing and loading packages
-require(changepoint)
-require(wtss.R)
+library(changepoint)
+library(wtss)
 
 # create a connection using a serverUrl
-server = WTSS("http://www.dpi.inpe.br/tws/wtss")
+server <-  wtss::WTSS("http://www.dpi.inpe.br/tws/wtss")
 
 # get the list of coverages provided by the service
-coverages = listCoverages(server)
+coverages <- wtss::listCoverages(server)
 
-# get the description of the third coverage
-cv = describeCoverage(server, coverages[2])
+# get the description of the MOD13Q1 coverage
+cv  <- describeCoverage(server, "mod13q1_512")
 
-# Get a time series
-spatio_temporal = timeSeries(server, names(cv), attributes=cv[[names(cv)]]$attributes$name[1], latitude=-10.408, longitude=-53.495, start="2000-02-18", end="2016-01-01")
+# Get a time seriesfor the "ndvi" attribute
+ndvi <- wtss::timeSeries(server, "mod13q1_512", attributes=c("ndvi"), 
+                         latitude=-10.408, longitude=-53.495, 
+                         start="2000-02-18", end="2016-01-01")
 
-# time series in a ts object with part of the original values
-time_series_ts1 = ts(coredata(spatio_temporal[[names(cv)]]$attributes[,1]), freq=365.25/(as.numeric(difftime(index(spatio_temporal[[names(cv)]]$attributes[2]),index(spatio_temporal[[names(cv)]]$attributes[1]),units = "days"))), start=decimal_date(ymd(index(spatio_temporal[[names(cv)]]$attributes[1]))))
+# transform time series to the TS format
+interval <- as.numeric(difftime(zoo::index(ndvi$mod13q1_512$attributes[2]),zoo::index(ndvi$mod13q1_512$attributes[1]),units = "days"))
+start_date <- lubridate::decimal_date(lubridate::ymd(index(ndvi$mod13q1_512$attributes[1])))
+
+ndvi_ts <- ts(zoo::coredata(ndvi$mod13q1_512$attributes[,"ndvi"]), freq=365.25/interval, start= start_date)
 
 # break point detection analysis 
-ansmeanvar = cpt.meanvar(coredata(time_series_ts1)[!is.na(coredata(time_series_ts1))])
+ansmeanvar = changepoint::cpt.meanvar(zoo::coredata(ndvi_ts)[!is.na(zoo::coredata(ndvi))])
 
 # break point in a line plot
 plot(ansmeanvar)

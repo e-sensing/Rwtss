@@ -3,12 +3,10 @@
 \usepackage[utf8]{inputenc}
 
 %\VignetteIndexEntry{How to}
-%\VignettePackage{wtss.R}
+%\VignettePackage{wtss}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
-
-
 
 \title{How to use the WTSS client for R}
 \author{
@@ -26,64 +24,54 @@
 
   The Web Time Series Service (WTSS) is a lightweight web service which is able to retrieve remote sensing imagery as time series. WTSS bridges the gap between remote sensing applications and their data-access through a simple representation of time series data. The service main goal is to bring to remote sensing research community an easy way for accessing and consuming satellite imagery data in the form of time series, saving researchers' time when dealing with a huge volume of data. 
 
-  This web service is integrated into \emph{R} thorugh the package \emph{RWTSS}. This document explains the basic functionality of the \emph{RWTSS} package.
+  This web service is integrated into \emph{R} thorugh the package \emph{wtss}. This document explains the basic functionality of the \emph{wtss} package.
 
 
 
 \section{Explore the service}
 
-  You can use the \emph{RWTSS} package to explore the contents of a \emph{WTSS}. For this, you need to create a client object by providing the URL of the service and then using the function for listing coverages:
+  To explore the contents of a \emph{WTSS}, you need to create a client object by providing the URL of the service and then using the function for listing coverages:
 
-<<exploreListCoverages, eval=FALSE>>=
-library(rwtss)
-obj = wtssClient("http://www.dpi.inpe.br/mds/mds")
-objlist = listCoverages(obj)
-objlist
+<<eval=TRUE>>=
+library(wtss)
+
+# create a connection using a serverUrl
+server <-  wtss::WTSS("http://www.dpi.inpe.br/tws/wtss")
+
+# get the list of coverages provided by the service
+coverages <- wtss::listCoverages(server)
+#print coverages
+coverages
 @
 
   Then, you can ask for a detailed description of any of the coverages provided by the service:
 
-<<exploreDescribeCoverages, eval=FALSE>>=
-objdesc = describeCoverages(obj,"MOD09Q1")
-objdesc
+<<eval=TRUE>>=
+# get the description of the MOD13Q1 coverage
+cv <-  wtss::describeCoverage(server, "mod13q1_512")
+# print information about the data
+cv$mod13q1_512$description
+# print informaton about the coverage bands
+cv$mod13q1_512$attributes
 @
 
 
 \section{Retrieve data}
 
-  To retrieve data, you need to specify the datasets, the position and the time interval you require:
+  To retrieve data, you need to specify the coverage names, the bands, latitude and longitude and the time interval :
 
-<<retrieveData, eval=FALSE>>=
-ds = datasets=c("nir","quality","red","evi2")
-lat = -12
-lon = -45
-start = "2004-01-01"
-end = "2004-05-01"
-ts1 = getTimeSeries(obj, 
-                    coverages = "MOD09Q1", 
-                    datasets = ds, 
-                    latitude = lat, longitude = lon, 
-                    from = start, to = end)
-df = as.data.frame(ts1)
+<<eval=TRUE, fig=TRUE>>=
+# get a time series for the "ndvi" attribute
+time_series <- wtss::timeSeries(server, coverages = "mod13q1_512", attributes=c("ndvi", "evi"), 
+                      latitude=-10.408, longitude=-53.495, 
+                      start="2000-02-18", end="2016-01-01")
+# show the contents of the time series as a data frame
+df = as.data.frame(time_series)
 head(df[,3:4])
+# plot the time series
+plot (time_series$mod13q1_512$attributes)
 @
 
-  The you can use the data as regular in R.
-<<retrieveData, eval=FALSE, fig=TRUE>>=
-df$MOD09Q1.datasets.timeline <- as.Date(
-  df$MOD09Q1.datasets.timeline, '%m/%d/%Y')
-
-plot(
-    x = df$MOD09Q1.datasets.timeline, 
-    y = df$MOD09Q1.datasets.red, 
-    type = "l", col = "red", 
-    main = "MOD09Q1 - RED and NIR", 
-    xlab = "time", ylab = "Value")
-lines(
-    x = df$MOD09Q1.datasets.timeline, 
-    y = df$MOD09Q1.datasets.nir, 
-    col = "dark red")
-@
-
+  The time series can then be used together with other packages in R. Please take a look at demos provided with the WTSS package, which show how to use a time series of the NDVI index together with different packages to detect when deforestation occurred in the Brazilian Amazon rain forest.
 
 \end{document}
