@@ -8,17 +8,15 @@
 # RStudio files
 .Rproj.user/
 .Rproj.user
-
 # Man files
 #man/
 #README.md~
-
 # Vignete files
 vignettes/
 .pdf
 .log
 .tex
 .gz
-
 #Mac OS X
 .DS_Store
+inst/doc

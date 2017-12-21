@@ -29,19 +29,9 @@ This function retrieves the time series for a list of coordinates.
 }
 \examples{
 \donttest{
-ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-coverages = listCoverages(ts.server)
-cv = describeCoverage(ts.server, coverages[1])
-name.cv = names(cv)
-coordinates = list(c(-45,-12),  c(-54,-11))
-attributes = cv[[1]]$attributes$name[1]
-start_date = "2014-01-01"
-end_date = "2015-01-01"
-tsList = listTimeSeries(ts.server, 
-                        name.cv, 
-                        attributes, 
-                        coordinates, 
-                        start_date, 
-                        end_date)
+ts.server <-  WTSS("http://www.dpi.inpe.br/tws/wtss")
+bands <- c("ndvi","evi")
+coords <- list (c(-45.00, -12.00), c(-46.00, -11.00))
+tsList <- listTimeSeries(ts.server, "mod13q1_512", bands, coords, "2000-02-18", "2016-12-18")
 }
 }

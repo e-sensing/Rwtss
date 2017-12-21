@@ -1,20 +1,20 @@
 Package: wtss
-Title: An R client for a Web Time-Series Service (WTSS)
+Title: An R Client for a Web Time-Series Service
 Version: 1.0.0
 Date: 2017-12-14
 Authors@R: c(person("Victor", "Maus", role = c("aut"), email ="vwmaus1@gmail.com"), 
+             person("Pedro", "Andrade", role = c("aut"), email ="pedro.andrade@inpe.br"), 
              person("Alber", "Sanchez", role = c("aut"),email ="alber.ipia@inpe.br"), 
              person("Luiz Fernando", "Assis", role = c("aut"), email ="luizffga@dpi.inpe.br"),  
              person("Gilberto", "Ribeiro", role = c("aut"), email ="gilberto.queiroz@inpe.br"),
              person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"))
 Maintainer: Gilberto Camara <gilberto.camara@inpe.br>
-Description: wtss is an R client for the Web Time-Series Service (WTSS). 
-  WTSS is a web service that provides remote access to satellite image time series.
-  The R client allows Earth observation users request time series from coverages available in a WTSS server. 
-  It provides a simple interface for accessing and consuming satellite image time series. 
-  The functions avaliable include: (a) listing the coverages available in the WTSS server; 
-  (b) describing the contents of a coverage; (c) retrieving a time series based on spatial location and temporal filters.  
+Description: An R client that provides remote access to satellite image time series.
+  The client allows Earth observation users to obtain time series from data sets available in a Web Time Series Server. 
+  The functions include: (a) listing the data sets available in the server; 
+  (b) describing the contents of a data set; (c) retrieving a time series based on spatial location and temporal filters.  
 Depends: R (>= 3.0.0)
+License: GPL-3
 Imports:
     methods,
     roxygen2,
@@ -22,7 +22,9 @@ Imports:
     jsonlite,
     lubridate,
     zoo
-License: LGPL-3 + file LICENSE
 RoxygenNote: 6.0.1
-URL: http://www.dpi.inpe.br/esensing
+URL: https://github.com/e-sensing/wtss
 BugReports: https://github.com/e-sensing/wtss/issues
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

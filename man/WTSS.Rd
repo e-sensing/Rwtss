@@ -29,9 +29,8 @@ No notes
 }
 
 \examples{
-\donttest{
 ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-}
+ts.server
 }
 \author{
 Victor Maus, Alber Sanchez, Luiz Fernando Assis, Pedro Andrade, Gilberto Ribeiro

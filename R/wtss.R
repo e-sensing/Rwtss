@@ -93,9 +93,8 @@ setMethod(
 #' @docType methods
 #' @export
 #' @examples
-#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-#' }
+#' ts.server
 WTSS <- function(serverUrl) {
   
   methods::new (Class="WTSS", serverUrl = serverUrl)
@@ -176,10 +175,9 @@ setMethod("setServerUrl","WTSS", function(object, aServerUrl) {
 #' @docType methods
 #' @export
 #' @examples
-#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 #' coverages = listCoverages(ts.server)
-#' }
+#' 
 setGeneric("listCoverages",function(object){standardGeneric ("listCoverages")})
 
 #' @rdname  listCoverages
@@ -224,10 +222,9 @@ setMethod("listCoverages","WTSS", function(object) {
 #' @docType methods
 #' @export
 #' @examples
-#' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
 #' cv = describeCoverage(ts.server, c("mod13q1_512"))
-#' }
+#' 
 setGeneric("describeCoverage",function(object,coverages){standardGeneric("describeCoverage")})
 
 
@@ -285,20 +282,10 @@ setMethod("describeCoverage","WTSS", function(object,coverages) {
 #' @export
 #' @examples
 #' \donttest{
-#' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-#' coverages = listCoverages(ts.server)
-#' cv = describeCoverage(ts.server, coverages[1])
-#' name.cv = names(cv)
-#' coordinates = list(c(-45,-12),  c(-54,-11))
-#' attributes = cv[[1]]$attributes$name[1]
-#' start_date = "2014-01-01"
-#' end_date = "2015-01-01"
-#' tsList = listTimeSeries(ts.server, 
-#'                         name.cv, 
-#'                         attributes, 
-#'                         coordinates, 
-#'                         start_date, 
-#'                         end_date)
+#' ts.server <-  WTSS("http://www.dpi.inpe.br/tws/wtss")
+#' bands <- c("ndvi","evi")
+#' coords <- list (c(-45.00, -12.00), c(-46.00, -11.00))
+#' tsList <- listTimeSeries(ts.server, "mod13q1_512", bands, coords, "2000-02-18", "2016-12-18")
 #'}
 setGeneric("listTimeSeries",function(object,coverages,attributes,coordinates,start_date,end_date){standardGeneric("listTimeSeries")})
 
@@ -338,21 +325,9 @@ setMethod("listTimeSeries","WTSS", function(object,coverages,attributes,coordina
 #' @examples
 #' \donttest{
 #' ts.server = WTSS("http://www.dpi.inpe.br/tws/wtss")
-#' coverages = listCoverages(ts.server)
-#' cv = describeCoverage(ts.server, coverages[1])
-#' name.cv = names(cv)
-#' attr = cv[[1]]$attributes$name[1]
-#' longitude = -45
-#' latitude = -12
-#' start_date = "2000-02-18"
-#' end_date = "2004-01-01"
-#' ts = timeSeries(ts.server, 
-#'                 name.cv, 
-#'                 attr, 
-#'                 longitude, 
-#'                 latitude, 
-#'                 start_date, 
-#'                 end_date)
+#' ts = timeSeries(ts.server, "mod13q1_512", c("ndvi","evi"), 
+#'                 longitude = -45.00, latitude  = -12.00,
+#'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #'}
 setGeneric("timeSeries",function(object,coverages,attributes,longitude,latitude,start_date,end_date){standardGeneric("timeSeries")})
 
