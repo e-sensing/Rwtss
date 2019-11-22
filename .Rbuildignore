@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+Rprofile$
+.RData$
+^\.tmp$
+^README\.Rmd$
+^README_cache$
