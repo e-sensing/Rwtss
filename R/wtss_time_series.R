@@ -21,11 +21,11 @@
 
 time_series <- function(wtss.obj,
                         name,
-                        attributes,
+                        attributes = NULL,
                         longitude,
                         latitude,
-                        start_date,
-                        end_date) {
+                        start_date = NULL,
+                        end_date   = NULL) {
     
     # is the object already a WTSS object or just a URL?
     # 
@@ -47,7 +47,7 @@ time_series <- function(wtss.obj,
     # if not, get the coverage description
     # if fails, return NULL
     if (length(wtss.obj$description) == 0) {
-        wtss.obj <- wtss::describe_coverage(wtss.obj, name)
+        wtss::describe_coverage(wtss.obj, name, .print = FALSE)
         ensurer::ensure_that(wtss.obj, !purrr::is_null(.),
             err_desc = paste0("WTSS - could not retrieve description of coverage ",
                            name, " from WTSS server"))
@@ -58,12 +58,15 @@ time_series <- function(wtss.obj,
     
     # check if the selected attributes are available
     cov_bands <- desc$bands[[1]]
+    # if no attributes are provided, all bands are retrieved
+    if (purrr::is_null(attributes))
+        attributes <- cov_bands
     ensurer::ensure_that(attributes, all((.) %in% cov_bands),
                          err_desc = "WTSS - attributes not available.")
     
     # check bounds for latitude and longitude
     ensurer::ensure_that(longitude, (.) > desc$xmin && (.) < desc$xmax,
-                         err_desc = "WTSS - invalid longitude value")
+                        err_desc = "WTSS - invalid longitude value")
     
     ensurer::ensure_that(latitude, (.) > desc$ymin && (.) < desc$ymax,
                          err_desc = "WTSS - invalid latitude value")
@@ -71,6 +74,17 @@ time_series <- function(wtss.obj,
     # check start and end date
     timeline <- desc$timeline[[1]]
     n_dates  <- length(timeline)
+    
+    # if start and end dates are not provided, use the full data set
+    if (purrr::is_null(start_date)) 
+        start_date <- lubridate::as_date(timeline[1])
+    else
+        start_date <- lubridate::as_date(start_date)
+    
+    if (purrr::is_null(end_date))
+        end_date <- lubridate::as_date(timeline[n_dates])
+    else
+        end_date <- lubridate::as_date(end_date)
     
     # test is start date is valid
     ensurer::ensure_that(start_date, lubridate::as_date(.) >= lubridate::as_date(timeline[1]) &&

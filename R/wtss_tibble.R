@@ -21,7 +21,7 @@
 }
 
 #' @title Import time series in the zoo format to a tibble
-#' @name .wtss_from_zoo
+#' @name .wtss_to_tibble
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
 #'
 #' @description Converts data from an instance of a zoo series to a sits tibble.

@@ -111,3 +111,7 @@ wtss_config_show <- function() {
                          err_desc = paste0("Could not find sensor for coverage ", name))
     return(s)
 }
+.wtss_error_handle <- function(){
+    message("Error in WTSS function")
+    stop()
+}

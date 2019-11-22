@@ -17,5 +17,7 @@
 # Creates a package environment to store global variables
 wtss.env <- new.env()
 
-utils::globalVariables(c(".", "%>%", "missing_value", "scale_factor", 
+utils::globalVariables(c(".", "%>%", "missing_value", "missing_values","scale_factor", "scale_factors",
+                         "minimum_values","maximum_values", "nrows", 
+                         "ncols", "xmin", "xmax", "ymin", "ymax", "xres", "yres", "crs",
                          "valid_range"))
