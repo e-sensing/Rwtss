@@ -9,6 +9,9 @@ list_coverages(wtss.obj)
 \arguments{
 \item{wtss.obj}{WTSS object}
 }
+\value{
+NULL if fails, TRUE if works
+}
 \description{
 Displays information about coverages available in the WTSS service
 }

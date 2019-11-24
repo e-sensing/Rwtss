@@ -4,8 +4,8 @@
 \alias{time_series}
 \title{Get time series}
 \usage{
-time_series(wtss.obj, name, attributes, longitude, latitude, start_date,
-  end_date)
+time_series(wtss.obj, name, attributes = NULL, longitude, latitude,
+  start_date = NULL, end_date = NULL)
 }
 \arguments{
 \item{wtss.obj}{Either a WTSS object or a server URL}

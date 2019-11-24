@@ -24,6 +24,7 @@ WTSS <- function(URL) {
     return(NULL)
   }
   class(wtss.obj) <- append(class(wtss.obj), "wtss", after = 0)
+  message(paste0("Connected to WTSS server at ", URL))
   return(wtss.obj)
 }
 

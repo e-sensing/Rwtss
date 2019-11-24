@@ -16,9 +16,12 @@ License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 3.6.0)
 Imports:
+    assertthat,
     config,
+    data.table,
     dplyr,
-    ensurer,
+    ggplot2,
+    reshape2,
     jsonlite,
     lubridate,
     magrittr,

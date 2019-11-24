@@ -93,7 +93,7 @@
     
     cat(paste("\nTimeline\n"))
     print(lubridate::as_date(cov.tb$timeline[[1]]))
-    cat("----------------------------------------------------------------------------------")
+    cat("----------------------------------------------------------------------------------\n")
 }
 #' @title Retrieves the list of cubes from the URL server
 #' @name .wtss_list_coverages

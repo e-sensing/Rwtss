@@ -78,5 +78,5 @@
                                time_series = ts.lst)
     
     # return the tibble with the time series
-    return(data)
+    return(tibble::as_tibble(data))
 }

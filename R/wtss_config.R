@@ -24,8 +24,8 @@ wtss_config <- function() {
     yml_file <- system.file("extdata", "config.yml", package = "wtss")
     
     # check that the file is valid
-    ensurer::ensure_that(yml_file, !purrr::is_null(.),
-                         err_desc = "wtss_config : invalid configuration file")
+    assertthat::assert_that(!purrr::is_null(yml_file),
+                            msg = "WTSS - invalid configuration file")
     
     # read the configuration parameters
     wtss.env$config <- config::get(file = yml_file)
@@ -61,8 +61,8 @@ wtss_config_show <- function() {
     # retrieve the basic configuration file
     yml_file <- system.file("extdata", "config.yml", package = "wtss")
     # check that the file is valid
-    ensurer::ensure_that(yml_file, !purrr::is_null(.),
-                         err_desc = "wtss_config: Invalid configuration file")
+    assertthat::assert_that(!purrr::is_null(yml_file),
+                            msg = "WTSS - Invalid configuration file")
     # try to find a valid user configuration file
     if (file.exists("~/.wtss/config.yml"))
         yml_user_file <- c("~/.wtss/config.yml")
@@ -92,8 +92,8 @@ wtss_config_show <- function() {
     p <- paste0(name,"_satellite")
     s <- wtss.env$config[[p]]
     #post-condition
-    ensurer::ensure_that(s, !purrr::is_null(.),
-                         err_desc = paste0("Could not find satellite for cube ", name))
+    assertthat::assert_that(!purrr::is_null(s),
+                            msg = paste0("WTSS - could not find satellite for coverage ", name))
     return(s)
 }
 
@@ -107,11 +107,7 @@ wtss_config_show <- function() {
     p <- paste0(name,"_sensor")
     s <- wtss.env$config[[p]]
     #post-condition
-    ensurer::ensure_that(s, !purrr::is_null(.),
-                         err_desc = paste0("Could not find sensor for coverage ", name))
+    assertthat::assert_that(!purrr::is_null(s),
+                            msg = paste0("WTSS - Could not find sensor for coverage ", name))
     return(s)
-}
-.wtss_error_handle <- function(){
-    message("Error in WTSS function")
-    stop()
 }
