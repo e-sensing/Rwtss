@@ -1,0 +1,109 @@
+---
+title: "WTSS - R interface to Web Time Series Service"
+author:
+- affiliation: National Institute for Space Research (INPE), Brazil
+  name: Gilberto Queiroz
+- affiliation: National Institute for Space Research (INPE), Brazil
+  name: Gilberto Camara
+- affiliation: National Institute for Space Research (INPE), Brazil
+  name: Luiz Fernando Assis
+- affiliation: National Institute for Space Research (INPE), Brazil
+  name: Karine Ferreira
+- affiliation: University of Vienna, Austria
+  name: Victor Maus
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  prettydoc::html_pretty:
+    theme: architects
+    highlight: github
+  pdf_document:
+    citation_package: natbib
+    df_print: tibble
+    fig_caption: yes
+    keep_tex: no
+    template: ../inst/extdata/markdown/latex-ms.tex
+endnote: no
+fontfamily: mathdesign
+fontfamilyoptions: adobe-utopia
+fontsize: 11pt
+graphics: yes
+mathtools: yes
+bibliography: ../inst/extdata/markdown/references-sits.bib
+abstract: The WTSS-R package is a front-end to the Web Time Series Service (WTSS)
+  that offers time series of remote sensing data using a simple API and is suited
+  for big data analytics. A WTSS server takes as input a 3D array. Each array has
+  a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The
+  WTSS API has three commands, which are are *list_coverages*, that returns a list
+  of coverages available in the server; (b) *describe_coverage*, that that returns
+  the metadata for a given coverage; (c) *time_series*, that returns a time series
+  for a spatio-temporal location.
+vignette: "%\\VignetteEncoding{UTF-8} \n%\\VignetteIndexEntry{WTSS - R interface to
+  Web Time Series Service}\n%\\VignetteEngine{knitr::rmarkdown} \n"
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time. Let $S = \{s_{1}, s_{2},\dotsc, s_{n}\}$ be a set of remote sensing images which shows the same region at \emph{n} consecutive times $T = \{t_{1}, t_{2}, \dotsc, t_{n}\}$. Each location \emph{[x, y, t]} of a pixel in an image (latitude, longitude, time) maps to a \emph{[i, j, k]} position in a 3D array. Each array position \emph{[i, j, k]} will be associated to a set of attributes values $A = \{a_{1}, a_{2}, \dotsc, a_{m}\}$ which are the sensor measurements at each location in space-time (see figure below}). For optical sensors, these observations are proportional to Earth's reflexion of the incoming solar radiation at different wavelengths of the electromagnetic spectrum. 
+
+```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
+knitr::include_graphics(system.file("extdata/markdown/figures", "3D-Arrays.png", package = "wtss"))
+```
+
+## Data Cubes and Coverages
+
+In the context of the WTSS services, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma \cite{Appel2019}:  
+
+\emph{A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:}
+
+\begin{enumerate}
+	
+\item \emph{Spatial dimensions refer to a single spatial reference system (SRS)};
+\item \emph{Cells of a data cube have a constant spatial size (with regard to the cube's SRS)};
+\item \emph{The spatial reference is defined by a simple offset and the cell size per axis, i.e., the cube axes are aligned with the SRS axes;}
+\item \emph{The temporal reference is a known set of non-overlapping temporal intervals; each temporal interval is defined by a simple start date/time and the temporal duration of cells;}
+\item \emph{All cells have the same set of attributes; each attribute can be a scalar or a vector;}   
+\item \emph{For every combination of dimensions, a cell has a single set of attribute values.}
+\end{enumerate}
+
+This definition of EO data cubes reflects their construction. Data cubes are built of 2D images collected on a specific date constrained by satellite orbits. These images are then grouped together in arbitrary intervals. In principle, a data cube can have an image on time 1, another image at time 5, another at time 8, and so on. Since interpolation in space is different from interpolation in time, a data set composed by these images would make a valid data cube. Space needs to be compact (dense) in a data cube, but time does not need to be. Thus, a sequence of 2D + time images need not be dense. 2D images in a data cube can correspond to different instants of acquisition.
+
+## Satellite Image Time Series
+
+EO data cubes (here called "coverages") consists of a temporal series of snapshots of the same area on the surface of the Earth. Given a series of remote sensing snapshots, we can reorganise them into a set of time series.  A satellite image time series is obtained by taking measurements in the same pixel location $(x,y)$ in consecutive times $t_1,...,t_m$, as shown in the figure below.
+
+```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="Events associated to a time series"}
+knitr::include_graphics(system.file("extdata/markdown/figures", "time_series.png", package = "wtss"))
+```
+
+
+Classification methods can then break an image time series into a set of intervals. As an example, the figure below shows four events extracted from a remote sensing time series, expressed in terms of the its intervals. From 2000 to 2001 the area was a forest that was deforested in 2002. From 2003 to 2005 the area it was used for pasture and from 2005 to 2008, it was transformed into a cropland. This kind of classification is done by algorithms such that split a time series into a set of events \cite{Maus2017}. Combining snapshots with time series, scientists can explore the full depth of big remote sensing data archives.
+
+Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep{Pasquarella2016}. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW \citep{Maus2016}, TIMESTAT \citep{Jonsson2004} and BFAST \citep{Verbesselt2010}. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
+
+## Web Time Series Service (WTSS)
+
+Motivated by the need to retrieve satellite image time series from large 3D arrays, we have designed and implemented the Web Time Series Service (WTSS). A WTSS server takes as input a 3D array. Each array has a spatial and a temporal dimension and can be multidimensional in terms of its attributes. The WTSS service is independent of the actual data architecture used for 3D array store. It can work with solutions such as flat files, MapReduce distributed datasets, array databases or object-relational databases.
+
+The WTSS API has three commands: (a) *list_coverages* that returns a list of coverages available in the server; (b) *describe_coverage* that returns the metadata for a given coverage; (c) *time_series* that returns a time series for a spatio-temporal location. 
+
+## Connecting to a WTSS server
+
+The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. The package informs if the connection has been correctly made.
+
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+```
+
+## Listing coverages available at the WTSS server
+
+This operation allows clients to retrieve the capabilities provided by any server that implements WTSS. It returns a list of coverage names available in a server instance.
+
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss::list_coverages(wtss_inpe)
+```
+

@@ -12,11 +12,10 @@
 #man/
 #README.md~
 # Vignete files
-vignettes/
-.pdf
-.log
-.tex
-.gz
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.R
+vignettes/*.log
 #Mac OS X
 .DS_Store
 inst/doc
