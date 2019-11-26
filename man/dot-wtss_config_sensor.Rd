@@ -4,10 +4,12 @@
 \alias{.wtss_config_sensor}
 \title{retrieve the sensor associated to a data cube}
 \usage{
-.wtss_config_sensor(name)
+.wtss_config_sensor(name, satellite)
 }
 \arguments{
 \item{name}{Name of the coverage}
+
+\item{satellite}{Name of the satellite}
 }
 \value{
 List of providers associated to a service

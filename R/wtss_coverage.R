@@ -90,9 +90,11 @@
     print(knitr::kable(dplyr::select(cov.tb, maximum_values), padding = 0))
     print(knitr::kable(dplyr::select(cov.tb, nrows, ncols, xmin, xmax, ymin, ymax, xres, yres, crs),
                        padding = 0))
-    
-    cat(paste("\nTimeline\n"))
-    print(lubridate::as_date(cov.tb$timeline[[1]]))
+    # print the timeline
+    timeline <- lubridate::as_date(cov.tb$timeline[[1]])
+    n_time_steps <- length(timeline)
+    cat(paste0("\nTimeline - ",n_time_steps," time steps\n"))
+    cat(paste0("start_date: ", timeline[1], " end_date: ", timeline[n_time_steps],"\n"))
     cat("----------------------------------------------------------------------------------\n")
 }
 #' @title Retrieves the list of cubes from the URL server

@@ -1,30 +1,86 @@
 ---
-title: "Untitled"
-author: "Gilberto Camara"
-date: "11/15/2019"
-output: html_document
+title: "WTSS - R interface to Web Time Series Service"
+authors: Gilberto Ribeiro, Gilberto Camara, Luiz Assis, Karine Ferreira, Rolf Simões, Victor Maus
+output: 
+    github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## About the package
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The WTSS-R package is a front-end to the Web Time Series Service (WTSS) that offers time series of remote sensing data using a simple API. A WTSS server takes as input an Earth observation data cube, that has a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The WTSS API has three commands, which are are *list_coverages*, that returns a list of coverages available in the server; (b) *describe_coverage*, that that returns the metadata for a given coverage; (c) *time_series*, that returns a time series for a spatio-temporal location.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
 
-```{r cars}
-summary(cars)
+```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
+knitr::include_graphics(system.file("extdata/markdown/figures", "3D-Arrays.png", package = "wtss"))
 ```
 
-## Including Plots
+## Connecting to a WTSS server
 
-You can also embed plots, for example:
+The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. The package informs if the connection has been correctly made.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Listing coverages available at the WTSS server
+
+This operation allows clients to retrieve the capabilities provided by any server that implements WTSS. It returns a list of coverage names available in a server instance.
+
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss::list_coverages(wtss_inpe)
+```
+
+## Describing a coverage from the WTSS server
+
+This operation returns the metadata for a given coverage identified by its name. It includes its range in the spatial and temporal dimensions.
+
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+```
+
+The coverage description is saved as a tibble in the wtss object, to be used whenever required.
+
+```{r}
+# Coverage description available in the wtss object
+wtss_inpe$description
+```
+
+## Obtaining a time series 
+
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
+*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
+
+```{r}
+# Request a time series from the "MOD13Q1" coverage
+ts   <- wtss::time_series(wtss_inpe, name = "MOD13Q1", attributes = c("ndvi","evi"), 
+                          longitude = -45.00, latitude  = -12.00,
+                          start_date = "2000-02-18", end_date = "2016-12-18")
+
+ts
+```
+
+
+The result of the operation is a `tibble` which contains data and metadata. The first six columns contain the metadata: satellite, sensor, spatial and temporal information, and the coverage from where the data has been extracted. The spatial location is given in longitude and latitude coordinates for the "WGS84" ellipsoid. The `time_series` column contains the time series data for each spatiotemporal location. This data is also organized as a tibble, with a column with the dates and the other columns with the values for each spectral band. 
+
+```{r}
+# Showing the contents of a time series
+ts$time_series[[1]]
+```
+
+## Plotting the time series 
+
+For convenience, the **WTSS** package provides a convenience funtion for plotting the time series.
+
+```{r}
+# Plotting the contents of a time series
+plot(ts[1,])
+```
+

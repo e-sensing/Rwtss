@@ -28,6 +28,7 @@ Imports:
     purrr,
     RCurl,
     roxygen2,
+    stringr,
     tibble,
     zoo
 RoxygenNote: 6.1.1

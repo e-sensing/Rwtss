@@ -29,17 +29,19 @@ fontfamilyoptions: adobe-utopia
 fontsize: 11pt
 graphics: yes
 mathtools: yes
-bibliography: ../inst/extdata/markdown/references-sits.bib
+bibliography: ../inst/extdata/markdown/references-bigdata.bib
 abstract: The WTSS-R package is a front-end to the Web Time Series Service (WTSS)
   that offers time series of remote sensing data using a simple API and is suited
-  for big data analytics. A WTSS server takes as input a 3D array. Each array has
+  for big data analytics. A WTSS server takes as input a n Earth observation data cube, that has
   a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The
   WTSS API has three commands, which are are *list_coverages*, that returns a list
   of coverages available in the server; (b) *describe_coverage*, that that returns
   the metadata for a given coverage; (c) *time_series*, that returns a time series
   for a spatio-temporal location.
-vignette: "%\\VignetteEncoding{UTF-8} \n%\\VignetteIndexEntry{WTSS - R interface to
-  Web Time Series Service}\n%\\VignetteEngine{knitr::rmarkdown} \n"
+vignette: |
+  %\VignetteEncoding{UTF-8} 
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{WTSS - R interface to Web Time Series Service}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -55,7 +57,7 @@ Data cubes rely on the fact that Earth observation satellites revisit the same p
 knitr::include_graphics(system.file("extdata/markdown/figures", "3D-Arrays.png", package = "wtss"))
 ```
 
-In what follows, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma \cite{Appel2019}: *A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:*
+In what follows, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma [@Appel2019]: *A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:*
 	
 1. Spatial dimensions refer to a single spatial reference system (SRS)};
 2. Cells of a data cube have a constant spatial size (with regard to the cube's SRS)};
@@ -70,9 +72,9 @@ This definition of EO data cubes reflects their construction. Data cubes are bui
 ## Web Services for Earth Observation Data Cubes
 
 Web services interfaces isolate users  from concrete implementations, thus increasing portability
-There are many ways to implement Earth observation data cubes. One of the earlier approaches is to break large images in chunks and store them in an object-relational DBMS, as done in RASDAMAN [Baumann1998]. Google Earth Engine[Gorelick2017] uses a massive parallel design; image data is partitioned in hundreds or thousands of CPUs, processed separately and later aggregated using map-reduce techniques. The Open Data Cube software, after making the required geometric and radiometric transformations in the images, stores them in files, which are indexed in a PostgreSQL database\cite[Lewis2017]. Similar file-based approaches are used in the R package "gdalcubes" [Appel2019]. Each of these designs is associated to a different API, thus making compatibility and interoperability between them hard to achieve.
+There are many ways to implement Earth observation data cubes. One of the earlier approaches is to break large images in chunks and store them in an object-relational DBMS, as done in RASDAMAN [@Baumann1998]. Google Earth Engine[@Gorelick2017] uses a massive parallel design; image data is partitioned in hundreds or thousands of CPUs, processed separately and later aggregated using map-reduce techniques. The Open Data Cube software, after making the required geometric and radiometric transformations in the images, stores them in files, which are indexed in a PostgreSQL database [@Lewis2017]. Similar file-based approaches are used in the R package "gdalcubes" [@Appel2019]. Each of these designs is associated to a different API, thus making compatibility and interoperability between them hard to achieve.
 
-Given the different designs of Earth observation data cubes, and their inherent limitations for achieving interoperability, one natural approach is to propose Web services that would present a unified interface for accessing them. Web services interfaces isolate users  from concrete implementations, thus increasing portability[Ferris2003]. In the geospatial domain, web service standards developed by the Open Geospatial Consortium have achieved considerable impact [Percivall2010]. Since services such as WMS (Web Map Service) and WCS (Web Coverage Service) are used worldwide with success, it is natural to ask: *how to design web services for big Earth observation (EO) data?* The current work addresses this issue and proposes WTSS (Web Time Series Service), a new services for big EO data. 
+Given the different designs of Earth observation data cubes, and their inherent limitations for achieving interoperability, one natural approach is to propose Web services that would present a unified interface for accessing them. Web services interfaces isolate users  from concrete implementations, thus increasing portability[@Ferris2003]. In the geospatial domain, web service standards developed by the Open Geospatial Consortium have achieved considerable impact [@Percivall2010]. Since services such as WMS (Web Map Service) and WCS (Web Coverage Service) are used worldwide with success, it is natural to ask: *how to design web services for big Earth observation (EO) data?* The current work addresses this issue and proposes WTSS (Web Time Series Service), a new services for big EO data. 
 
 ## Satellite Image Time Series
 
@@ -82,9 +84,9 @@ Given a series of remote sensing snapshots, we can reorganise them into a set of
 knitr::include_graphics(system.file("extdata/markdown/figures", "time_series.png", package = "wtss"))
 ```
 
-Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep[Pasquarella2016]. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW [Maus2016], TIMESTAT [Jonsson2004] and BFAST [Verbesselt2010]. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
+Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep[@Pasquarella2016]. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW [@Maus2016], TIMESTAT [@Jonsson2004] and BFAST [@Verbesselt2010]. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
 
-For example, classification methods such as TWDTW [Maus2019] can then break an image time series into a set of intervals. As an example, the figure below shows four events extracted from a remote sensing time series, expressed in terms of the its intervals. From 2000 to 2001 the area was a forest that was deforested in 2002. From 2003 to 2005 the area it was used for pasture and from 2005 to 2008, it was transformed into a cropland. This kind of classification is done by algorithms such that split a time series into a set of events. Combining snapshots with time series, scientists can explore the full depth of big remote sensing data archives.
+For example, classification methods such as TWDTW [@Maus2019] can then break an image time series into a set of intervals. As an example, the figure below shows four events extracted from a remote sensing time series, expressed in terms of the its intervals. From 2000 to 2001 the area was a forest that was deforested in 2002. From 2003 to 2005 the area it was used for pasture and from 2005 to 2008, it was transformed into a cropland. This kind of classification is done by algorithms such that split a time series into a set of events. Combining snapshots with time series, scientists can explore the full depth of big remote sensing data archives.
 
 ## Web Time Series Service (WTSS)
 
@@ -119,11 +121,47 @@ This operation returns the metadata for a given coverage identified by its name.
 wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 ```
 
+The coverage description is saved as a tibble in the wtss object, to be used whenever required.
+
+```{r}
+# Coverage description available in the wtss object
+wtss_inpe$description
+```
+
+
 ## Obtaining a time series 
 
-This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name* =           Coverage name.
-#' @param attributes    Vector of band names.
-#' @param longitude     Longitude in WGS84 coordinate system.
-#' @param latitude      Latitude in WGS84 coordinate system.
-#' @param start_date    Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage.
-#' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
+*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
+
+```{r}
+# Request a time series from the "MOD13Q1" coverage
+ts   <- wtss::time_series(wtss_inpe, name = "MOD13Q1", attributes = c("ndvi","evi"), 
+                          longitude = -45.00, latitude  = -12.00,
+                          start_date = "2000-02-18", end_date = "2016-12-18")
+
+ts
+```
+
+
+The result of the operation is a `tibble`, which is a generalization of a `data.frame`, the usual way in *R* to organise data in tables. Tibbles are part of the `tidyverse`, a collection of R packages designed to work together in data manipulation [@Wickham2017]. The tibble contains data and metadata. The first six columns contain the metadata: satellite, sensor, spatial and temporal information, and the coverage from where the data has been extracted. The spatial location is given in longitude and latitude coordinates for the "WGS84" ellipsoid. The `time_series` column contains the time series data for each spatiotemporal location. This data is also organized as a tibble, with a column with the dates and the other columns with the values for each spectral band. 
+
+```{r}
+# Showing the contents of a time series
+ts$time_series[[1]]
+```
+
+## Plotting the time series 
+
+For convenience, the **WTSS** package provides a convenience funtion for plotting the time series.
+
+```{r}
+# Plotting the contents of a time series
+plot(ts[1,])
+```
+
+
+
+## References
+
+

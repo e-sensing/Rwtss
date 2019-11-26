@@ -7,7 +7,9 @@
 .wtss_config_satellite(name, crs)
 }
 \arguments{
-\item{name}{Name of the covergae}
+\item{name}{Name of the coverage}
+
+\item{crs}{Projection crs information for the coverage}
 }
 \value{
 List of providers associated to a service

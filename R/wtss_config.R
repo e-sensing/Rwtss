@@ -85,7 +85,8 @@ wtss_config_show <- function() {
 #' @title retrieve the satellite associated to a given cube
 #' @name .wtss_config_satellite
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
-#' @param name Name of the covergae
+#' @param name Name of the coverage
+#' @param crs  Projection crs information for the coverage
 #'
 #' @return List of providers associated to a service
 .wtss_config_satellite <- function(name, crs) {
