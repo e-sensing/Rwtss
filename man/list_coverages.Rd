@@ -17,7 +17,7 @@ Displays information about coverages available in the WTSS service
 }
 \examples{
 {
-wtss <-  WTSS("http://www.dpi.inpe.br/tws/wtss")
+wtss <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 list_coverages(wtss)
 }
 }

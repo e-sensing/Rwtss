@@ -4,12 +4,12 @@
 \alias{describe_coverage}
 \title{Retrieves the list of cubes from the URL server}
 \usage{
-describe_coverage(wtss.obj, coverages, .print = TRUE)
+describe_coverage(wtss.obj, name, .print = TRUE)
 }
 \arguments{
 \item{wtss.obj}{A WTSS object}
 
-\item{coverages}{A character vector of coverage names}
+\item{name}{A character vector of coverage names}
 
 \item{.print}{Print the coverage description}
 }

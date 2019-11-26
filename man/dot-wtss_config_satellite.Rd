@@ -4,7 +4,7 @@
 \alias{.wtss_config_satellite}
 \title{retrieve the satellite associated to a given cube}
 \usage{
-.wtss_config_satellite(name)
+.wtss_config_satellite(name, crs)
 }
 \arguments{
 \item{name}{Name of the covergae}

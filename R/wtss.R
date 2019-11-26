@@ -36,7 +36,7 @@ WTSS <- function(URL) {
 #' @param wtss.obj       WTSS object
 #' @return               NULL if fails, TRUE if works
 #' @examples {
-#' wtss <-  WTSS("http://www.dpi.inpe.br/tws/wtss")
+#' wtss <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 #' list_coverages(wtss)
 #' }
 #' @export
@@ -65,7 +65,7 @@ list_coverages <- function(wtss.obj) {
 #'
 #' @description Contacts the WTSS server to request information about one or more coverages
 #' @param wtss.obj    A WTSS object
-#' @param coverages   A character vector of coverage names
+#' @param name        A character vector of coverage names
 #' @param .print      Print the coverage description
 #' @return            NULL if fails, TRUE if works
 #' 
@@ -73,40 +73,45 @@ list_coverages <- function(wtss.obj) {
 #' wtss  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 #' describe_coverage(wtss, wtss$coverages[1])
 #' @export
-describe_coverage <- function(wtss.obj, coverages, .print = TRUE) {
+describe_coverage <- function(wtss.obj, name, .print = TRUE) {
   
-    result <- purrr::map(coverages, function(cov) {
-        items <- NULL
-        # concat describe_coverage according to a name into the service URL 
-        request <- paste(wtss.obj$url,"/describe_coverage?name=", cov, sep = "")
-        ce <- 0
-        # avoid time out connection 
-        while (purrr::is_null(items) & ce < 10) {
-           items <- .wtss_parse_json(.wtss_send_request(request))
-           ce <- ce + 1
-        }
-        
+
+    result <- NULL
+    # concat describe_coverage according to a name into the service URL 
+    request <- paste(wtss.obj$url,"/describe_coverage?name=", name, sep = "")
+    ce <- 0
+    # avoid time out connection 
+    while (purrr::is_null(result) & ce < 10) {
+        result <- .wtss_parse_json(.wtss_send_request(request))
+        ce <- ce + 1
         # if the server does not answer any item, return NULL
-        if (purrr::is_null(items)) {
+        if (purrr::is_null(result)) {
             message("WTSS - coverage information not available")
             return(NULL)
         }
-        return(items)
-    })
-    # convert the coverage description into a list of tibbles
-    # print information for each coverage
-    cov.lst <- purrr::map(result, function(res) {
-               cov.tb <- .wtss_coverage_description(wtss.obj, res)
-               if (.print)
-                  .wtss_print_coverage(cov.tb)
-               return(cov.tb)
-              })
+    }
+    # convert the coverage description into a tibble
+
+    cov.tb <- .wtss_coverage_description(wtss.obj, result)
     
-    # fold the list of tibbles into a single tibble
-    description.tb <- dplyr::bind_rows(cov.lst)
-    
-    # export the description
-    eval.parent(substitute(wtss.obj$description <- description.tb))
+    # print the content of the coverage
+    if (.print)
+      .wtss_print_coverage(cov.tb)
+
+    # check if the description is already associated to the WTSS object
+    if (length(wtss.obj$description) != 0) {
+        if (!(name %in% wtss.obj$description$name)) {
+            # add the coverage description
+            cov.tb       <- dplyr::bind_rows(wtss.obj$description, cov.tb)
+            # export the description
+            eval.parent(substitute(wtss.obj$description <- cov.tb))  
+        }
+    }
+    else
+        # description list empty 
+        # export the description
+        eval.parent(substitute(wtss.obj$description <- cov.tb))  
+      
     # inform uses that WTSS object has the description
     if (.print)
       message("Coverage description saved in WTSS object")

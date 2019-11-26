@@ -14,8 +14,9 @@ author:
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   prettydoc::html_pretty:
-    theme: architects
-    highlight: github
+    theme: tactile
+    highlight: vignette
+    citation_package: natbib
   pdf_document:
     citation_package: natbib
     df_print: tibble
@@ -46,42 +47,44 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time. Let $S = \{s_{1}, s_{2},\dotsc, s_{n}\}$ be a set of remote sensing images which shows the same region at \emph{n} consecutive times $T = \{t_{1}, t_{2}, \dotsc, t_{n}\}$. Each location \emph{[x, y, t]} of a pixel in an image (latitude, longitude, time) maps to a \emph{[i, j, k]} position in a 3D array. Each array position \emph{[i, j, k]} will be associated to a set of attributes values $A = \{a_{1}, a_{2}, \dotsc, a_{m}\}$ which are the sensor measurements at each location in space-time (see figure below}). For optical sensors, these observations are proportional to Earth's reflexion of the incoming solar radiation at different wavelengths of the electromagnetic spectrum. 
+Recently, the concept of *data cubes* has emerged as a relevant paradigm for organising Earth observation data for performing analysis. In an intuitive sense, data cubes are  temporal sequences of images from the same geographical area. This sequence is organised consistently to allow algorithms to explore the data in both the spatial and temporal directions[Appel2019]. Data cubes are thus an efficient way to explore satellite image archives spanning years or even decades. 
+
+Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time. Let $S = \{s_{1}, s_{2},\dotsc, s_{n}\}$ be a set of remote sensing images which shows the same region at \emph{n} consecutive times $T = \{t_{1}, t_{2}, \dotsc, t_{n}\}$. Each location \emph{[x, y, t]} of a pixel in an image (latitude, longitude, time) maps to a \emph{[i, j, k]} position in a 3D array. Each array position \emph{[i, j, k]} will be associated to a set of attributes values $A = \{a_{1}, a_{2}, \dotsc, a_{m}\}$ which are the sensor measurements at each location in space-time (see figure below}). For optical sensors, these observations are proportional to Earth's reflexion of the incoming solar radiation at different wavelengths of the electromagnetic spectrum. 
 
 ```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
 knitr::include_graphics(system.file("extdata/markdown/figures", "3D-Arrays.png", package = "wtss"))
 ```
 
-## Data Cubes and Coverages
-
-In the context of the WTSS services, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma \cite{Appel2019}:  
-
-\emph{A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:}
-
-\begin{enumerate}
+In what follows, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma \cite{Appel2019}: *A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:*
 	
-\item \emph{Spatial dimensions refer to a single spatial reference system (SRS)};
-\item \emph{Cells of a data cube have a constant spatial size (with regard to the cube's SRS)};
-\item \emph{The spatial reference is defined by a simple offset and the cell size per axis, i.e., the cube axes are aligned with the SRS axes;}
-\item \emph{The temporal reference is a known set of non-overlapping temporal intervals; each temporal interval is defined by a simple start date/time and the temporal duration of cells;}
-\item \emph{All cells have the same set of attributes; each attribute can be a scalar or a vector;}   
-\item \emph{For every combination of dimensions, a cell has a single set of attribute values.}
-\end{enumerate}
+1. Spatial dimensions refer to a single spatial reference system (SRS)};
+2. Cells of a data cube have a constant spatial size (with regard to the cube's SRS)};
+3. The spatial reference is defined by a simple offset and the cell size per axis, i.e., the cube axes are aligned with the SRS axes;}
+4. The temporal reference is a known set of non-overlapping temporal intervals; each temporal interval is defined by a simple start date/time and the temporal duration of cells;}
+5. All cells have the same set of attributes; each attribute can be a scalar or a vector;}   
+6. For every combination of dimensions, a cell has a single set of attribute values.}
+
 
 This definition of EO data cubes reflects their construction. Data cubes are built of 2D images collected on a specific date constrained by satellite orbits. These images are then grouped together in arbitrary intervals. In principle, a data cube can have an image on time 1, another image at time 5, another at time 8, and so on. Since interpolation in space is different from interpolation in time, a data set composed by these images would make a valid data cube. Space needs to be compact (dense) in a data cube, but time does not need to be. Thus, a sequence of 2D + time images need not be dense. 2D images in a data cube can correspond to different instants of acquisition.
 
+## Web Services for Earth Observation Data Cubes
+
+Web services interfaces isolate users  from concrete implementations, thus increasing portability
+There are many ways to implement Earth observation data cubes. One of the earlier approaches is to break large images in chunks and store them in an object-relational DBMS, as done in RASDAMAN [Baumann1998]. Google Earth Engine[Gorelick2017] uses a massive parallel design; image data is partitioned in hundreds or thousands of CPUs, processed separately and later aggregated using map-reduce techniques. The Open Data Cube software, after making the required geometric and radiometric transformations in the images, stores them in files, which are indexed in a PostgreSQL database\cite[Lewis2017]. Similar file-based approaches are used in the R package "gdalcubes" [Appel2019]. Each of these designs is associated to a different API, thus making compatibility and interoperability between them hard to achieve.
+
+Given the different designs of Earth observation data cubes, and their inherent limitations for achieving interoperability, one natural approach is to propose Web services that would present a unified interface for accessing them. Web services interfaces isolate users  from concrete implementations, thus increasing portability[Ferris2003]. In the geospatial domain, web service standards developed by the Open Geospatial Consortium have achieved considerable impact [Percivall2010]. Since services such as WMS (Web Map Service) and WCS (Web Coverage Service) are used worldwide with success, it is natural to ask: *how to design web services for big Earth observation (EO) data?* The current work addresses this issue and proposes WTSS (Web Time Series Service), a new services for big EO data. 
+
 ## Satellite Image Time Series
 
-EO data cubes (here called "coverages") consists of a temporal series of snapshots of the same area on the surface of the Earth. Given a series of remote sensing snapshots, we can reorganise them into a set of time series.  A satellite image time series is obtained by taking measurements in the same pixel location $(x,y)$ in consecutive times $t_1,...,t_m$, as shown in the figure below.
+Given a series of remote sensing snapshots, we can reorganise them into a set of time series.  A satellite image time series is obtained by taking measurements in the same pixel location $(x,y)$ in consecutive times $t_1,...,t_m$, as shown in the figure below.
 
 ```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="Events associated to a time series"}
 knitr::include_graphics(system.file("extdata/markdown/figures", "time_series.png", package = "wtss"))
 ```
 
+Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep[Pasquarella2016]. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW [Maus2016], TIMESTAT [Jonsson2004] and BFAST [Verbesselt2010]. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
 
-Classification methods can then break an image time series into a set of intervals. As an example, the figure below shows four events extracted from a remote sensing time series, expressed in terms of the its intervals. From 2000 to 2001 the area was a forest that was deforested in 2002. From 2003 to 2005 the area it was used for pasture and from 2005 to 2008, it was transformed into a cropland. This kind of classification is done by algorithms such that split a time series into a set of events \cite{Maus2017}. Combining snapshots with time series, scientists can explore the full depth of big remote sensing data archives.
-
-Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep{Pasquarella2016}. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW \citep{Maus2016}, TIMESTAT \citep{Jonsson2004} and BFAST \citep{Verbesselt2010}. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
+For example, classification methods such as TWDTW [Maus2019] can then break an image time series into a set of intervals. As an example, the figure below shows four events extracted from a remote sensing time series, expressed in terms of the its intervals. From 2000 to 2001 the area was a forest that was deforested in 2002. From 2003 to 2005 the area it was used for pasture and from 2005 to 2008, it was transformed into a cropland. This kind of classification is done by algorithms such that split a time series into a set of events. Combining snapshots with time series, scientists can explore the full depth of big remote sensing data archives.
 
 ## Web Time Series Service (WTSS)
 
@@ -107,3 +110,20 @@ This operation allows clients to retrieve the capabilities provided by any serve
 wtss::list_coverages(wtss_inpe)
 ```
 
+## Describing a coverage from the WTSS server
+
+This operation returns the metadata for a given coverage identified by its name. It includes its range in the spatial and temporal dimensions.
+
+```{r}
+# Connect to the WTSS server at INPE Brazil
+wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+```
+
+## Obtaining a time series 
+
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name* =           Coverage name.
+#' @param attributes    Vector of band names.
+#' @param longitude     Longitude in WGS84 coordinate system.
+#' @param latitude      Latitude in WGS84 coordinate system.
+#' @param start_date    Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage.
+#' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage

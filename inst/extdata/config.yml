@@ -15,6 +15,7 @@ default:
     TERRA_sensors           : ["MODIS"]
     LANDSAT8_sensors        : ["OLI"]
     LANDSAT_sensors         : ["OLI"]
+    UNKNOWN_sensors         : ["UNKNOWN"]
 
     MODIS_products          : ["MOD13Q1"]
     MOD13Q1_satellite       : ["TERRA"]

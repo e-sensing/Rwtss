@@ -7,12 +7,15 @@
 #' 
 .wtss_coverage_description <- function(wtss.obj, cov){
     
+    # retri
     name <- cov$name
     
+    # Projection CRS
+    crs <- cov$crs$proj4
     # retrieve the satellite associated to the cube
-    satellite <- .wtss_config_satellite(name)
+    satellite <- .wtss_config_satellite(name, crs)
     # retrieve the sensor associated to the cube
-    sensor    <- .wtss_config_sensor(name)
+    sensor    <- .wtss_config_sensor(name, satellite)
     # temporal extent
     timeline <- lubridate::as_date(cov$timeline)
     
@@ -49,9 +52,6 @@
     # Size (rows and cols)
     nrows <- cov$dimension$y$max_idx - cov$dimensions$y$min_idx + 1
     ncols <- cov$dimension$x$max_idx - cov$dimensions$x$min_idx + 1
-    
-    # Projection CRS
-    crs <- cov$crs$proj4
     
     # create a tibble to store the metadata
     cov.tb <- tibble::tibble(URL            = wtss.obj$url,
