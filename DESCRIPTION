@@ -28,9 +28,9 @@ Imports:
     purrr,
     RCurl,
     roxygen2,
+    stats,
     stringr,
     tibble,
-    TSstudio,
     zoo
 RoxygenNote: 6.1.1
 URL: https://github.com/e-sensing/wtss

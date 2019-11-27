@@ -219,21 +219,34 @@ wtss_to_zoo <- function(data, band = NULL){
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
-#' # convert to zoo
+#' # convert to ts
 #' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
 #' @export
-wtss_to_ts <- function(data, band){
+wtss_to_ts <- function(data, band  = NULL){
     # only convert one row at a time
     assertthat::assert_that(nrow(data) == 1,
                     msg = "WTSS - Convertion to ts only accepts one time series at a time.")
-    # only univariate time series are accept
-    assertthat::assert_that(length(band) == 1,
-                    msg = "WTSS - Convertion to ts only accepts one band at a time.")
     
     # retrive the time series
     ts_wtss <- tibble::as_tibble(data$time_series[[1]])
+    # calculate the number of rows
+    n_dates <- nrow(ts_wtss)
+
+    # no band informed?
+    if (purrr::is_null(band)) {
+        # only univariate time series are accepted
+        assertthat::assert_that(ncol(ts_wtss) == 2,
+                                msg = "WTSS - Convertion to ts only accepts one band at a time.")
+        band <- names(ts_wtss[,2])
+    }
+    # calculate the interval
+    interval <- as.numeric(lubridate::decimal_date(data$end_date) 
+                           - lubridate::decimal_date(data$start_date))
+    
     # transform the time series to the zoo format
-    zoo <- zoo::zoo(ts_wtss[, band, drop = FALSE], ts_wtss$Index)
-    ts  <- TSstudio::zoo_to_ts(zoo) 
+    ts <- stats::ts(data = ts_wtss[, band, drop = FALSE], 
+                    start = lubridate::decimal_date(data$start_date),
+                    end   = lubridate::decimal_date(data$end_date),
+                    frequency = n_dates/interval)
     return(ts)
 }
