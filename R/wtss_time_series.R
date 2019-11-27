@@ -12,7 +12,9 @@
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage.
 #' @return              time series in a tibble format
 #' @examples {
+#' # connect to a WTSS server
 #' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' # retrieve a time series
 #' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
@@ -167,4 +169,71 @@ time_series <- function(wtss.obj,
                 attributes = zoo::zoo(attr.processed, timeline)))
     
 }
+#' @title Export data to be used to the zoo format
+#' @name wtss_to_zoo
+#' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
+#'
+#' @description Converts data from a tibble to a list of a zoo series.
+#'
+#' @param  data       A tibble with time series.
+#' @param  band       Name of the band to be exported (if NULL all bands are exported).
+#' @return            List of time series in zoo format.
+#' @examples
+#' # connect to a WTSS server
+#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' # retrieve a time series
+#' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#'                 longitude = -45.00, latitude  = -12.00,
+#'                 start_date = "2000-02-18", end_date = "2016-12-18")
+#' # convert to zoo
+#' zoo.lst <- wtss::wtss_to_zoo(ts_wtss)
+#'          
+#' @export
+wtss_to_zoo <- function(data, band = NULL){
+    zoo.lst <- data$time_series %>%
+        purrr::map(function(ts) {
+            if (purrr::is_null(band))
+                band <-  colnames(ts[-1:0])
+            # transform each sits time series to the zoo format
+            zoo.ts <- zoo::zoo(ts[, band, drop = FALSE], ts$Index)
+            return(zoo.ts)
+        })
+    
+    return(zoo.lst)
+}
 
+#' @title Export data to be used to the ts format
+#' @name wtss_to_ts
+#' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
+#'
+#' @description Converts data from a sits tibble to a list of a zoo series.
+#'
+#' @param  data       A sits tibble with time series.
+#' @param  band       Name of the band to be exported
+#' @return            A time series in the ts format.
+#' @examples
+#' # read a tibble with 400 samples of Cerrado and 346 samples of Pasture
+#' # connect to a WTSS server
+#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' # retrieve a time series
+#' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#'                 longitude = -45.00, latitude  = -12.00,
+#'                 start_date = "2000-02-18", end_date = "2016-12-18")
+#' # convert to zoo
+#' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
+#' @export
+wtss_to_ts <- function(data, band){
+    # only convert one row at a time
+    assertthat::assert_that(nrow(data) == 1,
+                    msg = "WTSS - Convertion to ts only accepts one time series at a time.")
+    # only univariate time series are accept
+    assertthat::assert_that(length(band) == 1,
+                    msg = "WTSS - Convertion to ts only accepts one band at a time.")
+    
+    # retrive the time series
+    ts_wtss <- tibble::as_tibble(data$time_series[[1]])
+    # transform the time series to the zoo format
+    zoo <- zoo::zoo(ts_wtss[, band, drop = FALSE], ts_wtss$Index)
+    ts  <- TSstudio::zoo_to_ts(zoo) 
+    return(ts)
+}

@@ -30,7 +30,9 @@ This function retrieves the time series for a pair of coordinates
 }
 \examples{
 {
+# connect to a WTSS server
 wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+# retrieve a time series
 ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,
                 start_date = "2000-02-18", end_date = "2016-12-18")

@@ -14,18 +14,18 @@ library(zoo)
 server <-  wtss::WTSS("http://www.dpi.inpe.br/tws/wtss")
 
 # Get the list of coverages provided by the service
-coverages <-  wtss::listCoverages(server)
+coverages <-  wtss::list_coverages(server)
 
 # Get the description of the third coverage
-cv <- wtss::describeCoverage(server,c("mod13q1_512"))
+cv <- wtss::describe_coverage(server,c("mod13q1_512"))
 
 # get a time series for the "ndvi" attribute
-ndvi <- wtss::timeSeries(server, "mod13q1_512", attributes=c("ndvi"), 
+ndvi <- wtss::time_series(server, "mod13q1_512", attributes=c("ndvi"), 
                          latitude=-10.408, longitude=-53.495, 
                          start="2000-02-18", end="2016-01-01")
 
 # plot the time-series
-plot(ndvi$mod13q1_512$attributes[,1])
+plot(ndvi)
 
 # transform time series to the TS format
 interval <- as.numeric(difftime(zoo::index(ndvi$mod13q1_512$attributes[2]),index(ndvi$mod13q1_512$attributes[1]),units = "days"))
