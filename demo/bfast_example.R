@@ -1,4 +1,4 @@
-nedi# Example of the WTSS package
+# Example of the WTSS package
 #
 # Retrieve an MOD13Q1 NDVI time series for a location in Brazilian Amazonia
 # 
@@ -30,16 +30,15 @@ plot(ndvi_wtss)
 # transform time series to the TS format
 ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss)
 
-# use BFAST for checking for one major break in the time series
-breaks_ts <-  bfast::bfast01(ndvi_ts)
+# use BFAST01 for checking for one major break in the time series
+one_break <-  bfast::bfast01(ndvi_ts)
 
 # plot BFAST result
-plot(breaks_ts)
+plot(one_break)
+
 
 # time series in a ts object with part of the original values
-ndvi_part <- ndvi_wtss$time_series[[1]][1:200,] 
-    
-ndvi_part_ts <- wtss::wtss_to_ts(ndvi_part)
+ndvi_part_ts <- wtss::wtss_to_ts(ndvi_wtss, start_date = "2000-02-18", "2012-06-30")
 
 # using bfastmonitor for monitoring disturbances in time series in near real-time
 plot(bfast::bfastmonitor(ndvi_part, start=time(ndvi_part)[200], history=time(ndvi_part)[1]))

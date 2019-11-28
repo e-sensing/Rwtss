@@ -178,7 +178,7 @@ time_series <- function(wtss.obj,
 #' @param  data       A tibble with time series.
 #' @param  band       Name of the band to be exported (if NULL all bands are exported).
 #' @return            List of time series in zoo format.
-#' @examples
+#' @examples {
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 #' # retrieve a time series
@@ -187,7 +187,7 @@ time_series <- function(wtss.obj,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to zoo
 #' zoo.lst <- wtss::wtss_to_zoo(ts_wtss)
-#'          
+#' }
 #' @export
 wtss_to_zoo <- function(data, band = NULL){
     zoo.lst <- data$time_series %>%
@@ -208,11 +208,12 @@ wtss_to_zoo <- function(data, band = NULL){
 #'
 #' @description Converts data from a sits tibble to a list of a zoo series.
 #'
-#' @param  data       A sits tibble with time series.
-#' @param  band       Name of the band to be exported
-#' @return            A time series in the ts format.
-#' @examples
-#' # read a tibble with 400 samples of Cerrado and 346 samples of Pasture
+#' @param  data          A sits tibble with time series.
+#' @param  band          Name of the band to be exported (optional if series has only one band)
+#' @param  start_date    Starting date to be filtered (optional)
+#' @param  end_date      End date to be filtered (optional)
+#' @return               A time series in the ts format.
+#' @examples {
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 #' # retrieve a time series
@@ -221,17 +222,26 @@ wtss_to_zoo <- function(data, band = NULL){
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to ts
 #' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
+#' }
 #' @export
-wtss_to_ts <- function(data, band  = NULL){
+wtss_to_ts <- function(data, band  = NULL, start_date = NULL, end_date = NULL){
     # only convert one row at a time
     assertthat::assert_that(nrow(data) == 1,
                     msg = "WTSS - Convertion to ts only accepts one time series at a time.")
     
+    # if either start_date or end_date are null, use default_dates
+    if (purrr::is_null(start_date))
+            start_date <- lubridate::as_date(data$start_date)
+    if (purrr::is_null(end_date))
+            end_date   <- lubridate::as_date(data$end_date)
+    
+    # filter the dates
+    data <- wtss_filter_dates(data, start_date, end_date)
+
     # retrive the time series
     ts_wtss <- tibble::as_tibble(data$time_series[[1]])
     # calculate the number of rows
     n_dates <- nrow(ts_wtss)
-
     # no band informed?
     if (purrr::is_null(band)) {
         # only univariate time series are accepted
@@ -239,6 +249,7 @@ wtss_to_ts <- function(data, band  = NULL){
                                 msg = "WTSS - Convertion to ts only accepts one band at a time.")
         band <- names(ts_wtss[,2])
     }
+
     # calculate the interval
     interval <- as.numeric(lubridate::decimal_date(data$end_date) 
                            - lubridate::decimal_date(data$start_date))
@@ -249,4 +260,42 @@ wtss_to_ts <- function(data, band  = NULL){
                     end   = lubridate::decimal_date(data$end_date),
                     frequency = n_dates/interval)
     return(ts)
+}
+#' @title Filter dates in WTSS time series
+#' @name wtss_filter_dates
+#' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
+#'
+#' @description Converts data from a sits tibble to a list of a zoo series.
+#'
+#' @param  data          A sits tibble with time series.
+#' @param  start_date    Starting date to be filtered
+#' @param  end_date      End date to be filtered
+#' @return               A time series filtered according to the start and end dates.
+#' @examples {
+#' # read a tibble with 400 samples of Cerrado and 346 samples of Pasture
+#' # connect to a WTSS server
+#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' # retrieve a time series as a tibble
+#' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#'                 longitude = -45.00, latitude  = -12.00,
+#'                 start_date = "2000-02-18", end_date = "2016-12-18")
+#' # filter the time series
+#' ts_wtss <- wtss::wtss_filter_dates(ts_wtss, start_date = "2001-01-01", end_date = "2014-12-31")
+#' }
+#' @export
+wtss_filter_dates <- function(data, start_date, end_date) {
+    # check compatibility of start and end dates
+    assertthat::assert_that(lubridate::as_date(end_date) > lubridate::as_date(start_date),
+                            msg = "WTSS - start date and end_date are inconsistent")
+    # retrive time series
+    ts <- data$time_series[[1]]
+    # filter time series
+    ts <- dplyr::filter(ts, Index >= lubridate::as_date(start_date))
+    ts <- dplyr::filter(ts, Index <= lubridate::as_date(end_date))
+    
+    # save the time series
+    data$time_series[[1]] <- ts
+    
+    return(data)
+    
 }
