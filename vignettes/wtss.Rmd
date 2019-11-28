@@ -8,6 +8,8 @@ author:
 - affiliation: National Institute for Space Research (INPE), Brazil
   name: Luiz Fernando Assis
 - affiliation: National Institute for Space Research (INPE), Brazil
+  name: Pedro Andrade
+- affiliation: National Institute for Space Research (INPE), Brazil
   name: Karine Ferreira
 - affiliation: University of Vienna, Austria
   name: Victor Maus
