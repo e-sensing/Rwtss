@@ -36,7 +36,6 @@ one_break <-  bfast::bfast01(ndvi_ts)
 # plot BFAST result
 plot(one_break)
 
-#start_date
 start_date <- lubridate::as_date("2008-02-18")
 
 # time series in a ts object with part of the original values
