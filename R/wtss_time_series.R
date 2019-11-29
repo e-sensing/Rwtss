@@ -243,11 +243,15 @@ wtss_to_ts <- function(data, band  = NULL){
     interval <- as.numeric(lubridate::decimal_date(data$end_date) 
                            - lubridate::decimal_date(data$start_date))
     
+    freq <- n_dates/interval
+    
     # transform the time series to the zoo format
-    ts <- stats::ts(data = ts_wtss[, band, drop = FALSE], 
+    ts <- stats::ts(ts_wtss[, band, drop = FALSE], 
                     start = lubridate::decimal_date(data$start_date),
                     end   = lubridate::decimal_date(data$end_date),
                     frequency = n_dates/interval)
+    
+    
     return(ts)
 }
 #' @title Filter dates in WTSS time series

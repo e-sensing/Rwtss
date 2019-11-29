@@ -159,7 +159,31 @@ For convenience, the **WTSS** package provides a convenience funtion for plottin
 
 ```{r}
 # Plotting the contents of a time series
-plot(ts[1,])
+plot(ts)
+```
+
+
+## Conversion to "zoo" and "ts" formats
+
+Since many time series analysis functions in R require data to be made available in the "zoo" and "ts" formats, the *wtss* package provides two convenience functions: *wtss_to_zoo* and "*wtss_to_ts*, as illustrated below.
+
+
+```{r}
+# create a connection using a serverUrl
+server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+
+# get a time series for the "ndvi" attribute
+ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
+                         latitude = -10.408, longitude = -53.495, 
+                         start = "2000-02-18", end = "2016-01-01")
+
+# convert to ts
+ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
+
+# detect trends
+stl <- stats::stl(ndvi_ts, s.window = 7)
+# plot the result
+plot(stl)
 ```
 
 

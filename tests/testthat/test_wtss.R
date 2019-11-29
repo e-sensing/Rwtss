@@ -56,8 +56,10 @@ test_that("Time Series 2", {
     wtss6 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
     ts    <- wtss::time_series(wtss6, "MOD13Q1", 
                                longitude = -45.00, latitude  = -12.00)
-    expect_true(nrow(ts$time_series[[1]]) == 452)
     expect_true(ncol(ts$time_series[[1]]) == 7)
+    expect_true(all(c("Index", "mir", "blue", "nir", "red", "evi", "ndvi") 
+                    %in% names(ts$time_series[[1]])))
+    expect_true(nrow(ts$time_series[[1]]) >= 452)
 })
 
 test_that("Time Series - errors", {
@@ -80,4 +82,21 @@ test_that("Time Series - errors", {
                                          start_date = "2010-01-01", 
                                          end_date   = "2005-01-01"))
 
+})
+
+test_that("Time Series - conversion to ts and zoo", {
+    wtss8 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+    ts    <- wtss::time_series(wtss8, "MOD13Q1", 
+                               longitude = -45.00, latitude  = -12.00)
+    ts_zoo <- wtss::wtss_to_zoo(ts)
+    expect_true(nrow(ts_zoo[[1]]) == nrow(ts$time_series[[1]]))
+    expect_true(ncol(ts_zoo[[1]]) == (ncol(ts$time_series[[1]]) - 1))
+    expect_true(all(as.vector(ts_zoo[[1]][,1]) == dplyr::pull(ts$time_series[[1]][,2])))
+    
+    ts_ts <- wtss::wtss_to_ts(ts, band = "ndvi")
+    expect_true(stats::start(ts_ts) == lubridate::decimal_date(ts$start_date))
+    expect_true(stats::end(ts_ts) == lubridate::decimal_date(ts$end_date))
+    expect_true(length(ts_ts) == nrow(ts$time_series[[1]]))
+    expect_true(all(as.vector(ts_ts[,1]) == dplyr::pull(ts$time_series[[1]][,"ndvi"])))
+    
 })

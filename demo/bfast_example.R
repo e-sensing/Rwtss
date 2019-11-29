@@ -8,7 +8,6 @@
 # installing and loading packages
 library(bfast)
 library(wtss)
-library(zoo)
 
 # create a connection using a serverUrl
 server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
