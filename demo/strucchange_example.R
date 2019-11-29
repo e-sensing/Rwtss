@@ -12,24 +12,24 @@ library(lubridate)
 library(wtss)
 
 # create a connection using a serverUrl
-server <-  wtss::WTSS("http://www.dpi.inpe.br/tws/wtss")
+server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 
 # get the list of coverages provided by the service
-coverages <- wtss::listCoverages(server)
+coverages <- wtss::list_coverages(server)
 
 # get the description of the MOD13Q1 coverage
-cv <-  wtss::describeCoverage(server, "mod13q1_512")
+cv <-  wtss::describe_coverage(server, "MOD13Q1")
 
 # get a time series for the "ndvi" attribute
-ndvi <- wtss::timeSeries(server, "mod13q1_512", attributes=c("ndvi"), 
-                         latitude=-10.408, longitude=-53.495, 
-                         start="2000-02-18", end="2016-01-01")
+ndvi <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
+                         latitude = -10.408, longitude = -53.495, 
+                         start = "2000-02-18", end = "2016-01-01")
+
+# plot the time series
+plot(ndvi)
 
 # transform time series to the TS format
-interval <- as.numeric(difftime(zoo::index(ndvi$mod13q1_512$attributes[2]),index(ndvi$mod13q1_512$attributes[1]),units = "days"))
-start_date <- lubridate::decimal_date(lubridate::ymd(index(ndvi$mod13q1_512$attributes[1])))
-
-ndvi_ts <- ts(zoo::coredata(ndvi$mod13q1_512$attributes[,"ndvi"]), freq=365.25/interval, start= start_date)
+ndvi_ts <- wtss::wtss_to_ts(ndvi)
 
 # analysis using strucchange
 fs.ndvi <- strucchange::Fstats(ndvi_ts ~ 1)
@@ -42,3 +42,4 @@ bk <- strucchange::breakpoints(fs.ndvi)
 
 # plot breakpoints
 lines(bk)
+

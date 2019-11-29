@@ -35,11 +35,3 @@ one_break <-  bfast::bfast01(ndvi_ts)
 
 # plot BFAST result
 plot(one_break)
-
-start_date <- lubridate::as_date("2008-02-18")
-
-# time series in a ts object with part of the original values
-ndvi_part_ts <- wtss::wtss_to_ts(ndvi_wtss, start_date = "2000-02-18", end_date = "2012-06-30")
-
-# using bfastmonitor for monitoring disturbances in time series in near real-time
-plot(bfast::bfastmonitor(ndvi_part_ts, start = lubridate::decimal_date("2000-02-18")))

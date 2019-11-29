@@ -4,16 +4,12 @@
 \alias{wtss_to_ts}
 \title{Export data to be used to the ts format}
 \usage{
-wtss_to_ts(data, band = NULL, start_date = NULL, end_date = NULL)
+wtss_to_ts(data, band = NULL)
 }
 \arguments{
 \item{data}{A sits tibble with time series.}
 
 \item{band}{Name of the band to be exported (optional if series has only one band)}
-
-\item{start_date}{Starting date to be filtered (optional)}
-
-\item{end_date}{End date to be filtered (optional)}
 }
 \value{
 A time series in the ts format.

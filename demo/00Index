@@ -1,5 +1,4 @@
 bfast_example             Detecting breaks in WTSS time series using BFAST 
-breakoutdetection_example Detecting breaks in WTSS time series using BreakoutDetection
 changepoint_example       Detecting breaks in WTSS time series using Changepoint
 strucchange_example       Detecting breaks in WTSS time series using Strucchange
 

@@ -210,8 +210,6 @@ wtss_to_zoo <- function(data, band = NULL){
 #'
 #' @param  data          A sits tibble with time series.
 #' @param  band          Name of the band to be exported (optional if series has only one band)
-#' @param  start_date    Starting date to be filtered (optional)
-#' @param  end_date      End date to be filtered (optional)
 #' @return               A time series in the ts format.
 #' @examples {
 #' # connect to a WTSS server
@@ -224,19 +222,10 @@ wtss_to_zoo <- function(data, band = NULL){
 #' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
 #' }
 #' @export
-wtss_to_ts <- function(data, band  = NULL, start_date = NULL, end_date = NULL){
+wtss_to_ts <- function(data, band  = NULL){
     # only convert one row at a time
     assertthat::assert_that(nrow(data) == 1,
                     msg = "WTSS - Convertion to ts only accepts one time series at a time.")
-    
-    # if either start_date or end_date are null, use default_dates
-    if (purrr::is_null(start_date))
-            start_date <- lubridate::as_date(data$start_date)
-    if (purrr::is_null(end_date))
-            end_date   <- lubridate::as_date(data$end_date)
-    
-    # filter the dates
-    data <- wtss_filter_dates(data, start_date, end_date)
 
     # retrive the time series
     ts_wtss <- tibble::as_tibble(data$time_series[[1]])
