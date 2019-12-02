@@ -16,7 +16,7 @@
     # retrieve information about the bands
     band_info <- cov$attributes
     
-    attr <- tibble::as.tibble(band_info)
+    attr <- tibble::as_tibble(band_info)
     bands <- attr$name
     
     t <- dplyr::select(dplyr::filter(attr, name %in% bands), 
@@ -98,14 +98,14 @@
     timeline <- lubridate::as_date(cov.tb$timeline[[1]])
     n_time_steps <- length(timeline)
     cat(paste0("\nTimeline - ",n_time_steps," time steps\n"))
-    cat(paste0("start_date: ", timeline[1], " end_date: ", timeline[n_time_steps],"\n"))
-    cat("----------------------------------------------------------------------------------\n")
+    cat(paste0("start_date: ", timeline[1], 
+               " end_date: ", timeline[n_time_steps],"\n"))
+    cat("-------------------------------------------------------------------\n")
 }
 #' @title Retrieves the list of cubes from the URL server
 #' @name .wtss_list_coverages
 #'
-#' @description Uses the WTSS services to print information and save metadata about a
-#' chosen cube.
+#' @description Use the WTSS protocol to find out available coverages
 #'
 #' @param wtss.obj      WTSS object associated to the service
 #' @return              updated WTSS object.

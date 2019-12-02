@@ -13,6 +13,5 @@
 updated WTSS object.
 }
 \description{
-Uses the WTSS services to print information and save metadata about a
-chosen cube.
+Use the WTSS protocol to find out available coverages
 }

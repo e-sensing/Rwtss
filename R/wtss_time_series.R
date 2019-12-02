@@ -223,13 +223,13 @@ wtss_to_zoo <- function(data, band = NULL){
 #' A WTSS tibble contains data retrieved from a WTSS server. 
 #' These data sets are time series with irregular intervals. Given that
 #' of many functions that use the R "ts" format, this function converts 
-#' the format used by WTSS (a tibble with data and metadata) to the "ts" format. 
+#' a WTSS time series (a tibble with data and metadata) to the "ts" format. 
 #' Since  "ts" requires regular time series, it interpolates 
 #' the original irregular time series to a regular time series. To do this, the 
-#' user needs to specify a regular period which is recognised by the "ts" format 
-#' (one of c("year", "quarter", "month", "week", "day"), 
-#' c("years", "quarters", "months", "weeks", "days") or
-#' c(1, 4, 12, 52)). This function creates a new time series with the required 
+#' user needs to specify a period which is recognised by the "ts" format. 
+#' This period can be either {"year", "quarter", "month", "week", "day"}, 
+#' {"years", "quarters", "months", "weeks", "days"} or
+#' {1, 4, 12, 52}. This function creates a new time series with the required 
 #' frequency and intepolates the missing values using spline interpolation 
 #' from the "zoo" package (zoo::na.spline).
 #'

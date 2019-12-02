@@ -1,6 +1,6 @@
 Package: wtss
 Title: An R Client for Web Time-Series Service
-Version: 1.2.0
+Version: 2.0.1
 Authors@R: c(person("Gilberto", "Ribeiro", role = c("aut"), email ="gilberto.queiroz@inpe.br"),
              person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"),
              person("Pedro", "Andrade", role = c("aut"), email = "pedro.andrade@inpe.br"), 

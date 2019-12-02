@@ -25,7 +25,7 @@
 #' @export
 plot.wtss <- function(x, y, ..., colors = "Dark2") {
     
-    data <- tibble::as.tibble(x)
+    data <- tibble::as_tibble(x)
     purrr::map(list(data), function(row) .wtss_ggplot_series(row, colors))
     # return the original tibble - useful for chaining
     return(invisible(data))
@@ -38,7 +38,7 @@ plot.wtss <- function(x, y, ..., colors = "Dark2") {
 #' for showing the same lat/long location in a series of time steps.
 #'
 #' @param row         A row of a sits tibble with the time series to be plotted.
-#' @param colors      A string with the set of Brewer colors to be used for plotting.
+#' @param colors      The set of Brewer colors to be used for plotting.
 .wtss_ggplot_series <- function(row, colors = "Dark2") {
     # create the plot title
     plot_title <- paste("Location = (", row$latitude,  ", ", row$longitude, ")",
