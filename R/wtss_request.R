@@ -11,9 +11,9 @@
     tryCatch(response <- RCurl::getURL(request), 
              error = function(e) {
                  e$message <- paste("HTTP request failed. 
-                                   The URL server may be incorrect or the service 
-                                   may be temporarily unavailable."); 
-                 return(NULL);
+                              The URL server may be incorrect or the service 
+                              may be temporarily unavailable.")
+                 return(NULL)
              })
     
     return(response)
@@ -21,7 +21,7 @@
 #' @title Parse a JSON response from the WTSS server
 #' @name .wtss_parse_json
 #'
-#' @description Uses the jsonlite package to parse a JSON response from the WTSS service
+#' @description Parse a JSON response from the WTSS service
 #'
 #' @param response   valid JSON response from the WTSS service
 #' @return  parsed JSON document

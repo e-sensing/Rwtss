@@ -13,5 +13,5 @@
 parsed JSON document
 }
 \description{
-Uses the jsonlite package to parse a JSON response from the WTSS service
+Parse a JSON response from the WTSS service
 }

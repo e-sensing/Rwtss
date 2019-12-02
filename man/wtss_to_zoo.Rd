@@ -9,7 +9,8 @@ wtss_to_zoo(data, band = NULL)
 \arguments{
 \item{data}{A tibble with time series.}
 
-\item{band}{Name of the band to be exported (if NULL all bands are exported).}
+\item{band}{Name of the band to be exported 
+(if NULL all bands are exported).}
 }
 \value{
 List of time series in zoo format.

@@ -7,8 +7,6 @@
 
 # installing and loading packages
 library(strucchange)
-library(zoo)
-library(lubridate)
 library(wtss)
 
 # create a connection using a serverUrl

@@ -5,3 +5,5 @@ Rprofile$
 ^\.tmp$
 ^README\.Rmd$
 ^README_cache$
+^doc$
+^Meta$

@@ -1,8 +1,7 @@
 #' @title Creates a WTSS object
 #' @name WTSS
 #'
-#' @description Uses the WTSS services to print information and save metadata about a
-#' chosen cube.
+#' @description Creates a connection to a WTSS server.
 #'
 #' @param URL        URL of the service provider.
 #' @return  R WTSS object associated to the service.
@@ -13,7 +12,8 @@
 WTSS <- function(URL) {
     
   # create a list to store the metadata
-  wtss.obj <- list(url = character(), coverages = character(), description = list())
+  wtss.obj <- list(url = character(), coverages = character(), 
+                   description = list())
   
   wtss.obj$url <- URL
   
@@ -31,7 +31,7 @@ WTSS <- function(URL) {
 #' @title List the coverages available in the WTSS service
 #' @name list_coverages
 #'
-#' @description Displays information about coverages available in the WTSS service 
+#' @description Lists coverages available in the WTSS service 
 #'
 #' @param wtss.obj       WTSS object
 #' @return               NULL if fails, TRUE if works
@@ -63,7 +63,7 @@ list_coverages <- function(wtss.obj) {
 #' @title Retrieves the list of cubes from the URL server
 #' @name  describe_coverage
 #'
-#' @description Contacts the WTSS server to request information about one or more coverages
+#' @description Contacts the WTSS server to describe one  coverages
 #' @param wtss.obj    A WTSS object
 #' @param name        A character vector of coverage names
 #' @param .print      Print the coverage description
@@ -74,8 +74,8 @@ list_coverages <- function(wtss.obj) {
 #' describe_coverage(wtss, wtss$coverages[1])
 #' @export
 describe_coverage <- function(wtss.obj, name, .print = TRUE) {
-  
-
+    assertthat::assert_that(length(name) == 1, 
+                msg = "WTSS - select only one coverage to describe")
     result <- NULL
     # concat describe_coverage according to a name into the service URL 
     request <- paste(wtss.obj$url,"/describe_coverage?name=", name, sep = "")

@@ -13,7 +13,7 @@ list_coverages(wtss.obj)
 NULL if fails, TRUE if works
 }
 \description{
-Displays information about coverages available in the WTSS service
+Lists coverages available in the WTSS service
 }
 \examples{
 {

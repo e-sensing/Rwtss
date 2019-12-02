@@ -14,24 +14,22 @@
 
 \item{...}{further specifications for \link{plot}.}
 
-\item{colors}{Color pallete to be used (based on Color Brewer - default is "Dark2").}
+\item{colors}{Color pallete to be used (based on Color Brewer - 
+default is "Dark2").}
 }
 \value{
 Input  tibble (useful for chaining functions).
 }
 \description{
 Given a tibble with a set of time series, plot them.
-
-The plot.wtss function makes an educated guess of what plot is required,
-based on the input data. If there are more than 10 samples, it will default to
-"together".
 }
 \examples{
 {
 # Read one time series from the WTSS server
 # plot one time series
 wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
-ts   <- wtss::time_series(wtss, name = "MOD13Q1", attributes = c("ndvi","evi"), 
+ts   <- wtss::time_series(wtss, name = "MOD13Q1", 
+                attributes = c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,
                 start_date = "2000-02-18", end_date = "2016-12-18")
 plot(ts)

@@ -4,18 +4,35 @@
 \alias{wtss_to_ts}
 \title{Export data to be used to the ts format}
 \usage{
-wtss_to_ts(data, band = NULL)
+wtss_to_ts(data, band = NULL, period = "week")
 }
 \arguments{
 \item{data}{A sits tibble with time series.}
 
-\item{band}{Name of the band to be exported (optional if series has only one band)}
+\item{band}{Name of the band to be exported 
+(optional if series has only one band)}
+
+\item{period}{One of c("year", "quarter", "month", "week", "day"), 
+c("years", "quarters", "months", "weeks", "days") or
+c(1, 4, 12, 52)}
 }
 \value{
 A time series in the ts format.
 }
 \description{
-Converts data from a sits tibble to a list of a zoo series.
+Converts data from a wtss tibble to a time series "ts".
+A WTSS tibble contains data retrieved from a WTSS server. 
+These data sets are time series with irregular intervals. Given that
+of many functions that use the R "ts" format, this function converts 
+the format used by WTSS (a tibble with data and metadata) to the "ts" format. 
+Since  "ts" requires regular time series, it interpolates 
+the original irregular time series to a regular time series. To do this, the 
+user needs to specify a regular period which is recognised by the "ts" format 
+(one of c("year", "quarter", "month", "week", "day"), 
+c("years", "quarters", "months", "weeks", "days") or
+c(1, 4, 12, 52)). This function creates a new time series with the required 
+frequency and intepolates the missing values using spline interpolation 
+from the "zoo" package (zoo::na.spline).
 }
 \examples{
 {

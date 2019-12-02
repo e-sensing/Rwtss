@@ -4,8 +4,15 @@
 \alias{time_series}
 \title{Get time series}
 \usage{
-time_series(wtss.obj, name, attributes = NULL, longitude, latitude,
-  start_date = NULL, end_date = NULL)
+time_series(
+  wtss.obj,
+  name,
+  attributes = NULL,
+  longitude,
+  latitude,
+  start_date = NULL,
+  end_date = NULL
+)
 }
 \arguments{
 \item{wtss.obj}{Either a WTSS object or a server URL}
@@ -18,15 +25,17 @@ time_series(wtss.obj, name, attributes = NULL, longitude, latitude,
 
 \item{latitude}{Latitude in WGS84 coordinate system.}
 
-\item{start_date}{Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage.}
+\item{start_date}{Start date in the format yyyy-mm-dd or yyyy-mm 
+depending on the coverage.}
 
-\item{end_date}{End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage.}
+\item{end_date}{End date in the format yyyy-mm-dd or yyyy-mm 
+depending on the coverage.}
 }
 \value{
 time series in a tibble format
 }
 \description{
-This function retrieves the time series for a pair of coordinates
+Retrieves the time series for a pair of coordinates
 }
 \examples{
 {

@@ -182,3 +182,52 @@ plot(ts[1,])
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+## Conversion to “zoo” and “ts” formats
+
+Since many time series analysis functions in R require data to be made
+available in the “zoo” and “ts” formats, the *wtss* package provides two
+convenience functions: *wtss\_to\_zoo* and “*wtss\_to\_ts*. The example
+below shows the detection of trends in a series converted to the”ts"
+format using the BFAST package \[@Verbesselt2010\].
+
+``` r
+library(bfast)
+```
+
+    ## Registered S3 method overwritten by 'xts':
+    ##   method     from
+    ##   as.zoo.xts zoo
+
+    ## Registered S3 method overwritten by 'quantmod':
+    ##   method            from
+    ##   as.zoo.data.frame zoo
+
+    ## Registered S3 methods overwritten by 'forecast':
+    ##   method             from    
+    ##   fitted.fracdiff    fracdiff
+    ##   residuals.fracdiff fracdiff
+
+``` r
+# create a connection using a serverUrl
+server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+```
+
+    ## Connected to WTSS server at http://www.esensing.dpi.inpe.br/wtss/
+
+``` r
+# get a time series for the "ndvi" attribute
+ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
+                         latitude = -10.408, longitude = -53.495, 
+                         start = "2000-02-18", end = "2016-01-01")
+
+# convert to ts
+ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
+
+# detect trends
+bf <- bfast::bfast01(ndvi_ts)
+# plot the result
+plot(bf)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->

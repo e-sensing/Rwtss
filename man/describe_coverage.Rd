@@ -17,7 +17,7 @@ describe_coverage(wtss.obj, name, .print = TRUE)
 NULL if fails, TRUE if works
 }
 \description{
-Contacts the WTSS server to request information about one or more coverages
+Contacts the WTSS server to describe one  coverages
 }
 \examples{
 wtss  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")

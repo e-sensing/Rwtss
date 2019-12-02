@@ -3,7 +3,7 @@
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
 #'
 #' @description This function returns an empty tibble that
-#' contains both the satellite image time series and its metadata. The columns are
+#' contains the satellite image time series and its metadata. The columns are
 #' <longitude, latitude, start_date, end_date, label, cube, time_series>.
 #' WTSS functions produce a tibble as output.
 #' 
@@ -36,7 +36,8 @@
 #' @param cov_desc      Description of the WTSS coverage
 #' @return Time series in sits tibble format.
 #'
-.wtss_to_tibble <- function(ts, name, bands, longitude, latitude, start_date, end_date, cov_desc) {
+.wtss_to_tibble <- function(ts, name, bands, longitude, latitude, 
+                            start_date, end_date, cov_desc) {
     # retrieve the time series information
     time_series <- ts[[name]]$attributes
     

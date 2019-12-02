@@ -4,8 +4,16 @@
 \alias{.wtss_to_tibble}
 \title{Import time series in the zoo format to a tibble}
 \usage{
-.wtss_to_tibble(ts, name, bands, longitude, latitude, start_date, end_date,
-  cov_desc)
+.wtss_to_tibble(
+  ts,
+  name,
+  bands,
+  longitude,
+  latitude,
+  start_date,
+  end_date,
+  cov_desc
+)
 }
 \arguments{
 \item{ts}{list of time series retrieved by WTSS}

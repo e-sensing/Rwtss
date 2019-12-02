@@ -9,13 +9,7 @@
     
     # retri
     name <- cov$name
-    
-    # Projection CRS
-    crs <- cov$crs$proj4
-    # retrieve the satellite associated to the cube
-    satellite <- .wtss_config_satellite(name, crs)
-    # retrieve the sensor associated to the cube
-    sensor    <- .wtss_config_sensor(name, satellite)
+
     # temporal extent
     timeline <- lubridate::as_date(cov$timeline)
     
@@ -53,6 +47,15 @@
     nrows <- cov$dimension$y$max_idx - cov$dimensions$y$min_idx + 1
     ncols <- cov$dimension$x$max_idx - cov$dimensions$x$min_idx + 1
     
+    # Projection CRS
+    crs <- cov$crs$proj4
+    
+    # retrieve the satellite associated to the cube
+    sat_sensor <- .wtss_guess_satellite(xres)
+    satellite  <- sat_sensor["satellite"]
+    # retrieve the sensor associated to the cube
+    sensor     <- sat_sensor["sensor"]
+    
     # create a tibble to store the metadata
     cov.tb <- tibble::tibble(URL            = wtss.obj$url,
                              satellite      = satellite,
@@ -80,16 +83,17 @@
 }
 
 .wtss_print_coverage <- function(cov.tb){
-    cat("----------------------------------------------------------------------------------")
+    cat("---------------------------------------------------------------------")
     cat(paste0("\nWTSS server URL = ", cov.tb$URL, "\n"))
     cat(paste0("Coverage = ", cov.tb$name))
     
-    print(knitr::kable(dplyr::select(cov.tb, satellite, sensor, bands), padding = 0))
+    print(knitr::kable(dplyr::select(cov.tb, satellite, sensor, bands), 
+                       padding = 0))
     print(knitr::kable(dplyr::select(cov.tb, scale_factors), padding = 0))
     print(knitr::kable(dplyr::select(cov.tb, minimum_values), padding = 0))
     print(knitr::kable(dplyr::select(cov.tb, maximum_values), padding = 0))
-    print(knitr::kable(dplyr::select(cov.tb, nrows, ncols, xmin, xmax, ymin, ymax, xres, yres, crs),
-                       padding = 0))
+    print(knitr::kable(dplyr::select(cov.tb, nrows, ncols, xmin, xmax, ymin, 
+                                     ymax, xres, yres, crs), padding = 0))
     # print the timeline
     timeline <- lubridate::as_date(cov.tb$timeline[[1]])
     n_time_steps <- length(timeline)
@@ -127,4 +131,29 @@
     
     # if the server answers correctly
     return(items$coverages)
+}
+#' @title Try a best guess for the type of sensor/satellite
+#' @name .wtss_guess_satellite
+#' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
+#'
+#' @description    Based on resolution, tries to guess what is the satellite.
+#'
+#' @param xres      xres of the coverage
+#' @return          Satellite sensor pair
+.wtss_guess_satellite <- function(xres) {
+    # approximate resolution of the coverage 
+    res_m <- geosphere::distGeo(p1 = c(0.0, 0.0), p2 = c(xres, 0.00))
+    
+    #try to guess the satellite
+    if (res_m > 200.0 && res_m < 2000.0) {
+        sat_sensor <- c("TERRA", "MODIS")
+    }
+    else if (res_m > 25.00 && res_m < 35.0)
+        sat_sensor <- c("LANDSAT", "OLI")
+    else
+        sat_sensor <- c("UNKNOWN", "UNKNOWN")
+    
+    names(sat_sensor) <-  c("satellite", "sensor")
+    
+    return(sat_sensor)
 }

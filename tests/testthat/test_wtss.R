@@ -8,7 +8,8 @@ test_that("Connection to a WTSS service", {
 })
 test_that("Bad connection to a WTSS service", {
     URL <- "http://www.dpi.inpe.br/wtss/"
-    expect_message(wtss1 <- wtss::WTSS(URL), "WTSS server not responding - please check URL")
+    expect_message(wtss1 <- wtss::WTSS(URL), 
+                   "WTSS server not responding - please check URL")
     expect_true(purrr::is_null(wtss1))
 })
 
@@ -69,7 +70,7 @@ test_that("Time Series - errors", {
     expect_error(ts <- wtss::time_series(wtss7, "MOD13Q1", 
                                          longitude = -45.00, latitude  = 12.00))
     expect_error(ts <- wtss::time_series(wtss7, "MOD13Q1", c("swir", "ndvi"),
-                                         longitude = -45.00, latitude  = -12.00))
+                                        longitude = -45.00, latitude  = -12.00))
     expect_error(ts <- wtss::time_series(wtss7, "MOD13Q1",
                                          longitude = -45.00, latitude  = -12.00,
                                          start_date = "1999-01-01"))    
@@ -87,16 +88,22 @@ test_that("Time Series - errors", {
 test_that("Time Series - conversion to ts and zoo", {
     wtss8 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
     ts    <- wtss::time_series(wtss8, "MOD13Q1", 
-                               longitude = -45.00, latitude  = -12.00)
+                               longitude = -45.00, latitude  = -12.00,
+                             start_date = "2002-01-01", end_date = "2002-12-31")
     ts_zoo <- wtss::wtss_to_zoo(ts)
-    expect_true(nrow(ts_zoo[[1]]) == nrow(ts$time_series[[1]]))
-    expect_true(ncol(ts_zoo[[1]]) == (ncol(ts$time_series[[1]]) - 1))
-    expect_true(all(as.vector(ts_zoo[[1]][,1]) == dplyr::pull(ts$time_series[[1]][,2])))
+    expect_true(nrow(ts_zoo) == nrow(ts$time_series[[1]]))
+    expect_true(ncol(ts_zoo) == (ncol(ts$time_series[[1]]) - 1))
+    expect_true(all(as.vector(ts_zoo[,1]) == 
+                        dplyr::pull(ts$time_series[[1]][,2])))
     
     ts_ts <- wtss::wtss_to_ts(ts, band = "ndvi")
-    expect_true(stats::start(ts_ts) == lubridate::decimal_date(ts$start_date))
-    expect_true(stats::end(ts_ts) == lubridate::decimal_date(ts$end_date))
-    expect_true(length(ts_ts) == nrow(ts$time_series[[1]]))
-    expect_true(all(as.vector(ts_ts[,1]) == dplyr::pull(ts$time_series[[1]][,"ndvi"])))
     
+    ts_start <- c(as.numeric(lubridate::year(ts$start_date)), 
+                  as.numeric(lubridate::week(ts$start_date)))
+    ts_end   <- c(as.numeric(lubridate::year(ts$end_date)), 
+                  as.numeric(lubridate::week(ts$end_date)))
+    
+    expect_true(all(stats::start(ts_ts) == ts_start))
+    expect_true(length(ts_ts) == 53)
+    expect_true(ts_ts[1] == as.numeric(ts_zoo[1,"ndvi"]))
 })

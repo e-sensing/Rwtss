@@ -13,8 +13,7 @@ WTSS(URL)
 R WTSS object associated to the service.
 }
 \description{
-Uses the WTSS services to print information and save metadata about a
-chosen cube.
+Creates a connection to a WTSS server.
 }
 \examples{
 {

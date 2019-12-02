@@ -4,21 +4,20 @@
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
 #' @description Given a tibble with a set of time series, plot them.
 #'
-#' The plot.wtss function makes an educated guess of what plot is required,
-#' based on the input data. If there are more than 10 samples, it will default to
-#' "together".
 #'
 #' @param  x            object of class "wtss"
 #' @param  y            ignored
 #' @param ...           further specifications for \link{plot}.
-#' @param  colors       Color pallete to be used (based on Color Brewer - default is "Dark2").
+#' @param  colors       Color pallete to be used (based on Color Brewer - 
+#'                      default is "Dark2").
 #' @return              Input  tibble (useful for chaining functions).
 #'
 #' @examples{
 #' # Read one time series from the WTSS server
 #' # plot one time series
 #' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
-#' ts   <- wtss::time_series(wtss, name = "MOD13Q1", attributes = c("ndvi","evi"), 
+#' ts   <- wtss::time_series(wtss, name = "MOD13Q1", 
+#'                 attributes = c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' plot(ts)
@@ -42,7 +41,8 @@ plot.wtss <- function(x, y, ..., colors = "Dark2") {
 #' @param colors      A string with the set of Brewer colors to be used for plotting.
 .wtss_ggplot_series <- function(row, colors = "Dark2") {
     # create the plot title
-    plot_title <-  paste("Location = (", row$latitude,  ", ", row$longitude, ")",sep = "")
+    plot_title <- paste("Location = (", row$latitude,  ", ", row$longitude, ")",
+                        sep = "")
     #extract the time series
     data.ts <- row$time_series
     # melt the data into long format
@@ -50,7 +50,8 @@ plot.wtss <- function(x, y, ..., colors = "Dark2") {
         reshape2::melt(id.vars = "Index") %>%
         as.data.frame()
     # plot the data with ggplot
-    g <- ggplot2::ggplot(melted.ts, ggplot2::aes(x = Index, y = value, group = variable)) +
+    g <- ggplot2::ggplot(melted.ts, 
+                         ggplot2::aes(x = Index, y = value, group = variable)) +
         ggplot2::geom_line(ggplot2::aes(color = variable)) +
         ggplot2::labs(title = plot_title) +
         ggplot2::scale_color_brewer(palette = colors)

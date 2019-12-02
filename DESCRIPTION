@@ -1,25 +1,31 @@
 Package: wtss
-Title: An R Client for a Web Time-Series Service
-Version: 1.0.1
-Authors@R: c(person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"),
-             person("Victor", "Maus", role = c("aut"), email ="vwmaus1@gmail.com"), 
-             person("Pedro", "Andrade", role = c("aut"), email ="pedro.andrade@inpe.br"), 
-             person("Alber", "Sanchez", role = c("aut"),email ="alber.ipia@inpe.br"), 
-             person("Luiz Fernando", "Assis", role = c("aut"), email ="luizffga@dpi.inpe.br"),  
-             person("Gilberto", "Ribeiro", role = c("aut"), email ="gilberto.queiroz@inpe.br"))
+Title: An R Client for Web Time-Series Service
+Version: 1.2.0
+Authors@R: c(person("Gilberto", "Ribeiro", role = c("aut"), email ="gilberto.queiroz@inpe.br"),
+             person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"),
+             person("Pedro", "Andrade", role = c("aut"), email = "pedro.andrade@inpe.br"), 
+             person("Luiz Fernando", "Assis", role = c("aut"), email ="luizffga@dpi.inpe.br"),
+             person("Rolf", "Simoes", role = c("aut"), email ="rolf.simoes@dpi.inpe.br"),          
+             person("Alber", "Sanchez", role = c("aut"), email ="alber.ipia@inpe.br"), 
+             person("Victor", "Maus", role = c("aut"), email ="vwmaus1@gmail.com")
+             )
 Maintainer: Gilberto Camara <gilberto.camara@inpe.br>
-Description: An R client that provides remote access to satellite image time series.
-  The client allows Earth observation users to obtain time series from data sets available in a Web Time Series Server. 
-  The functions include: (a) listing the data sets available in the server; 
-  (b) describing the contents of a data set; (c) retrieving a time series based on spatial location and temporal filters.  
+Description: An R client that provides remote access to satellite image time 
+    series using a web time series service. The client allows Earth observation 
+    users to obtain time series. The functions include listing the data sets 
+    available in the server, describing the contents of a data set, and 
+    retrieving a time series based on spatial location and temporal filters.
+URL: https://github.com/e-sensing/wtss/
+BugReports: https://github.com/e-sensing/wtss/issues
+ByteCompile: true
+LazyData: true
 License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 3.6.0)
 Imports:
     assertthat,
-    config,
-    data.table,
     dplyr,
+    geosphere,
     ggplot2,
     reshape2,
     jsonlite,
@@ -27,16 +33,14 @@ Imports:
     magrittr,
     purrr,
     RCurl,
-    roxygen2,
     stats,
-    stringr,
     tibble,
     zoo
-RoxygenNote: 6.1.1
-URL: https://github.com/e-sensing/wtss
-BugReports: https://github.com/e-sensing/wtss/issues
+RoxygenNote: 7.0.1
 Suggests: 
+    bfast,
     knitr,
     rmarkdown,
+    roxygen2,
     testthat
 VignetteBuilder: knitr
