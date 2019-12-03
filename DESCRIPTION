@@ -36,7 +36,7 @@ Imports:
     stats,
     tibble,
     zoo
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 Suggests: 
     bfast,
     knitr,

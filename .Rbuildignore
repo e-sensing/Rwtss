@@ -4,6 +4,8 @@ Rprofile$
 .RData$
 ^\.tmp$
 ^README\.Rmd$
+^README\.md$
 ^README_cache$
 ^doc$
 ^Meta$
+^man/figures/*$
