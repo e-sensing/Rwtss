@@ -15,10 +15,6 @@ The WTSS-R package is a front-end to the Web Time Series Service (WTSS) that off
 
 Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
 
-```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
-knitr::include_graphics(system.file("extdata/markdown/figures", "arrays.png", package = "wtss"))
-```
-
 ## Connecting to a WTSS server
 
 The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. The package informs if the connection has been correctly made.
