@@ -18,10 +18,7 @@ the same place at regular intervals. Thus measures can be calibrated so
 that observations of the same place in different times are comparable.
 These calibrated observations can be organised in regular intervals, so
 that each measure from sensor is mapped into a three dimensional
-multivariate array in
-space-time.
-
-<img src="/Users/gilberto/Library/R/3.6/library/wtss/extdata/markdown/figures/3D-Arrays.png" title="A Normalized Difference Vegetation Index (NDVI) time series" alt="A Normalized Difference Vegetation Index (NDVI) time series" style="display: block; margin: auto;" />
+multivariate array in space-time.
 
 ## Connecting to a WTSS server
 
@@ -63,7 +60,7 @@ its name. It includes its range in the spatial and temporal dimensions.
 wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 ```
 
-    ## ----------------------------------------------------------------------------------
+    ## ---------------------------------------------------------------------
     ## WTSS server URL = http://www.esensing.dpi.inpe.br/wtss/
     ## Coverage = MOD13Q1
     ## 
@@ -93,7 +90,7 @@ wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
     ## 
     ## Timeline - 452 time steps
     ## start_date: 2000-02-18 end_date: 2019-09-30
-    ## ----------------------------------------------------------------------------------
+    ## -------------------------------------------------------------------
 
     ## Coverage description saved in WTSS object
 
@@ -181,7 +178,7 @@ plotting the time series.
 plot(ts[1,])
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ## Conversion to “zoo” and “ts” formats
 
@@ -230,4 +227,4 @@ bf <- bfast::bfast01(ndvi_ts)
 plot(bf)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->

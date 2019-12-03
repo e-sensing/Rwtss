@@ -28,18 +28,17 @@ fontsize: 11pt
 graphics: yes
 mathtools: yes
 bibliography: ../inst/extdata/markdown/references-bigdata.bib
-abstract: The WTSS-R package is a front-end to the Web Time Series Service (WTSS)
-  that offers time series of remote sensing data using a simple API and is suited
-  for big data analytics. A WTSS server takes as input a n Earth observation data cube, that has
-  a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The
-  WTSS API has three commands, which are are *list_coverages*, that returns a list
-  of coverages available in the server; (b) *describe_coverage*, that that returns
-  the metadata for a given coverage; (c) *time_series*, that returns a time series
-  for a spatio-temporal location.
+abstract: The WTSS-R package is a front-end to the Web Time Series Service \\ (WTSS)
+  that offers time series of remote sensing data using a simple API. A WTSS server
+  takes as input a n Earth observation data cube, that has a spatial and a temporal
+  dimension and can have multiple bands attributes. The WTSS API has three commands,
+  which are are *list_coverages*, that returns a list of coverages available in the
+  server; (b) *describe_coverage*, that returns the metadata for a given coverage;
+  (c) *time_series*, that returns a time series for a spatio-temporal location.
 vignette: |
   %\VignetteEncoding{UTF-8} 
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{WTSS - R interface to Web Time Series Service}
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{SITS: Data Analysis and Machine Learning using Satellite Image Time Series}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -52,7 +51,7 @@ Recently, the concept of *data cubes* has emerged as a relevant paradigm for org
 Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time. Let $S = \{s_{1}, s_{2},\dotsc, s_{n}\}$ be a set of remote sensing images which shows the same region at \emph{n} consecutive times $T = \{t_{1}, t_{2}, \dotsc, t_{n}\}$. Each location \emph{[x, y, t]} of a pixel in an image (latitude, longitude, time) maps to a \emph{[i, j, k]} position in a 3D array. Each array position \emph{[i, j, k]} will be associated to a set of attributes values $A = \{a_{1}, a_{2}, \dotsc, a_{m}\}$ which are the sensor measurements at each location in space-time (see figure below}). For optical sensors, these observations are proportional to Earth's reflexion of the incoming solar radiation at different wavelengths of the electromagnetic spectrum. 
 
 ```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
-knitr::include_graphics(system.file("extdata/markdown/figures", "arrays.png", package = "wtss"))
+knitr::include_graphics(system.file("extdata/markdown/figures", "arrays.jpg", package = "wtss"))
 ```
 
 In what follows, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma [@Appel2019]: *A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:*
