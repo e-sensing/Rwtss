@@ -6,15 +6,18 @@
 #' @param URL        URL of the service provider.
 #' @return  R WTSS object associated to the service.
 #' @examples {
-#' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 #' }
 #' @export
 WTSS <- function(URL) {
+  
+  # remove trailing dash
+  URL <- .wtss_remove_trailing_dash(URL)
     
   # create a list to store the metadata
   wtss.obj <- list(url = character(), coverages = character(), 
                    description = list())
-  
+  # store the URL
   wtss.obj$url <- URL
   
   wtss.obj$coverages <- .wtss_list_coverages(wtss.obj)
@@ -117,6 +120,36 @@ describe_coverage <- function(wtss.obj, name, .print = TRUE) {
       message("Coverage description saved in WTSS object")
     
     return(invisible(TRUE))
+}
+
+#' @title Remove trailing dashes from a WTSS server address
+#' @name  .wtss_remove_trailing_dash
+#'
+#' @description The WTSS URL cannot have a trailing dash. This functions checks
+#' and removes it, if present.
+#' 
+#' @param URL         A WTSS URL
+#' @return            URL without trailing dash
+
+.wtss_remove_trailing_dash <- function(URL) {
+  
+    # find the length of the URL 
+    url_length   <- stringr::str_length(URL)
+    # locate all dashes in URL and return a data frame
+    url_loc_dash <- stringr::str_locate_all(URL, "/")[[1]]
+    # find out how many rows are there (one row for each dash)
+    nrow_ld <- nrow(url_loc_dash)
+    
+    # find the location of the last dash
+    lg <- as.numeric(url_loc_dash[nrow_ld, "start"])
+    # create a retrun variable
+    url_new <- URL
+    
+    # if there is a trailing dash, remove it
+    if (lg == url_length)
+      url_new <- stringr::str_sub(URL, end = (url_length - 1))
+  
+    return(url_new)
 }
 
 

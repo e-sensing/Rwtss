@@ -36,7 +36,8 @@ time_series <- function(wtss.obj,
     # if it is an URL, try to create a WTSS object
     # 
     if (!("wtss" %in% class(wtss.obj))) {
-        URL <- wtss.obj # the parameter should be a URL or a wtss object
+        URL <- wtss.obj # the parameter should be a URL
+        URL <- .wtss_remove_trailing_dash(URL)
         wtss.obj <- wtss::WTSS(URL)
         assertthat::assert_that(!purrr::is_null(wtss.obj),
             msg = "WTSS - invalid URL for WTSS server")
@@ -129,7 +130,8 @@ time_series <- function(wtss.obj,
     ts.tb <- .wtss_to_tibble(result, name, attributes, longitude, latitude, 
                              start_date, end_date, desc)
                 
-    class(ts.tb) <- append(class(ts.tb), "wtss", after = 0)
+    class(ts.tb) <- append(class(ts.tb), c("wtss", "sits", "sits_ts_tbl"), 
+                           after = 0)
     return(ts.tb)
 }
 

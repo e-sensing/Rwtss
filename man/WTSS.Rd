@@ -17,6 +17,6 @@ Creates a connection to a WTSS server.
 }
 \examples{
 {
-wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 }
 }

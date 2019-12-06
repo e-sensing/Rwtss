@@ -16,7 +16,6 @@
                              coverage    = character(),
                              time_series = list()
     )
-    class(result) <- append(class(result), "sits", after = 0)
     return(result)
 }
 

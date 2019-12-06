@@ -34,6 +34,7 @@ Imports:
     purrr,
     RCurl,
     stats,
+    stringr,
     tibble,
     zoo
 RoxygenNote: 7.0.2
