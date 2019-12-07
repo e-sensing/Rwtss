@@ -33,6 +33,10 @@
     maximum_values        <- t$valid_range$max
     names(maximum_values) <- t$name
     
+    # correct errors in scale factors
+    if (all(scale_factors == 1))
+        scale_factors <- 1/maximum_values
+    
     # Spatial extent
     xmin <- cov$spatial_extent$xmin
     ymin <- cov$spatial_extent$ymin
@@ -141,17 +145,28 @@
 #' @param xres      xres of the coverage
 #' @return          Satellite sensor pair
 .wtss_guess_satellite <- function(xres) {
-    # approximate resolution of the coverage 
-    res_m <- geosphere::distGeo(p1 = c(0.0, 0.0), p2 = c(xres, 0.00))
+    
+    if (xres < 1.0 ) {
+        # assume that xres is given in decimal degrees
+        # approximate resolution of the coverage 
+        res_m <- geosphere::distGeo(p1 = c(0.0, 0.0), p2 = c(xres, 0.00))
+    }
+    else
+        res_m <- xres
     
     #try to guess the satellite
     if (res_m > 200.0 && res_m < 2000.0) {
         sat_sensor <- c("TERRA", "MODIS")
     }
+    else if (res_m > 60.00 && res_m < 80.0)
+        sat_sensor <- c("CBERS", "AWFI")
     else if (res_m > 25.00 && res_m < 35.0)
         sat_sensor <- c("LANDSAT", "OLI")
-    else
+    else if (res_m < 25.00 && res_m > 5.0)
+        sat_sensor <- c("SENTINEL-2", "MSI")
+    else 
         sat_sensor <- c("UNKNOWN", "UNKNOWN")
+
     
     names(sat_sensor) <-  c("satellite", "sensor")
     

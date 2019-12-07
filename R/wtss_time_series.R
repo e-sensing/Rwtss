@@ -166,15 +166,17 @@ time_series <- function(wtss.obj,
     # convert string into date format
     timeline <- unlist(strsplit(items$result$timeline, split = " "))
     
-    # check date format
-    format <- lubridate::guess_formats(timeline[1], c("%Y-%m-%d", "%Y-%m"))
+    # # check date format
+    # format <- lubridate::guess_formats(timeline[1], c("%Y-%m-%d", "%Y-%m"))
+    # 
+    # # if monthly date
+    # if (any(format == "%Y-%m"))
+    #     timeline <- as.Date(zoo::as.yearmon(timeline))
+    # else # if weekly or daily date
+    #     if (any(format == "%Y-%m-%d"))
+    #         timeline <- as.Date(timeline, format)
     
-    # if monthly date
-    if (any(format == "%Y-%m"))
-        timeline <- as.Date(zoo::as.yearmon(timeline))
-    else # if weekly or daily date
-        if (any(format == "%Y-%m-%d"))
-            timeline <- as.Date(timeline, format)
+    timeline <- lubridate::as_date(timeline)
     
     return(list(center_coordinate = 
                     data.frame(longitude = items$result$coordinates$longitude, 
