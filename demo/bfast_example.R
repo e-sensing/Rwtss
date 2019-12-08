@@ -20,8 +20,7 @@ cv <- wtss::describe_coverage(server,c("MOD13Q1"))
 
 # get a time series for the "ndvi" attribute
 ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
-                         latitude = -10.408, longitude = -53.495, 
-                         start = "2000-02-18", end = "2016-01-01")
+                         latitude = -10.408, longitude = -53.495)
 
 # plot the time-series
 plot(ndvi_wtss)

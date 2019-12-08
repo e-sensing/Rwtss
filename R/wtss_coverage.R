@@ -81,7 +81,7 @@
                              yres           = yres,
                              crs            = crs)
     
-    class(cov.tb) <- append(class(cov.tb), "coverage", after = 0)
+    class(cov.tb) <- append(class(cov.tb), c("sits", "sits_cube_tbl"), after = 0)
     
     return(cov.tb)
 }
@@ -89,7 +89,7 @@
 .wtss_print_coverage <- function(cov.tb){
     cat("---------------------------------------------------------------------")
     cat(paste0("\nWTSS server URL = ", cov.tb$URL, "\n"))
-    cat(paste0("Coverage = ", cov.tb$name))
+    cat(paste0("Cube (coverage) = ", cov.tb$name))
     
     print(knitr::kable(dplyr::select(cov.tb, satellite, sensor, bands), 
                        padding = 0))

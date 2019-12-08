@@ -13,6 +13,7 @@
                              latitude    = double(),
                              start_date  = as.Date(character()),
                              end_date    = as.Date(character()),
+                             label       = character(),
                              coverage    = character(),
                              time_series = list()
     )
@@ -70,12 +71,13 @@
     data <- .wtss_tibble()
     # add one row to the tibble
     data <- tibble::add_row(data,
-                               longitude,
-                               latitude,
-                               start_date  = start_date,
-                               end_date    = end_date,
-                               coverage    = name,
-                               time_series = ts.lst)
+                            longitude,
+                            latitude,
+                            start_date  = start_date,
+                            end_date    = end_date,
+                            label      = c("NoClass"),
+                            coverage    = name,
+                            time_series = ts.lst)
     
     # return the tibble with the time series
     return(tibble::as_tibble(data))

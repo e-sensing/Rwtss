@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 
 ## About the package
 
-The WTSS-R package is a front-end to the Web Time Series Service (WTSS) that offers time series of remote sensing data using a simple API. A WTSS server takes as input an Earth observation data cube, that has a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The WTSS API has three commands, which are are *list_coverages*, that returns a list of coverages available in the server; (b) *describe_coverage*, that that returns the metadata for a given coverage; (c) *time_series*, that returns a time series for a spatio-temporal location.
+The WTSS-R package is a front-end to the Web Time Series Service (WTSS) that offers time series of remote sensing data using a simple API. A WTSS server takes as input an Earth observation data cube, that has a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The WTSS API has three commands, which are are (a) *list_coverages*, that returns a list of coverages available in the server; (b) *describe_coverage*, that that returns the metadata for a given coverage; (c) *time_series*, that returns a time series for a spatio-temporal location.
 
-Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
+The R interface to WTSS services considers that "coverages" are equivalent to "data cubes". Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
 
 ## Connecting to a WTSS server
 
@@ -55,7 +55,7 @@ wtss_inpe$description
 
 ## Obtaining a time series 
 
-This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
 *end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
 
 ```{r}
@@ -69,6 +69,8 @@ ts
 
 
 The result of the operation is a `tibble` which contains data and metadata. The first six columns contain the metadata: satellite, sensor, spatial and temporal information, and the coverage from where the data has been extracted. The spatial location is given in longitude and latitude coordinates for the "WGS84" ellipsoid. The `time_series` column contains the time series data for each spatiotemporal location. This data is also organized as a tibble, with a column with the dates and the other columns with the values for each spectral band. 
+
+For compatibility with the **sits** suite of packages for satellite image time series analysis, the R interface to the WTSS packages uses the term "cube" to refer to the contents of the coverage. The time series retrieved from WTSS also include a "label" column, to be use for assigning labels to time series samples that are used to train classifiers.
 
 ```{r}
 # Showing the contents of a time series
