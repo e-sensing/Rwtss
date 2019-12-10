@@ -4,10 +4,12 @@
 \alias{WTSS}
 \title{Creates a WTSS object}
 \usage{
-WTSS(URL)
+WTSS(URL, .show_msg = TRUE)
 }
 \arguments{
 \item{URL}{URL of the service provider.}
+
+\item{.show_msg}{Show connection message}
 }
 \value{
 R WTSS object associated to the service.

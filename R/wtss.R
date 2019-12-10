@@ -4,12 +4,13 @@
 #' @description Creates a connection to a WTSS server.
 #'
 #' @param URL        URL of the service provider.
+#' @param .show_msg  Show connection message
 #' @return  R WTSS object associated to the service.
 #' @examples {
 #' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 #' }
 #' @export
-WTSS <- function(URL) {
+WTSS <- function(URL, .show_msg = TRUE) {
   
   # remove trailing dash
   URL <- .wtss_remove_trailing_dash(URL)
@@ -27,7 +28,8 @@ WTSS <- function(URL) {
     return(NULL)
   }
   class(wtss.obj) <- append(class(wtss.obj), "wtss", after = 0)
-  message(paste0("Connected to WTSS server at ", URL))
+  if (.show_msg)
+      message(paste0("Connected to WTSS server at ", URL))
   return(wtss.obj)
 }
 

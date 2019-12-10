@@ -38,7 +38,7 @@ time_series <- function(wtss.obj,
     if (!("wtss" %in% class(wtss.obj))) {
         URL <- wtss.obj # the parameter should be a URL
         URL <- .wtss_remove_trailing_dash(URL)
-        wtss.obj <- wtss::WTSS(URL)
+        wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
         assertthat::assert_that(!purrr::is_null(wtss.obj),
             msg = "WTSS - invalid URL for WTSS server")
 
