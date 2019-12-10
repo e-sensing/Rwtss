@@ -14,7 +14,7 @@
                              start_date  = as.Date(character()),
                              end_date    = as.Date(character()),
                              label       = character(),
-                             coverage    = character(),
+                             cube        = character(),
                              time_series = list()
     )
     return(result)
@@ -75,8 +75,8 @@
                             latitude,
                             start_date  = start_date,
                             end_date    = end_date,
-                            label      = c("NoClass"),
-                            coverage    = name,
+                            label       = c("NoClass"),
+                            cube        = name,
                             time_series = ts.lst)
     
     # return the tibble with the time series
