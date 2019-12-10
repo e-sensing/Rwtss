@@ -112,24 +112,24 @@ time_series <- function(wtss.obj,
                      "&start_date=", start_date, 
                      "&end_date=", end_date, sep = "")
                 
-    # try only 10 times (avoid time out connection)
-    while (purrr::is_null(items) && ce < 10) {
-        items <- .wtss_parse_json(.wtss_send_request(request))
-        ce <- ce + 1
-    }
+    # send a request to the WTSS server
+    response <- .wtss_send_request(request)
+    # parse the response 
+    items <- .wtss_parse_json(response)
                 
     # if the server does not answer any item
     assertthat::assert_that(!purrr::is_null(items),
                             msg = "Server connection timeout. 
                             Verify the URL or try again later.")
-                
+    
+    # process the response         
     result <- list(.wtss_time_series_processing(items))
                 
     names(result) <- name
-    
+    # convert to tibble 
     ts.tb <- .wtss_to_tibble(result, name, attributes, longitude, latitude, 
                              start_date, end_date, desc)
-                
+    #append class         
     class(ts.tb) <- append(class(ts.tb), c("wtss", "sits", "sits_ts_tbl"), 
                            after = 0)
     return(ts.tb)

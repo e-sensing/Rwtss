@@ -1,11 +1,35 @@
 #' @title Send a request to WTSS server
 #' @name .wtss_send_request
 #'
+#' @description Sends a request to the WTSS server and times out after 10 tries
+#'
+#' @param request   valid request according to the WTSS protocol
+#' @return  response from the server
+#' 
+#' 
+.wtss_send_request <- function(request) {
+    
+    response <- NULL 
+    ce <- 0
+    # try 10 times (avoid time out connection)
+    while (purrr::is_null(response) & ce < 10) {
+        response <- .wtss_get_response(request)
+        ce <- ce + 1
+    }
+    assertthat::assert_that(!purrr::is_null(response),
+         msg = "WTSS - The URL server may be incorrect or the service 
+                     may be temporarily unavailable")
+    
+    return(response)
+}
+#' @title Get a response to the WTSS server
+#' @name .wtss_get_response 
+#'
 #' @description Sends a request to the WTSS server and gets a response
 #'
 #' @param request   valid request according to the WTSS protocol
 #' @return  response from the server
-.wtss_send_request <- function(request) {
+.wtss_get_response <- function(request) {
     
     # check if URL exists and perform the request
     tryCatch(response <- RCurl::getURL(request), 
