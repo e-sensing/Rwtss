@@ -72,11 +72,11 @@ time_series <- function(wtss.obj,
     }
                             
     # check bounds for latitude and longitude
-    if (longitude > desc$xmin || longitude < desc$xmax) {
+    if (longitude < desc$xmin || longitude > desc$xmax) {
         message("WTSS - invalid longitude value") 
         return(NULL)
     }
-    if (latitude > desc$ymin || latitude < desc$ymax) {
+    if (latitude < desc$ymin || latitude > desc$ymax) {
         message("WTSS - invalid latitude value")
         return(NULL)
     }
@@ -92,16 +92,16 @@ time_series <- function(wtss.obj,
         end_date <-  lubridate::as_date(timeline[n_dates])
     
     # test is start date is valid
-    if (lubridate::as_date(start_date) >= lubridate::as_date(timeline[1]) &&
-     lubridate::as_date(start_date) < lubridate::as_date(timeline[n_dates])) {
+    if (lubridate::as_date(start_date) < lubridate::as_date(timeline[1]) ||
+     lubridate::as_date(start_date) > lubridate::as_date(timeline[n_dates])) {
         message("WTSS - invalid start date")
         return(NULL)
     }
 
     # test if end date is valid
-    if (lubridate::as_date(end_date) >  lubridate::as_date(timeline[1]) &&
-        lubridate::as_date(end_date) <= lubridate::as_date(timeline[n_dates]) &&
-        lubridate::as_date(end_date) >  lubridate::as_date(start_date)) {
+    if (lubridate::as_date(end_date) <  lubridate::as_date(timeline[1]) ||
+        lubridate::as_date(end_date) >  lubridate::as_date(timeline[n_dates]) ||
+        lubridate::as_date(end_date) <  lubridate::as_date(start_date)) {
         message("WTSS - invalid end date")
         return(NULL)
     }
