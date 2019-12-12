@@ -32,7 +32,7 @@ depending on the coverage.}
 depending on the coverage.}
 }
 \value{
-time series in a tibble format
+time series in a tibble format (NULL )
 }
 \description{
 Retrieves the time series for a pair of coordinates

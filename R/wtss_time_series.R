@@ -12,7 +12,7 @@
 #'                      depending on the coverage.
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
 #'                      depending on the coverage.
-#' @return              time series in a tibble format
+#' @return              time series in a tibble format (NULL )
 #' @examples {
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
@@ -66,16 +66,21 @@ time_series <- function(wtss.obj,
     cov_bands <- desc$bands[[1]]
     if (purrr::is_null(attributes))
         attributes <- cov_bands
-    
-    assertthat::assert_that(all(attributes %in% cov_bands),
-                            msg = "WTSS - attributes not available.")
-    
+    if (!all(attributes %in% cov_bands)) {
+        message("WTSS - attributes not available.")
+        return(NULL)
+    }
+                            
     # check bounds for latitude and longitude
-    assertthat::assert_that(longitude > desc$xmin && longitude < desc$xmax,
-                            msg = "WTSS - invalid longitude value")
-    
-    assertthat::assert_that(latitude > desc$ymin && latitude < desc$ymax,
-                            msg = "WTSS - invalid latitude value")
+    if (longitude > desc$xmin || longitude < desc$xmax) {
+        message("WTSS - invalid longitude value") 
+        return(NULL)
+    }
+    if (latitude > desc$ymin || latitude < desc$ymax) {
+        message("WTSS - invalid latitude value")
+        return(NULL)
+    }
+
     
     # check start and end date
     timeline <- desc$timeline[[1]]
@@ -85,27 +90,26 @@ time_series <- function(wtss.obj,
         start_date <-  lubridate::as_date(timeline[1])
     if (purrr::is_null(end_date))
         end_date <-  lubridate::as_date(timeline[n_dates])
+    
     # test is start date is valid
-    assertthat::assert_that(lubridate::as_date(start_date) >= 
-                                lubridate::as_date(timeline[1]) &&
-                            lubridate::as_date(start_date) < 
-                                lubridate::as_date(timeline[n_dates]),
-                            msg = "WTSS - invalid start date")
-    
+    if (lubridate::as_date(start_date) >= lubridate::as_date(timeline[1]) &&
+     lubridate::as_date(start_date) < lubridate::as_date(timeline[n_dates])) {
+        message("WTSS - invalid start date")
+        return(NULL)
+    }
+
     # test if end date is valid
-    assertthat::assert_that(lubridate::as_date(end_date) >  
-                                lubridate::as_date(timeline[1]) &&
-                            lubridate::as_date(end_date) <= 
-                                lubridate::as_date(timeline[n_dates]) &&
-                            lubridate::as_date(end_date) >  
-                                lubridate::as_date(start_date),
-                            msg = "WTSS - invalid end date")
-    
+    if (lubridate::as_date(end_date) >  lubridate::as_date(timeline[1]) &&
+        lubridate::as_date(end_date) <= lubridate::as_date(timeline[n_dates]) &&
+        lubridate::as_date(end_date) >  lubridate::as_date(start_date)) {
+        message("WTSS - invalid end date")
+        return(NULL)
+    }
     items <- NULL
     ce <- 0
     
     URL <- wtss.obj$url
-    # try to retrive the time series 
+    # try to retrieve the time series 
     request <- paste(URL,"/time_series?coverage=", name, "&attributes=", 
                      paste(attributes, collapse = ","),
                      "&longitude=", longitude, "&latitude=", latitude,
