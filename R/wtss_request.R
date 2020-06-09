@@ -13,9 +13,9 @@
         response <- .wtss_get_response(request)
         ce <- ce + 1
     }
-    assertthat::assert_that(!purrr::is_null(response),
-         msg = "WTSS - The URL server may be incorrect or the service 
-                     may be temporarily unavailable")
+
+    if(purrr::is_null(response))
+        message("WTSS server not responding - please check URL")
     
     return(response)
 }
@@ -29,11 +29,10 @@
 #' @return  response from the server
 .wtss_get_response <- function(request) {
     # check if URL exists and perform the request
+    response <- NULL
+
     tryCatch(response <- RCurl::getURL(request), 
              error = function(e) {
-                 e$message <- paste("HTTP request failed. 
-                              The URL server may be incorrect or the service 
-                              may be temporarily unavailable.")
                  return(NULL)
              })
 
@@ -49,7 +48,7 @@
 #' @return  parsed JSON document
 .wtss_parse_json <- function(response) {
     # validate json
-    if (jsonlite::validate(response)) {
+    if (!purrr::is_null(response) && jsonlite::validate(response)) {
         json_response <- jsonlite::fromJSON(response)
         
         if ("exception" %in% names(json_response))
@@ -58,5 +57,8 @@
     else
         json_response <- NULL
 
+    if(purrr::is_null(json_response))
+        message("Server does not return a valid JSON - please check URL")
+        
     return(json_response)
 }

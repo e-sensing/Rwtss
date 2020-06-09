@@ -1,4 +1,5 @@
 context("WTSS service")
+
 test_that("Connection to a WTSS service", {
     wtss1 <-  wtss::WTSS()
     if(is.null(wtss1)) return()
@@ -6,11 +7,17 @@ test_that("Connection to a WTSS service", {
     coverages <- wtss1$coverages
     expect_true("MOD13Q1" %in% coverages)
 })
+
 test_that("Bad connection to a WTSS service", {
+    URL <- "http://www.dpi.inpe.br2/wtss/"
+
+    expect_message(wtss::WTSS(URL), "WTSS server not responding - please check URL\n")
+    expect_true(purrr::is_null(wtss::WTSS(URL)))
+
     URL <- "http://www.dpi.inpe.br/wtss/"
-    expect_message(wtss1 <- wtss::WTSS(URL), 
-                   "WTSS server not responding - please check URL")
-    expect_true(purrr::is_null(wtss1))
+        
+    expect_message(wtss::WTSS(URL), "Server does not return a valid JSON - please check URL\n")
+    expect_true(purrr::is_null(wtss::WTSS(URL)))
 })
 
 test_that("List coverages", {
@@ -92,7 +99,6 @@ test_that("Time Series - errors", {
                                          longitude = -45.00, latitude  = -12.00,
                                          start_date = "2010-01-01", 
                                          end_date   = "2005-01-01"))
-
 })
 
 test_that("Time Series - conversion to ts and zoo", {

@@ -22,10 +22,9 @@ WTSS <- function(URL = "http://www.esensing.dpi.inpe.br/wtss", .show_msg = TRUE)
   
   wtss.obj$coverages <- .wtss_list_coverages(wtss.obj)
   
-  if (purrr::is_null(wtss.obj$coverages)) {
-    message("WTSS server not responding - please check URL")
+  if (purrr::is_null(wtss.obj$coverages))
     return(NULL)
-  }
+
   class(wtss.obj) <- append(class(wtss.obj), "wtss", after = 0)
   if (.show_msg)
       message(paste0("Connected to WTSS server at ", URL))
