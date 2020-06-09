@@ -3,15 +3,14 @@
 #'
 #' @description Creates a connection to a WTSS server.
 #'
-#' @param URL        URL of the service provider.
+#' @param URL        URL of the service provider. The default value is
+#' "http://www.esensing.dpi.inpe.br/wtss".
 #' @param .show_msg  Show connection message
 #' @return  R WTSS object associated to the service.
-#' @examples {
-#' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' }
+#' @examples
+#' wtss <-  wtss::WTSS()
 #' @export
-WTSS <- function(URL, .show_msg = TRUE) {
-  
+WTSS <- function(URL = "http://www.esensing.dpi.inpe.br/wtss", .show_msg = TRUE) {
   # remove trailing dash
   URL <- .wtss_remove_trailing_dash(URL)
     
@@ -41,7 +40,7 @@ WTSS <- function(URL, .show_msg = TRUE) {
 #' @param wtss.obj       WTSS object
 #' @return               NULL if fails, TRUE if works
 #' @examples {
-#' wtss <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <-  WTSS()
 #' list_coverages(wtss)
 #' }
 #' @export
@@ -75,8 +74,8 @@ list_coverages <- function(wtss.obj) {
 #' @return            NULL if fails, TRUE if works
 #' 
 #' @examples
-#' wtss  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
 #' describe_coverage(wtss, wtss$coverages[1])
+#' wtss  <-  WTSS()
 #' @export
 describe_coverage <- function(wtss.obj, name, .print = TRUE) {
     assertthat::assert_that(length(name) == 1, 

@@ -15,7 +15,7 @@
 #' @return              time series in a tibble format (NULL )
 #' @examples {
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
 #' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
@@ -189,7 +189,7 @@ time_series <- function(wtss.obj,
 #' @return            List of time series in zoo format.
 #' @examples {
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
@@ -239,7 +239,7 @@ wtss_to_zoo <- function(data, band = NULL){
 #' @return               A time series in the ts format.
 #' @examples {
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,

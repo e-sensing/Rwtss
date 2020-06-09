@@ -35,7 +35,7 @@ informs if the connection has been correctly made.
 
 ``` r
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+wtss_inpe <-  wtss::WTSS()
 #> Connected to WTSS server at http://www.esensing.dpi.inpe.br/wtss/
 ```
 
@@ -200,7 +200,7 @@ library(bfast)
 #>   fitted.fracdiff    fracdiff
 #>   residuals.fracdiff fracdiff
 # create a connection using a serverUrl
-server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+server <-  wtss::WTSS()
 #> Connected to WTSS server at http://www.esensing.dpi.inpe.br/wtss/
 
 # get a time series for the "ndvi" attribute

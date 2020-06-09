@@ -10,7 +10,7 @@ library(changepoint)
 library(wtss)
 
 # create a connection using a serverUrl
-server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+server <-  wtss::WTSS()
 
 # get the list of coverages provided by the service
 coverages <- wtss::list_coverages(server)
