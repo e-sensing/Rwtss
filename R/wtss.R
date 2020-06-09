@@ -76,6 +76,11 @@ list_coverages <- function(wtss.obj) {
 #' describe_coverage(wtss, "MOD13Q1")
 #' @export
 describe_coverage <- function(wtss.obj, name, .print = TRUE) {
+  if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
+    message("WTSS - server URL not working") 
+    return(NULL)
+  }
+  
     assertthat::assert_that(length(name) == 1, 
                 msg = "WTSS - select only one coverage to describe")
     result <- NULL

@@ -28,6 +28,11 @@ time_series <- function(wtss.obj,
                         latitude,
                         start_date = NULL,
                         end_date   = NULL) {
+    if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
+        message("WTSS - server URL not working") 
+        return(NULL)
+    }
+
     # is the object already a WTSS object or just a URL?
     # if it is an URL, try to create a WTSS object
     if (!("wtss" %in% class(wtss.obj))) {
@@ -116,8 +121,7 @@ time_series <- function(wtss.obj,
                 
     # if the server does not answer any item
     assertthat::assert_that(!purrr::is_null(items),
-                            msg = "Server connection timeout. 
-                            Verify the URL or try again later.")
+                            msg = "Server connection timeout.\nVerify the URL or try again later.")
     
     # process the response         
     result <- list(.wtss_time_series_processing(items))
