@@ -36,7 +36,7 @@
                               may be temporarily unavailable.")
                  return(NULL)
              })
-    
+
     return(response)
 }
 
@@ -57,6 +57,6 @@
     }
     else
         json_response <- NULL
-    
+
     return(json_response)
 }

@@ -114,7 +114,6 @@
 #' @param wtss.obj      WTSS object associated to the service
 #' @return              updated WTSS object.
 .wtss_list_coverages <- function(wtss.obj) {
-
     items <- NULL
     ce <- 0
     

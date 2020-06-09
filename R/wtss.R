@@ -39,10 +39,9 @@ WTSS <- function(URL = "http://www.esensing.dpi.inpe.br/wtss", .show_msg = TRUE)
 #'
 #' @param wtss.obj       WTSS object
 #' @return               NULL if fails, TRUE if works
-#' @examples {
+#' @examples
 #' wtss <-  WTSS()
 #' list_coverages(wtss)
-#' }
 #' @export
 list_coverages <- function(wtss.obj) {
     if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {

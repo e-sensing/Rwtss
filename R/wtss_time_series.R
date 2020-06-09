@@ -13,15 +13,14 @@
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
 #'                      depending on the coverage.
 #' @return              time series in a tibble format (NULL )
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS()
 #' # retrieve a time series
-#' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi", "evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
-#' }
-#'@export 
+#'@export
 time_series <- function(wtss.obj,
                         name,
                         attributes = NULL,
@@ -187,7 +186,7 @@ time_series <- function(wtss.obj,
 #' @param  band       Name of the band to be exported 
 #'                    (if NULL all bands are exported).
 #' @return            List of time series in zoo format.
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS()
 #' # retrieve a time series
@@ -196,7 +195,6 @@ time_series <- function(wtss.obj,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to zoo
 #' zoo.lst <- wtss::wtss_to_zoo(ts_wtss)
-#' }
 #' @export
 wtss_to_zoo <- function(data, band = NULL){
     # only convert one row at a time
@@ -237,7 +235,7 @@ wtss_to_zoo <- function(data, band = NULL){
 #'                       c("years", "quarters", "months", "weeks", "days") or
 #'                       c(1, 4, 12, 52)
 #' @return               A time series in the ts format.
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
 #' wtss <- wtss::WTSS()
 #' # retrieve a time series
@@ -246,7 +244,6 @@ wtss_to_zoo <- function(data, band = NULL){
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to ts
 #' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
-#' }
 #' @export
 wtss_to_ts <- function(data, band  = NULL, period = "week"){
     # only convert one row at a time

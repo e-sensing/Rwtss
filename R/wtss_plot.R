@@ -12,7 +12,7 @@
 #'                      default is "Dark2").
 #' @return              Input  tibble (useful for chaining functions).
 #'
-#' @examples{
+#' @examples
 #' # Read one time series from the WTSS server
 #' # plot one time series
 #' wtss <- wtss::WTSS()
@@ -21,7 +21,6 @@
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' plot(ts)
-#' }
 #' @export
 plot.wtss <- function(x, y, ..., colors = "Dark2") {
     data <- tibble::as_tibble(x)
