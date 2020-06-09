@@ -22,7 +22,6 @@
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' }
 #'@export 
-
 time_series <- function(wtss.obj,
                         name,
                         attributes = NULL,
@@ -30,21 +29,17 @@ time_series <- function(wtss.obj,
                         latitude,
                         start_date = NULL,
                         end_date   = NULL) {
-    
     # is the object already a WTSS object or just a URL?
-    # 
     # if it is an URL, try to create a WTSS object
-    # 
     if (!("wtss" %in% class(wtss.obj))) {
         URL <- wtss.obj # the parameter should be a URL
         URL <- .wtss_remove_trailing_dash(URL)
         wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
         assertthat::assert_that(!purrr::is_null(wtss.obj),
             msg = "WTSS - invalid URL for WTSS server")
-
     }
+
     # is there a coverage with this name in the WTSS service?
-    # 
     assertthat::assert_that(name %in% wtss.obj$coverages,
         msg = paste0("WTSS - coverage", name, 
                      "not available in the WTSS server"))
@@ -81,7 +76,6 @@ time_series <- function(wtss.obj,
         return(NULL)
     }
 
-    
     # check start and end date
     timeline <- desc$timeline[[1]]
     n_dates  <- length(timeline)
@@ -144,12 +138,8 @@ time_series <- function(wtss.obj,
 #' 
 #' @param items  Items retrieved from WTSS server
 #' @return tibble with a time series 
-#' 
-
 .wtss_time_series_processing <- function(items) {
-    
     attr_list <- list(items$result$attributes)
-    
     
     attr.processed <- purrr::map(attr_list, function(subdataset) {
         # assign attribute values 
@@ -162,7 +152,6 @@ time_series <- function(wtss.obj,
         names(value) <- subdataset$attribute
         
         return(value)
-        
     })
     
     attr.processed <- data.frame(attr.processed, stringsAsFactors = FALSE)
@@ -186,8 +175,8 @@ time_series <- function(wtss.obj,
                     data.frame(longitude = items$result$coordinates$longitude, 
                                latitude  = items$result$coordinates$latitude), 
                 attributes = zoo::zoo(attr.processed, timeline)))
-    
 }
+
 #' @title Export data to be used to the zoo format
 #' @name wtss_to_zoo
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
@@ -337,4 +326,3 @@ wtss_to_ts <- function(data, band  = NULL, period = "week"){
     
     return(ts_ts)
 }
-

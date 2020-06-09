@@ -24,12 +24,12 @@
 #' }
 #' @export
 plot.wtss <- function(x, y, ..., colors = "Dark2") {
-    
     data <- tibble::as_tibble(x)
     purrr::map(list(data), function(row) .wtss_ggplot_series(row, colors))
     # return the original tibble - useful for chaining
     return(invisible(data))
 }
+
 #' @title Plot one timeSeries using ggplot
 #'
 #' @name .wtss_ggplot_series

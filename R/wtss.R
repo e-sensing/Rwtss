@@ -123,8 +123,3 @@ describe_coverage <- function(wtss.obj, name, .print = TRUE) {
     
     return(invisible(TRUE))
 }
-
-
-
-
-

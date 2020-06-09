@@ -35,7 +35,6 @@
 #' @param end_date      End date of the time series
 #' @param cov_desc      Description of the WTSS coverage
 #' @return Time series in sits tibble format.
-#'
 .wtss_to_tibble <- function(ts, name, bands, longitude, latitude, 
                             start_date, end_date, cov_desc) {
     # retrieve the time series information

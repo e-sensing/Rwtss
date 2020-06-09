@@ -4,7 +4,6 @@
 #' @description creates a tibble to store the description of the WTSS coverage
 #' @param wtss.obj  valid WTSS object
 #' @param cov       coverage response provided by WTSS service
-#' 
 .wtss_coverage_description <- function(wtss.obj, cov){
     
     # retri
@@ -106,6 +105,7 @@
                " end_date: ", timeline[n_time_steps],"\n"))
     cat("-------------------------------------------------------------------\n")
 }
+
 #' @title Retrieves the list of cubes from the URL server
 #' @name .wtss_list_coverages
 #'
@@ -114,7 +114,7 @@
 #' @param wtss.obj      WTSS object associated to the service
 #' @return              updated WTSS object.
 .wtss_list_coverages <- function(wtss.obj) {
-    
+
     items <- NULL
     ce <- 0
     
@@ -136,6 +136,7 @@
     # if the server answers correctly
     return(items$coverages)
 }
+
 #' @title Try a best guess for the type of sensor/satellite
 #' @name .wtss_guess_satellite
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
@@ -145,7 +146,6 @@
 #' @param xres      xres of the coverage
 #' @return          Satellite sensor pair
 .wtss_guess_satellite <- function(xres) {
-    
     if (xres < 1.0 ) {
         # assume that xres is given in decimal degrees
         # approximate resolution of the coverage 
@@ -172,6 +172,7 @@
     
     return(sat_sensor)
 }
+
 #' @title Remove trailing dashes from a WTSS server address
 #' @name  .wtss_remove_trailing_dash
 #'
@@ -180,9 +181,7 @@
 #' 
 #' @param URL         A WTSS URL
 #' @return            URL without trailing dash
-
 .wtss_remove_trailing_dash <- function(URL) {
-    
     # find the length of the URL 
     url_length   <- stringr::str_length(URL)
     # locate all dashes in URL and return a data frame
