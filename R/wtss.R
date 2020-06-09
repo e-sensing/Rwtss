@@ -73,8 +73,8 @@ list_coverages <- function(wtss.obj) {
 #' @return            NULL if fails, TRUE if works
 #' 
 #' @examples
-#' describe_coverage(wtss, wtss$coverages[1])
 #' wtss  <-  WTSS()
+#' describe_coverage(wtss, "MOD13Q1")
 #' @export
 describe_coverage <- function(wtss.obj, name, .print = TRUE) {
     assertthat::assert_that(length(name) == 1, 
