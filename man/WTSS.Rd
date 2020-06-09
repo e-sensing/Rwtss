@@ -4,10 +4,11 @@
 \alias{WTSS}
 \title{Creates a WTSS object}
 \usage{
-WTSS(URL, .show_msg = TRUE)
+WTSS(URL = "http://www.esensing.dpi.inpe.br/wtss", .show_msg = TRUE)
 }
 \arguments{
-\item{URL}{URL of the service provider.}
+\item{URL}{URL of the service provider. The default value is
+"http://www.esensing.dpi.inpe.br/wtss".}
 
 \item{.show_msg}{Show connection message}
 }
@@ -18,7 +19,5 @@ R WTSS object associated to the service.
 Creates a connection to a WTSS server.
 }
 \examples{
-{
-wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-}
+wtss <-  wtss::WTSS()
 }
