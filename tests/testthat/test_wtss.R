@@ -1,7 +1,8 @@
 context("WTSS service")
 test_that("Connection to a WTSS service", {
-    URL <- "http://www.esensing.dpi.inpe.br/wtss/"
-    wtss1 <-  wtss::WTSS(URL) 
+    wtss1 <-  wtss::WTSS()
+    if(is.null(wtss1)) return()
+
     coverages <- wtss1$coverages
     expect_true("MOD13Q1" %in% coverages)
 })
@@ -13,16 +14,18 @@ test_that("Bad connection to a WTSS service", {
 })
 
 test_that("List coverages", {
-    URL   <- "http://www.esensing.dpi.inpe.br/wtss/"
-    wtss2 <-  wtss::WTSS(URL) 
+    wtss2 <-  wtss::WTSS()
+    if(is.null(wtss2)) return()
+
     output <- capture.output(wtss::list_coverages(wtss2))
     expect_true(as.logical(grep(wtss2$url, output[2])))
     expect_true(as.logical(grep(wtss2$coverages[1], output[3])))
 })
 
 test_that("Describe coverage", {
-    URL   <- "http://www.esensing.dpi.inpe.br/wtss/"
-    wtss3 <-  wtss::WTSS(URL) 
+    wtss3 <-  wtss::WTSS()
+    if(is.null(wtss3)) return()
+
     output <- capture.output(wtss::describe_coverage(wtss3, wtss3$coverages[1]))
     expect_true(as.logical(grep("satellite", output[5])))
     expect_true(as.logical(grep("minimum_values", output[15])))
@@ -31,8 +34,9 @@ test_that("Describe coverage", {
 })
 
 test_that("Describe coverage", {
-    URL   <- "http://www.esensing.dpi.inpe.br/wtss/"
-    wtss4 <-  wtss::WTSS(URL) 
+    wtss4 <-  wtss::WTSS()
+    if(is.null(wtss4)) return()
+
     output <- capture.output(wtss::describe_coverage(wtss4, wtss4$coverages[1]))
     expect_true(nrow(wtss4$description) == 1)
     output <- capture.output(wtss::describe_coverage(wtss4, wtss4$coverages[1]))
@@ -44,7 +48,9 @@ test_that("Describe coverage", {
 })
 
 test_that("Time Series", {
-    wtss5 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+    wtss5 <- wtss::WTSS()
+    if(is.null(wtss5)) return()
+
     ts    <- wtss::time_series(wtss5, "MOD13Q1", c("ndvi","evi"), 
                      longitude = -45.00, latitude  = -12.00,
                      start_date = "2000-02-18", end_date = "2016-12-18")
@@ -53,7 +59,9 @@ test_that("Time Series", {
 })
 
 test_that("Time Series 2", {
-    wtss6 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+    wtss6 <- wtss::WTSS()
+    if(is.null(wtss6)) return()
+
     ts    <- wtss::time_series(wtss6, "MOD13Q1", 
                                longitude = -45.00, latitude  = -12.00)
     expect_true(ncol(ts$time_series[[1]]) == 7)
@@ -63,7 +71,9 @@ test_that("Time Series 2", {
 })
 
 test_that("Time Series - errors", {
-    wtss7 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+    wtss7 <- wtss::WTSS()
+    if(is.null(wtss7)) return()
+
     expect_message(ts <- wtss::time_series(wtss7, "MOD13Q1", 
                                          longitude = 45.00, latitude  = -12.00))
     expect_true(purrr::is_null(ts))
@@ -86,7 +96,9 @@ test_that("Time Series - errors", {
 })
 
 test_that("Time Series - conversion to ts and zoo", {
-    wtss8 <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+    wtss8 <- wtss::WTSS()
+    if(is.null(wtss8)) return()
+
     ts    <- wtss::time_series(wtss8, "MOD13Q1", 
                                longitude = -45.00, latitude  = -12.00,
                              start_date = "2002-01-01", end_date = "2002-12-31")
@@ -95,7 +107,7 @@ test_that("Time Series - conversion to ts and zoo", {
     expect_true(ncol(ts_zoo) == (ncol(ts$time_series[[1]]) - 1))
     expect_true(all(as.vector(ts_zoo[,1]) == 
                         dplyr::pull(ts$time_series[[1]][,2])))
-    
+
     ts_ts <- wtss::wtss_to_ts(ts, band = "ndvi")
     
     ts_start <- c(as.numeric(lubridate::year(ts$start_date)), 
@@ -105,5 +117,5 @@ test_that("Time Series - conversion to ts and zoo", {
     
     expect_true(all(stats::start(ts_ts) == ts_start))
     expect_true(length(ts_ts) == 53)
-    expect_true(ts_ts[1] == as.numeric(ts_zoo[1,"ndvi"]))
+    expect_true(ts_ts[1] == as.numeric(ts_zoo[1, "ndvi"]))
 })
