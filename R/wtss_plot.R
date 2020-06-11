@@ -12,24 +12,23 @@
 #'                      default is "Dark2").
 #' @return              Input  tibble (useful for chaining functions).
 #'
-#' @examples{
+#' @examples
 #' # Read one time series from the WTSS server
 #' # plot one time series
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' ts   <- wtss::time_series(wtss, name = "MOD13Q1", 
 #'                 attributes = c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' plot(ts)
-#' }
 #' @export
 plot.wtss <- function(x, y, ..., colors = "Dark2") {
-    
     data <- tibble::as_tibble(x)
     purrr::map(list(data), function(row) .wtss_ggplot_series(row, colors))
     # return the original tibble - useful for chaining
     return(invisible(data))
 }
+
 #' @title Plot one timeSeries using ggplot
 #'
 #' @name .wtss_ggplot_series

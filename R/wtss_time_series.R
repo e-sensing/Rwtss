@@ -13,16 +13,14 @@
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
 #'                      depending on the coverage.
 #' @return              time series in a tibble format (NULL )
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
-#' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi", "evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
-#' }
-#'@export 
-
+#'@export
 time_series <- function(wtss.obj,
                         name,
                         attributes = NULL,
@@ -30,21 +28,22 @@ time_series <- function(wtss.obj,
                         latitude,
                         start_date = NULL,
                         end_date   = NULL) {
-    
+    if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
+        message("WTSS - server URL not working") 
+        return(NULL)
+    }
+
     # is the object already a WTSS object or just a URL?
-    # 
     # if it is an URL, try to create a WTSS object
-    # 
     if (!("wtss" %in% class(wtss.obj))) {
         URL <- wtss.obj # the parameter should be a URL
         URL <- .wtss_remove_trailing_dash(URL)
         wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
         assertthat::assert_that(!purrr::is_null(wtss.obj),
             msg = "WTSS - invalid URL for WTSS server")
-
     }
+
     # is there a coverage with this name in the WTSS service?
-    # 
     assertthat::assert_that(name %in% wtss.obj$coverages,
         msg = paste0("WTSS - coverage", name, 
                      "not available in the WTSS server"))
@@ -81,7 +80,6 @@ time_series <- function(wtss.obj,
         return(NULL)
     }
 
-    
     # check start and end date
     timeline <- desc$timeline[[1]]
     n_dates  <- length(timeline)
@@ -123,8 +121,7 @@ time_series <- function(wtss.obj,
                 
     # if the server does not answer any item
     assertthat::assert_that(!purrr::is_null(items),
-                            msg = "Server connection timeout. 
-                            Verify the URL or try again later.")
+                            msg = "Server connection timeout.\nVerify the URL or try again later.")
     
     # process the response         
     result <- list(.wtss_time_series_processing(items))
@@ -144,12 +141,8 @@ time_series <- function(wtss.obj,
 #' 
 #' @param items  Items retrieved from WTSS server
 #' @return tibble with a time series 
-#' 
-
 .wtss_time_series_processing <- function(items) {
-    
     attr_list <- list(items$result$attributes)
-    
     
     attr.processed <- purrr::map(attr_list, function(subdataset) {
         # assign attribute values 
@@ -162,7 +155,6 @@ time_series <- function(wtss.obj,
         names(value) <- subdataset$attribute
         
         return(value)
-        
     })
     
     attr.processed <- data.frame(attr.processed, stringsAsFactors = FALSE)
@@ -186,8 +178,8 @@ time_series <- function(wtss.obj,
                     data.frame(longitude = items$result$coordinates$longitude, 
                                latitude  = items$result$coordinates$latitude), 
                 attributes = zoo::zoo(attr.processed, timeline)))
-    
 }
+
 #' @title Export data to be used to the zoo format
 #' @name wtss_to_zoo
 #' @author Gilberto Camara, \email{gilberto.camara@@inpe.br}
@@ -198,16 +190,15 @@ time_series <- function(wtss.obj,
 #' @param  band       Name of the band to be exported 
 #'                    (if NULL all bands are exported).
 #' @return            List of time series in zoo format.
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to zoo
 #' zoo.lst <- wtss::wtss_to_zoo(ts_wtss)
-#' }
 #' @export
 wtss_to_zoo <- function(data, band = NULL){
     # only convert one row at a time
@@ -248,16 +239,15 @@ wtss_to_zoo <- function(data, band = NULL){
 #'                       c("years", "quarters", "months", "weeks", "days") or
 #'                       c(1, 4, 12, 52)
 #' @return               A time series in the ts format.
-#' @examples {
+#' @examples
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' wtss <- wtss::WTSS()
 #' # retrieve a time series
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to ts
 #' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
-#' }
 #' @export
 wtss_to_ts <- function(data, band  = NULL, period = "week"){
     # only convert one row at a time
@@ -337,4 +327,3 @@ wtss_to_ts <- function(data, band  = NULL, period = "week"){
     
     return(ts_ts)
 }
-

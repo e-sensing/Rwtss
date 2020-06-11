@@ -35,7 +35,6 @@
 #' @param end_date      End date of the time series
 #' @param cov_desc      Description of the WTSS coverage
 #' @return Time series in sits tibble format.
-#'
 .wtss_to_tibble <- function(ts, name, bands, longitude, latitude, 
                             start_date, end_date, cov_desc) {
     # retrieve the time series information
@@ -69,6 +68,13 @@
     
     # create a tibble to store the WTSS data
     data <- .wtss_tibble()
+    
+    if("character" %in% class(start_date))
+        start_date <- as.Date(start_date)
+
+    if("character" %in% class(end_date))
+        end_date <- as.Date(end_date)
+
     # add one row to the tibble
     data <- tibble::add_row(data,
                             longitude,

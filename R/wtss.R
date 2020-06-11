@@ -3,15 +3,14 @@
 #'
 #' @description Creates a connection to a WTSS server.
 #'
-#' @param URL        URL of the service provider.
+#' @param URL        URL of the service provider. The default value is
+#' "http://www.esensing.dpi.inpe.br/wtss".
 #' @param .show_msg  Show connection message
 #' @return  R WTSS object associated to the service.
-#' @examples {
-#' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' }
+#' @examples
+#' wtss <-  wtss::WTSS()
 #' @export
-WTSS <- function(URL, .show_msg = TRUE) {
-  
+WTSS <- function(URL = "http://www.esensing.dpi.inpe.br/wtss", .show_msg = TRUE) {
   # remove trailing dash
   URL <- .wtss_remove_trailing_dash(URL)
     
@@ -23,10 +22,9 @@ WTSS <- function(URL, .show_msg = TRUE) {
   
   wtss.obj$coverages <- .wtss_list_coverages(wtss.obj)
   
-  if (purrr::is_null(wtss.obj$coverages)) {
-    message("WTSS server not responding - please check URL")
+  if (purrr::is_null(wtss.obj$coverages))
     return(NULL)
-  }
+
   class(wtss.obj) <- append(class(wtss.obj), "wtss", after = 0)
   if (.show_msg)
       message(paste0("Connected to WTSS server at ", URL))
@@ -40,10 +38,9 @@ WTSS <- function(URL, .show_msg = TRUE) {
 #'
 #' @param wtss.obj       WTSS object
 #' @return               NULL if fails, TRUE if works
-#' @examples {
-#' wtss <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+#' @examples
+#' wtss <-  WTSS()
 #' list_coverages(wtss)
-#' }
 #' @export
 list_coverages <- function(wtss.obj) {
     if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
@@ -75,10 +72,15 @@ list_coverages <- function(wtss.obj) {
 #' @return            NULL if fails, TRUE if works
 #' 
 #' @examples
-#' wtss  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss/")
-#' describe_coverage(wtss, wtss$coverages[1])
+#' wtss  <-  WTSS()
+#' describe_coverage(wtss, "MOD13Q1")
 #' @export
 describe_coverage <- function(wtss.obj, name, .print = TRUE) {
+  if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
+    message("WTSS - server URL not working") 
+    return(NULL)
+  }
+  
     assertthat::assert_that(length(name) == 1, 
                 msg = "WTSS - select only one coverage to describe")
     result <- NULL
@@ -123,8 +125,3 @@ describe_coverage <- function(wtss.obj, name, .print = TRUE) {
     
     return(invisible(TRUE))
 }
-
-
-
-
-

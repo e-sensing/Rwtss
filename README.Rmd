@@ -25,7 +25,7 @@ The first step towards using the service is connecting to a server that supports
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+wtss_inpe <-  wtss::WTSS()
 ```
 
 ## Listing coverages available at the WTSS server
@@ -94,7 +94,7 @@ Since many time series analysis functions in R require data to be made available
 ```{r}
 library(bfast)
 # create a connection using a serverUrl
-server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+server <-  wtss::WTSS()
 
 # get a time series for the "ndvi" attribute
 ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 

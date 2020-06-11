@@ -97,7 +97,7 @@ The first step towards using the service is connecting to a server that supports
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+wtss_inpe <-  wtss::WTSS()
 ```
 
 ## Listing coverages available at the WTSS server
@@ -144,7 +144,8 @@ The result of the operation is a `tibble`, which is a generalization of a `data.
 
 ```{r}
 # Showing the contents of a time series
-ts$time_series[[1]]
+if(!is.null(ts))
+  ts$time_series[[1]]
 ```
 
 ## Plotting the time series 
@@ -153,7 +154,8 @@ For convenience, the **WTSS** package provides a convenience funtion for plottin
 
 ```{r, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
 # Plotting the contents of a time series
-plot(ts)
+if(!is.null(ts))
+  plot(ts)
 ```
 
 
@@ -165,18 +167,20 @@ Since many time series analysis functions in R require data to be made available
 ```{r, fig.align="center", fig.height=3, fig.width=5, fig.cap="Breaks on an NDVI time series detected by BFAST"}
 library(bfast)
 # create a connection using a serverUrl
-server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss/")
+server <-  wtss::WTSS()
 
 # get a time series for the "ndvi" attribute
 ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
                          latitude = -10.408, longitude = -53.495, 
                          start = "2000-02-18", end = "2016-01-01")
 
-# convert to ts
-ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
-
-# detect trends
-bf <- bfast::bfast01(ndvi_ts)
-# plot the result
-plot(bf)
+if(!is.null(ndvi_wtss)){
+  # convert to ts
+  ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
+  
+  # detect trends
+  bf <- bfast::bfast01(ndvi_ts)
+  # plot the result
+  plot(bf)
+}
 ```

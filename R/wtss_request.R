@@ -5,10 +5,7 @@
 #'
 #' @param request   valid request according to the WTSS protocol
 #' @return  response from the server
-#' 
-#' 
 .wtss_send_request <- function(request) {
-    
     response <- NULL 
     ce <- 0
     # try 10 times (avoid time out connection)
@@ -16,12 +13,13 @@
         response <- .wtss_get_response(request)
         ce <- ce + 1
     }
-    assertthat::assert_that(!purrr::is_null(response),
-         msg = "WTSS - The URL server may be incorrect or the service 
-                     may be temporarily unavailable")
+
+    if(purrr::is_null(response))
+        message("WTSS server not responding - please check URL")
     
     return(response)
 }
+
 #' @title Get a response to the WTSS server
 #' @name .wtss_get_response 
 #'
@@ -30,18 +28,17 @@
 #' @param request   valid request according to the WTSS protocol
 #' @return  response from the server
 .wtss_get_response <- function(request) {
-    
     # check if URL exists and perform the request
+    response <- NULL
+
     tryCatch(response <- RCurl::getURL(request), 
              error = function(e) {
-                 e$message <- paste("HTTP request failed. 
-                              The URL server may be incorrect or the service 
-                              may be temporarily unavailable.")
                  return(NULL)
              })
-    
+
     return(response)
 }
+
 #' @title Parse a JSON response from the WTSS server
 #' @name .wtss_parse_json
 #'
@@ -50,9 +47,8 @@
 #' @param response   valid JSON response from the WTSS service
 #' @return  parsed JSON document
 .wtss_parse_json <- function(response) {
-    
     # validate json
-    if (jsonlite::validate(response)) {
+    if (!purrr::is_null(response) && jsonlite::validate(response)) {
         json_response <- jsonlite::fromJSON(response)
         
         if ("exception" %in% names(json_response))
@@ -60,6 +56,9 @@
     }
     else
         json_response <- NULL
-    
+
+    if(purrr::is_null(json_response))
+        message("Server does not return a valid JSON - please check URL")
+        
     return(json_response)
 }
