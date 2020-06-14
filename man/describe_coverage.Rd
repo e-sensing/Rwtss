@@ -20,6 +20,6 @@ NULL if fails, TRUE if works
 Contacts the WTSS server to describe one  coverages
 }
 \examples{
-wtss  <-  WTSS()
-describe_coverage(wtss, "MOD13Q1")
+wtss_service  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
+describe_coverage(wtss_service, "MOD13Q1")
 }

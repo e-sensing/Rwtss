@@ -16,6 +16,6 @@ NULL if fails, TRUE if works
 Lists coverages available in the WTSS service
 }
 \examples{
-wtss <-  WTSS()
-list_coverages(wtss)
+wtss_service <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
+list_coverages(wtss_service)
 }

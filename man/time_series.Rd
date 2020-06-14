@@ -38,12 +38,15 @@ time series in a tibble format (NULL )
 Retrieves the time series for a pair of coordinates
 }
 \examples{
+\dontrun{
 # connect to a WTSS server
-wtss <- wtss::WTSS()
+wtss_server <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 # retrieve a time series
-ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi", "evi"), 
-                longitude = -45.00, latitude  = -12.00,
-                start_date = "2000-02-18", end_date = "2016-12-18")
+ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
+                             latitude = -10.408, longitude = -53.495)
+# plot the time series
+plot(ndvi_ts)
+}
 }
 \author{
 Gilberto Camara

@@ -14,12 +14,15 @@
 #'                      depending on the coverage.
 #' @return              time series in a tibble format (NULL )
 #' @examples
+#' \dontrun{
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS()
+#' wtss_server <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 #' # retrieve a time series
-#' ts   <- wtss::time_series(wtss, "MOD13Q1", c("ndvi", "evi"), 
-#'                 longitude = -45.00, latitude  = -12.00,
-#'                 start_date = "2000-02-18", end_date = "2016-12-18")
+#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
+#'                              latitude = -10.408, longitude = -53.495)
+#' # plot the time series
+#' plot(ndvi_ts)
+#' }
 #'@export
 time_series <- function(wtss.obj,
                         name,
@@ -28,19 +31,22 @@ time_series <- function(wtss.obj,
                         latitude,
                         start_date = NULL,
                         end_date   = NULL) {
-    if (purrr::is_null(wtss.obj) || purrr::is_null(wtss.obj$coverages)) {
-        message("WTSS - server URL not working") 
-        return(NULL)
-    }
-
+    
     # is the object already a WTSS object or just a URL?
     # if it is an URL, try to create a WTSS object
     if (!("wtss" %in% class(wtss.obj))) {
         URL <- wtss.obj # the parameter should be a URL
         URL <- .wtss_remove_trailing_dash(URL)
         wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
-        assertthat::assert_that(!purrr::is_null(wtss.obj),
-            msg = "WTSS - invalid URL for WTSS server")
+    }
+    
+    # is the wtss object valid? If not, retrieve a generic time series
+    if (!wtss.obj$valid) {
+        message("WTSS server not responding - 
+                retrieving a generic time series as example")
+        ts <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
+                                         package = "wtss"))
+        return(ts)
     }
 
     # is there a coverage with this name in the WTSS service?
@@ -121,7 +127,7 @@ time_series <- function(wtss.obj,
                 
     # if the server does not answer any item
     assertthat::assert_that(!purrr::is_null(items),
-                            msg = "Server connection timeout.\nVerify the URL or try again later.")
+        msg = "Server connection timeout.\nVerify the URL or try again later.")
     
     # process the response         
     result <- list(.wtss_time_series_processing(items))

@@ -80,7 +80,8 @@
                              yres           = yres,
                              crs            = crs)
     
-    class(cov.tb) <- append(class(cov.tb), c("sits", "sits_cube_tbl"), after = 0)
+    class(cov.tb) <- append(class(cov.tb), 
+                            c("sits", "sits_cube_tbl"), after = 0)
     
     return(cov.tb)
 }
@@ -126,14 +127,18 @@
     
     # send a request to the WTSS server
     response <- .wtss_send_request(request)
-    # parse the response 
-    items <- .wtss_parse_json(response)
-    # if the server does not answer any item
-    if (purrr::is_null(items))
-        return(NULL)
     
-    # if the server answers correctly
-    return(items$coverages)
+    if (!purrr::is_null(response))
+    {
+        # parse the response 
+        items <- .wtss_parse_json(response)
+        # if the server does not answer any item
+        if (purrr::is_null(items))
+            return(NULL)
+        # if the server answers correctly
+        return(items$coverages)
+    }
+    return(NULL)
 }
 
 #' @title Try a best guess for the type of sensor/satellite

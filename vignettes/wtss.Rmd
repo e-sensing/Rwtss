@@ -97,7 +97,7 @@ The first step towards using the service is connecting to a server that supports
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS()
+wtss_inpe <-  wtss::WTSS(URL = "http://www.esensing.dpi.inpe.br/wtss")
 ```
 
 ## Listing coverages available at the WTSS server

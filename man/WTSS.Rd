@@ -19,5 +19,5 @@ R WTSS object associated to the service.
 Creates a connection to a WTSS server.
 }
 \examples{
-wtss <-  wtss::WTSS()
+wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 }

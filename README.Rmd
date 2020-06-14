@@ -25,7 +25,7 @@ The first step towards using the service is connecting to a server that supports
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS()
+wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 ```
 
 ## Listing coverages available at the WTSS server
@@ -45,14 +45,6 @@ This operation returns the metadata for a given coverage identified by its name.
 # Connect to the WTSS server at INPE Brazil
 wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 ```
-
-The coverage description is saved as a tibble in the wtss object, to be used whenever required.
-
-```{r}
-# Coverage description available in the wtss object
-wtss_inpe$description
-```
-
 ## Obtaining a time series 
 
 This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
@@ -60,11 +52,9 @@ This operation requests the time series of values of a coverage attribute at a g
 
 ```{r}
 # Request a time series from the "MOD13Q1" coverage
-ts   <- wtss::time_series(wtss_inpe, name = "MOD13Q1", attributes = c("ndvi","evi"), 
-                          longitude = -45.00, latitude  = -12.00,
-                          start_date = "2000-02-18", end_date = "2016-12-18")
+ndvi_ts <- wtss::time_series(wtss_inpe, "MOD13Q1", attributes = c("ndvi"), latitude = -10.408, longitude = -53.495)
 
-ts
+ndvi_ts
 ```
 
 
@@ -74,7 +64,7 @@ For compatibility with the **sits** suite of packages for satellite image time s
 
 ```{r}
 # Showing the contents of a time series
-ts$time_series[[1]]
+ndvi_ts$time_series[[1]]
 ```
 
 ## Plotting the time series 
@@ -83,7 +73,7 @@ For convenience, the **WTSS** package provides a convenience funtion for plottin
 
 ```{r}
 # Plotting the contents of a time series
-plot(ts[1,])
+plot(ndvi_ts)
 ```
 
 ## Conversion to "zoo" and "ts" formats
@@ -93,19 +83,12 @@ Since many time series analysis functions in R require data to be made available
 
 ```{r}
 library(bfast)
-# create a connection using a serverUrl
-server <-  wtss::WTSS()
-
-# get a time series for the "ndvi" attribute
-ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
-                         latitude = -10.408, longitude = -53.495, 
-                         start = "2000-02-18", end = "2016-01-01")
 
 # convert to ts
-ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
+ts <- wtss::wtss_to_ts(ndvi_ts, band = "ndvi")
 
 # detect trends
-bf <- bfast::bfast01(ndvi_ts)
+bf <- bfast::bfast01(ts)
 # plot the result
 plot(bf)
 ```

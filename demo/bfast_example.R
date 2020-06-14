@@ -10,7 +10,7 @@ library(bfast)
 library(wtss)
 
 # create a connection using a serverUrl
-server <-  wtss::WTSS()
+server <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
 
 # Get the list of coverages provided by the service
 coverages <-  wtss::list_coverages(server)

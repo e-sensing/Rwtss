@@ -13,9 +13,6 @@
         response <- .wtss_get_response(request)
         ce <- ce + 1
     }
-
-    if(purrr::is_null(response))
-        message("WTSS server not responding - please check URL")
     
     return(response)
 }
@@ -56,9 +53,6 @@
     }
     else
         json_response <- NULL
-
-    if(purrr::is_null(json_response))
-        message("Server does not return a valid JSON - please check URL")
         
     return(json_response)
 }
