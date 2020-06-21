@@ -137,7 +137,7 @@ time_series <- function(wtss.obj,
     ts.tb <- .wtss_to_tibble(result, name, attributes, longitude, latitude, 
                              start_date, end_date, desc)
     #append class         
-    class(ts.tb) <- append(class(ts.tb), c("wtss", "sits", "sits_ts_tbl"), 
+    class(ts.tb) <- append(class(ts.tb), c("wtss"), 
                            after = 0)
     return(ts.tb)
 }
