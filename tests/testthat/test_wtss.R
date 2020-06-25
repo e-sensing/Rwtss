@@ -1,12 +1,10 @@
 context("WTSS service")
-library(testthat)
 
 test_that("List coverages", {
     wtss2 <-  "http://www.esensing.dpi.inpe.br/wtss/"
 
     output <- capture.output(wtss::list_coverages(wtss2))
     if (!purrr::is_null(output)) {
-        expect_true(as.logical(grep("Coverages", output[1])))
         expect_true(as.logical(grep("MOD13Q1", output[1])))        
     }
 })
