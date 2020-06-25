@@ -1,6 +1,9 @@
 WTSS - R interface to Web Time Series Service
 ================
 
+[![Codecov test
+coverage](https://codecov.io/gh/e-sensing/wtss/branch/master/graph/badge.svg)](https://codecov.io/gh/e-sensing/wtss?branch=master)
+
 ## About the package
 
 The WTSS-R package is a front-end to the Web Time Series Service (WTSS)
@@ -21,18 +24,12 @@ different times are comparable. These calibrated observations can be
 organised in regular intervals, so that each measure from sensor is
 mapped into a three dimensional multivariate array in space-time.
 
-## Connecting to a WTSS server
-
 The first step towards using the service is connecting to a server that
 supports the WTSS protocol. Currenlty, Brazil’s National Insitute for
-Space Research (INPE) runs such a service. In the package, the
-connection is enabled by using the URL of the service. The package
-informs if the connection has been correctly made.
+Space Research (INPE) runs such a WTSS service in the address below.
 
 ``` r
-# Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#> Connected to WTSS server at http://www.esensing.dpi.inpe.br/wtss
+wtss_inpe <- "http://www.esensing.dpi.inpe.br/wtss"
 ```
 
 ## Listing coverages available at the WTSS server
@@ -44,7 +41,7 @@ available in a server instance.
 ``` r
 # Connect to the WTSS server at INPE Brazil
 wtss::list_coverages(wtss_inpe)
-#> Coverages: MOD13Q1 MOD13Q1_M
+#> [1] "MOD13Q1"   "MOD13Q1_M"
 ```
 
 ## Describing a coverage from the WTSS server
@@ -86,7 +83,6 @@ wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 #> Timeline - 452 time steps
 #> start_date: 2000-02-18 end_date: 2019-09-30
 #> -------------------------------------------------------------------
-#> Coverage description saved in WTSS object
 ```
 
 ## Obtaining a time series
@@ -112,7 +108,7 @@ ndvi_ts
 #> # A tibble: 1 x 7
 #>   longitude latitude start_date end_date   label   cube    time_series       
 #>       <dbl>    <dbl> <date>     <date>     <chr>   <chr>   <list>            
-#> 1     -53.5    -10.4 2000-02-18 2019-09-30 NoClass MOD13Q1 <tibble [452 × 2]>
+#> 1     -53.5    -10.4 2000-02-18 2019-09-30 NoClass MOD13Q1 <tibble [452 x 2]>
 ```
 
 The result of the operation is a `tibble` which contains data and
@@ -147,7 +143,7 @@ ndvi_ts$time_series[[1]]
 #>  8 2000-06-09 0.864
 #>  9 2000-06-25 0.880
 #> 10 2000-07-11 0.870
-#> # … with 442 more rows
+#> # ... with 442 more rows
 ```
 
 ## Plotting the time series
