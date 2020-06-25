@@ -4,18 +4,17 @@
 \alias{list_coverages}
 \title{List the coverages available in the WTSS service}
 \usage{
-list_coverages(wtss.obj)
+list_coverages(URL)
 }
 \arguments{
-\item{wtss.obj}{WTSS object}
+\item{URL}{URL of the server}
 }
 \value{
-NULL if fails, TRUE if works
+vector with coverage name
 }
 \description{
 Lists coverages available in the WTSS service
 }
 \examples{
-wtss_service <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
-list_coverages(wtss_service)
+list_coverages("http://www.esensing.dpi.inpe.br/wtss")
 }

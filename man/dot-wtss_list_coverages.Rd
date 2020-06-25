@@ -4,10 +4,10 @@
 \alias{.wtss_list_coverages}
 \title{Retrieves the list of cubes from the URL server}
 \usage{
-.wtss_list_coverages(wtss.obj)
+.wtss_list_coverages(URL)
 }
 \arguments{
-\item{wtss.obj}{WTSS object associated to the service}
+\item{URL}{URL of the WTSS service}
 }
 \value{
 updated WTSS object.

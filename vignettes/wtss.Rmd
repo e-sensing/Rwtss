@@ -93,11 +93,11 @@ The WTSS API has three commands: (a) *list_coverages* that returns a list of cov
 
 ## Connecting to a WTSS server
 
-The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. The package informs if the connection has been correctly made.
+The first step towards using the service is connecting to a server that supports the WTSS protocol. Currently, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. So, the first procedure is to find the URL of a WTSS service.
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  wtss::WTSS(URL = "http://www.esensing.dpi.inpe.br/wtss")
+wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
 ```
 
 ## Listing coverages available at the WTSS server
@@ -115,20 +115,20 @@ This operation returns the metadata for a given coverage identified by its name.
 
 ```{r}
 # Connect to the WTSS server at INPE Brazil
-wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 ```
 
-The coverage description is saved as a tibble in the wtss object, to be used whenever required.
+The coverage description is also saved as a tibble in the wtss object, to be used whenever required.
 
 ```{r}
 # Coverage description available in the wtss object
-wtss_inpe$description
+desc
 ```
 
 
 ## Obtaining a time series 
 
-This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *URL*: a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
 *end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
 
 ```{r}
@@ -166,11 +166,9 @@ Since many time series analysis functions in R require data to be made available
 
 ```{r, fig.align="center", fig.height=3, fig.width=5, fig.cap="Breaks on an NDVI time series detected by BFAST"}
 library(bfast)
-# create a connection using a serverUrl
-server <-  wtss::WTSS()
 
 # get a time series for the "ndvi" attribute
-ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
+ndvi_wtss <- wtss::time_series(wtss_inpe, "MOD13Q1", attributes = c("ndvi"), 
                          latitude = -10.408, longitude = -53.495, 
                          start = "2000-02-18", end = "2016-01-01")
 

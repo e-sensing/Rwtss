@@ -13,6 +13,7 @@
 
 # Creates a package environment to store global variables
 wtss.env <- new.env()
+wtss.env$desc <- NULL
 
 utils::globalVariables(c(".", "%>%", "missing_value", "missing_values",
                          "scale_factor", "scale_factors",

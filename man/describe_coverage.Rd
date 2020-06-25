@@ -4,22 +4,21 @@
 \alias{describe_coverage}
 \title{Retrieves the list of cubes from the URL server}
 \usage{
-describe_coverage(wtss.obj, name, .print = TRUE)
+describe_coverage(URL, name, .print = TRUE)
 }
 \arguments{
-\item{wtss.obj}{A WTSS object}
+\item{URL}{URL of the server}
 
-\item{name}{A character vector of coverage names}
+\item{name}{name of coverage}
 
 \item{.print}{Print the coverage description}
 }
 \value{
-NULL if fails, TRUE if works
+tibble with coverage description
 }
 \description{
 Contacts the WTSS server to describe one  coverages
 }
 \examples{
-wtss_service  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
-describe_coverage(wtss_service, "MOD13Q1")
+describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")
 }

@@ -19,10 +19,9 @@ List of time series in zoo format.
 Converts data from a tibble to a list of a zoo series.
 }
 \examples{
-# connect to a WTSS server
-wtss <- wtss::WTSS()
 # retrieve a time series
-ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+ts_wtss  <- wtss::time_series("http://www.esensing.dpi.inpe.br/wtss", 
+                "MOD13Q1", c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,
                 start_date = "2000-02-18", end_date = "2016-12-18")
 # convert to zoo
