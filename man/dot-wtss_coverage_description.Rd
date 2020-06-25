@@ -4,10 +4,10 @@
 \alias{.wtss_coverage_description}
 \title{Decodes the description from a WTSS coverage}
 \usage{
-.wtss_coverage_description(wtss.obj, cov)
+.wtss_coverage_description(URL, cov)
 }
 \arguments{
-\item{wtss.obj}{valid WTSS object}
+\item{URL}{URL of the coverage}
 
 \item{cov}{coverage response provided by WTSS service}
 }

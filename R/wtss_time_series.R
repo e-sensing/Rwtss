@@ -1,146 +1,4 @@
-#' @title Get time series
-#' @name time_series
-#' @author  Gilberto Camara
-#' @description Retrieves the time series for a pair of coordinates 
-#' 
-#' @param wtss.obj      Either a WTSS object or a server URL
-#' @param name          Coverage name.
-#' @param attributes    Vector of band names.
-#' @param longitude     Longitude in WGS84 coordinate system.
-#' @param latitude      Latitude in WGS84 coordinate system.
-#' @param start_date    Start date in the format yyyy-mm-dd or yyyy-mm 
-#'                      depending on the coverage.
-#' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
-#'                      depending on the coverage.
-#' @return              time series in a tibble format (NULL )
-#' @examples
-#' \dontrun{
-#' # connect to a WTSS server
-#' wtss_server <- wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' # retrieve a time series
-#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
-#'                              latitude = -10.408, longitude = -53.495)
-#' # plot the time series
-#' plot(ndvi_ts)
-#' }
-#'@export
-time_series <- function(wtss.obj,
-                        name,
-                        attributes = NULL,
-                        longitude,
-                        latitude,
-                        start_date = NULL,
-                        end_date   = NULL) {
-    
-    # is the object already a WTSS object or just a URL?
-    # if it is an URL, try to create a WTSS object
-    if (!("wtss" %in% class(wtss.obj))) {
-        URL <- wtss.obj # the parameter should be a URL
-        URL <- .wtss_remove_trailing_dash(URL)
-        wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
-    }
-    
-    # is the wtss object valid? If not, retrieve a generic time series
-    if (!wtss.obj$valid) {
-        message("WTSS server not responding - 
-                retrieving a generic time series as example")
-        ts <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
-                                         package = "wtss"))
-        return(ts)
-    }
 
-    # is there a coverage with this name in the WTSS service?
-    assertthat::assert_that(name %in% wtss.obj$coverages,
-        msg = paste0("WTSS - coverage", name, 
-                     "not available in the WTSS server"))
-    
-    # have we described the coverage before?
-    # if not, get the coverage description
-    # if fails, return NULL
-    if (length(wtss.obj$description) == 0) {
-        wtss::describe_coverage(wtss.obj, name, .print = FALSE)
-        assertthat::assert_that(!purrr::is_null(wtss.obj),
-            msg = paste0("WTSS - could not retrieve description of coverage ",
-                           name, " from WTSS server"))
-    }
-
-    # get coverage description
-    desc <- dplyr::filter(wtss.obj$description, name == name)
-    
-    # check if the selected attributes are available
-    cov_bands <- desc$bands[[1]]
-    if (purrr::is_null(attributes))
-        attributes <- cov_bands
-    if (!all(attributes %in% cov_bands)) {
-        message("WTSS - attributes not available.")
-        return(NULL)
-    }
-                            
-    # check bounds for latitude and longitude
-    if (longitude < desc$xmin || longitude > desc$xmax) {
-        message("WTSS - invalid longitude value") 
-        return(NULL)
-    }
-    if (latitude < desc$ymin || latitude > desc$ymax) {
-        message("WTSS - invalid latitude value")
-        return(NULL)
-    }
-
-    # check start and end date
-    timeline <- desc$timeline[[1]]
-    n_dates  <- length(timeline)
-    
-    if (purrr::is_null(start_date))
-        start_date <-  lubridate::as_date(timeline[1])
-    if (purrr::is_null(end_date))
-        end_date <-  lubridate::as_date(timeline[n_dates])
-    
-    # test is start date is valid
-    if (lubridate::as_date(start_date) < lubridate::as_date(timeline[1]) ||
-     lubridate::as_date(start_date) > lubridate::as_date(timeline[n_dates])) {
-        message("WTSS - invalid start date")
-        return(NULL)
-    }
-
-    # test if end date is valid
-    if (lubridate::as_date(end_date) <  lubridate::as_date(timeline[1]) ||
-        lubridate::as_date(end_date) >  lubridate::as_date(timeline[n_dates]) ||
-        lubridate::as_date(end_date) <  lubridate::as_date(start_date)) {
-        message("WTSS - invalid end date")
-        return(NULL)
-    }
-    items <- NULL
-    ce <- 0
-    
-    URL <- wtss.obj$url
-    # try to retrieve the time series 
-    request <- paste(URL,"/time_series?coverage=", name, "&attributes=", 
-                     paste(attributes, collapse = ","),
-                     "&longitude=", longitude, "&latitude=", latitude,
-                     "&start_date=", start_date, 
-                     "&end_date=", end_date, sep = "")
-                
-    # send a request to the WTSS server
-    response <- .wtss_send_request(request)
-    # parse the response 
-    items <- .wtss_parse_json(response)
-                
-    # if the server does not answer any item
-    assertthat::assert_that(!purrr::is_null(items),
-        msg = "Server connection timeout.\nVerify the URL or try again later.")
-    
-    # process the response         
-    result <- list(.wtss_time_series_processing(items))
-                
-    names(result) <- name
-    # convert to tibble 
-    ts.tb <- .wtss_to_tibble(result, name, attributes, longitude, latitude, 
-                             start_date, end_date, desc)
-    #append class         
-    class(ts.tb) <- append(class(ts.tb), c("wtss"), 
-                           after = 0)
-    return(ts.tb)
-}
 
 #' @title Processing a Time Series Result from WTSS
 #' @name .wtss_time_series_processing
@@ -197,10 +55,9 @@ time_series <- function(wtss.obj,
 #'                    (if NULL all bands are exported).
 #' @return            List of time series in zoo format.
 #' @examples
-#' # connect to a WTSS server
-#' wtss <- wtss::WTSS()
 #' # retrieve a time series
-#' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#' ts_wtss  <- wtss::time_series("http://www.esensing.dpi.inpe.br/wtss", 
+#'                 "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to zoo
@@ -208,9 +65,11 @@ time_series <- function(wtss.obj,
 #' @export
 wtss_to_zoo <- function(data, band = NULL){
     # only convert one row at a time
-    assertthat::assert_that(nrow(data) == 1,
-                            msg = "WTSS - Convertion to ts only accepts 
-                            one time series at a time.")
+    if (nrow(data) > 1){
+        message ("Conversion to ts only accepts one time series at a time.")  
+        data <- data[1,]
+    }
+
     ts <- data$time_series[[1]]
     if (purrr::is_null(band))
         band <-  colnames(ts[-1:0])
@@ -232,22 +91,22 @@ wtss_to_zoo <- function(data, band = NULL){
 #' Since  "ts" requires regular time series, it interpolates 
 #' the original irregular time series to a regular time series. To do this, the 
 #' user needs to specify a period which is recognised by the "ts" format. 
-#' This period can be either {"year", "quarter", "month", "week", "day"}, 
-#' {"years", "quarters", "months", "weeks", "days"} or
-#' {1, 4, 12, 52}. This function creates a new time series with the required 
+#' This period can be either {"month", "week", "day"}, 
+#' {"months", "weeks", "days"} or
+#' {12, 52, 365}. This function creates a new time series with the required 
 #' frequency and intepolates the missing values using spline interpolation 
 #' from the "zoo" package (zoo::na.spline).
 #'
 #' @param  data          A sits tibble with time series.
 #' @param  band          Name of the band to be exported 
 #'                       (optional if series has only one band)
-#' @param  period        One of c("year", "quarter", "month", "week", "day"), 
-#'                       c("years", "quarters", "months", "weeks", "days") or
-#'                       c(1, 4, 12, 52)
+#' @param  period        One of c("month", "week", "day"), 
+#'                       c("months", "weeks", "days") or
+#'                       c(12, 52, 365)
 #' @return               A time series in the ts format.
 #' @examples
 #' # connect to a WTSS server
-#' wtss <- wtss::WTSS()
+#' wtss <- "http://www.esensing.dpi.inpe.br/wtss"
 #' # retrieve a time series
 #' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
@@ -257,48 +116,51 @@ wtss_to_zoo <- function(data, band = NULL){
 #' @export
 wtss_to_ts <- function(data, band  = NULL, period = "week"){
     # only convert one row at a time
-    assertthat::assert_that(nrow(data) == 1,
-                    msg = "WTSS - Convertion to ts only accepts 
-                    one time series at a time.")
-
+    if(nrow(data) > 1) {
+        message ("Conversion to ts only accepts one time series at a time.")
+        data <- data[1,]
+    }
     # retrieve the time series
     ts_wtss <- tibble::as_tibble(data$time_series[[1]])
     # no band informed?
     if (purrr::is_null(band)) {
         # only univariate time series are accepted
-        assertthat::assert_that(ncol(ts_wtss) == 2,
-                                msg = "WTSS - Convertion to ts only accepts 
-                                one band at a time.")
+        if (ncol(ts_wtss > 2)) {
+            message("WTSS - Conversion to ts only accepts one band at a time.")
+            message("using the first available band")
+        }
         band <- names(ts_wtss[,2])
     }
+    # more than one band?
+    if (length(band) > 1){
+        message("WTSS - Conversion to ts only accepts one band at a time.")
+        message("using the first available band")
+        band <- band[1]
+    }
     # check valid periods
-    valid_periods_1 <- c("year", "quarter", "month", "week", "day")
-    valid_periods_2 <- c("years", "quarters", "months", "weeks", "days")
-    valid_frequencies <- c(1, 4, 12, 52, 365)
-    names(valid_frequencies) <- c("year", "quarter", "month", "week", "day")
-    names(valid_periods_2)   <- c("year", "quarter", "month", "week", "day")
-    
-    assertthat::assert_that(period %in% valid_periods_1 ||
-                            period %in% valid_periods_2 ||
-                            period %in% valid_frequencies,
-                            msg = "WTSS - Invalid period for convertion to ts")
-    # is the period in c("year", "quarter", "month", "day")?
-    if (period %in% valid_periods_1) {
+    valid_periods <- c("month", "week", "day")
+    names(valid_periods) <- c("months", "weeks", "days")
+    valid_frequencies <- c(12, 52, 365)
+    names(valid_frequencies) <- c("month", "week", "day")
+    freq_to_period <- valid_periods 
+    names(freq_to_period) <- c(12, 52, 365)
+    # is the period in c("week", "month", "day")?
+    if (period %in% valid_periods) {
         zoo_frequency <- period
         ts_frequency  <- valid_frequencies[period]
     }
-    # is the period in c("years", "quarters", "months", "days")?
-    else if (period %in% valid_periods_2) {
-        zoo_frequency <- names(valid_periods_2[period])
+    # is the period in c("weeks", "months", "days")?
+    else if (period %in% names(valid_periods)) {
+        zoo_frequency <- valid_periods[period]
         ts_frequency  <- valid_frequencies[zoo_frequency]
     }
-    # is the period in c(1, 4, 12, 52)?
+    # is the period in c(12, 52, 365)?
     else if (period %in% valid_frequencies) {
-        zoo_frequency <- names(valid_frequencies[period])
+        zoo_frequency <- freq_to_period[as.character(period)]
         ts_frequency  <- period
     }
     else {
-        message("WTSS - Invalid period ")
+        message("WTSS - Invalid period for conversion to ts")
         return(NULL)
     }
     

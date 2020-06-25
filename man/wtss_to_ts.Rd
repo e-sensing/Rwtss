@@ -12,9 +12,9 @@ wtss_to_ts(data, band = NULL, period = "week")
 \item{band}{Name of the band to be exported 
 (optional if series has only one band)}
 
-\item{period}{One of c("year", "quarter", "month", "week", "day"), 
-c("years", "quarters", "months", "weeks", "days") or
-c(1, 4, 12, 52)}
+\item{period}{One of c("month", "week", "day"), 
+c("months", "weeks", "days") or
+c(12, 52, 365)}
 }
 \value{
 A time series in the ts format.
@@ -28,15 +28,15 @@ a WTSS time series (a tibble with data and metadata) to the "ts" format.
 Since  "ts" requires regular time series, it interpolates 
 the original irregular time series to a regular time series. To do this, the 
 user needs to specify a period which is recognised by the "ts" format. 
-This period can be either {"year", "quarter", "month", "week", "day"}, 
-{"years", "quarters", "months", "weeks", "days"} or
-{1, 4, 12, 52}. This function creates a new time series with the required 
+This period can be either {"month", "week", "day"}, 
+{"months", "weeks", "days"} or
+{12, 52, 365}. This function creates a new time series with the required 
 frequency and intepolates the missing values using spline interpolation 
 from the "zoo" package (zoo::na.spline).
 }
 \examples{
 # connect to a WTSS server
-wtss <- wtss::WTSS()
+wtss <- "http://www.esensing.dpi.inpe.br/wtss"
 # retrieve a time series
 ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,

@@ -2,7 +2,6 @@
 
 S3method(plot,wtss)
 export("%>%")
-export(WTSS)
 export(describe_coverage)
 export(list_coverages)
 export(time_series)

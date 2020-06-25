@@ -1,153 +1,203 @@
-#' @title Creates a WTSS object
-#' @name WTSS
-#'
-#' @description Creates a connection to a WTSS server.
-#'
-#' @param URL        URL of the service provider. The default value is
-#' "http://www.esensing.dpi.inpe.br/wtss".
-#' @param .show_msg  Show connection message
-#' @return  R WTSS object associated to the service.
-#' @examples
-#' wtss <-  wtss::WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' @export
-WTSS <- function(URL = "http://www.esensing.dpi.inpe.br/wtss", 
-                 .show_msg = TRUE) {
-    # remove trailing dash
-    URL <- .wtss_remove_trailing_dash(URL)
-    
-    # create a list to store the metadata
-    wtss.obj <- list(url = character(), coverages = character(), 
-                   description = list(), valid = logical())
-    # store the URL
-    wtss.obj$url <- URL
-    # try to retrieve the coverage list
-    wtss.obj$coverages <- .wtss_list_coverages(wtss.obj)
-  
-    # if the coverage list is NULL, the wtss.obj is invalid
-    if (purrr::is_null(wtss.obj$coverages))
-        wtss.obj$valid <- FALSE
-    else
-        wtss.obj$valid <- TRUE
-
-    # assign the object class
-    class(wtss.obj) <- append(class(wtss.obj), "wtss", after = 0)
-    # is the object valid? If yes then inform the connection
-    if (.show_msg && wtss.obj$valid)
-        message(paste0("Connected to WTSS server at ", URL))
-    if (!wtss.obj$valid)
-        message(paste0("WTSS server at ", wtss.obj$url, 
-                     " not responding - please check URL"))
-      
-return(wtss.obj)
-}
-
 #' @title List the coverages available in the WTSS service
 #' @name list_coverages
 #'
 #' @description Lists coverages available in the WTSS service 
 #'
-#' @param wtss.obj       WTSS object
-#' @return               NULL if fails, TRUE if works
+#' @param URL       URL of the server
+#' @return          vector with coverage name
 #' @examples
-#' wtss_service <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' list_coverages(wtss_service)
+#' list_coverages("http://www.esensing.dpi.inpe.br/wtss")
 #' @export
-list_coverages <- function(wtss.obj) {
+list_coverages <- function(URL) {
     
-    # is the object already a WTSS object or just a URL?
-    # if it is an URL, try to create a WTSS object
-    if (!("wtss" %in% class(wtss.obj))) {
-        URL <- wtss.obj # the parameter should be a URL
-        URL <- .wtss_remove_trailing_dash(URL)
-        wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
-    }
-    # is the wtss object valid?
-    if (!wtss.obj$valid) {
-        message(paste0("WTSS server at URL ", wtss.obj$URL, 
-                       "not responding - please check URL"))
-        return(wtss.obj)
+    # adjust the URL
+    URL <- .wtss_remove_trailing_dash(URL)
+
+    # try to retrieve the coverage list
+    coverages <- .wtss_list_coverages(URL)
+   
+    # if the coverage list is NULL, the wtss.obj is invalid
+    if (purrr::is_null(coverages)) {
+        message(paste0("WTSS server at URL ", URL, "not responding"))
     }
     else {
-    
       # print coverages
       cat("Coverages: ")
-      cat(paste(wtss.obj$coverages), " ")
+      cat(paste(coverages), " ")
     } 
   
-    return(invisible(wtss.obj))
+    return(invisible(coverages))
 }
 
 #' @title Retrieves the list of cubes from the URL server
 #' @name  describe_coverage
 #'
 #' @description Contacts the WTSS server to describe one  coverages
-#' @param wtss.obj    A WTSS object
-#' @param name        A character vector of coverage names
+#' @param URL         URL of the server
+#' @param name        name of coverage
 #' @param .print      Print the coverage description
-#' @return            NULL if fails, TRUE if works
+#' @return            tibble with coverage description
 #' 
 #' @examples
-#' wtss_service  <-  WTSS("http://www.esensing.dpi.inpe.br/wtss")
-#' describe_coverage(wtss_service, "MOD13Q1")
+#' describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")
 #' @export
-describe_coverage <- function(wtss.obj, name, .print = TRUE) {
+describe_coverage <- function(URL, name, .print = TRUE) {
   
-    # is the object already a WTSS object or just a URL?
-    # if it is an URL, try to create a WTSS object
-    if (!("wtss" %in% class(wtss.obj))) {
-        URL <- wtss.obj # the parameter should be a URL
-        URL <- .wtss_remove_trailing_dash(URL)
-        wtss.obj <- wtss::WTSS(URL, .show_msg = FALSE)
-    }
-    # is the wtss object valid?
-    if (!wtss.obj$valid) {
-      message(paste0("WTSS server not responding - please check URL"))
-      return(invisible(wtss.obj))
-    }
-  
+    # adjust the URL
+    URL <- .wtss_remove_trailing_dash(URL)
+    # only one coverage at a time
     assertthat::assert_that(length(name) == 1, 
                 msg = "WTSS - select only one coverage to describe")
     result <- NULL
-    
-    # build a "describe_coverage" request 
-    request <- paste(wtss.obj$url,"/describe_coverage?name=", name, sep = "")
-    ce <- 0
-    
-    # avoid time out connection 
-    while (purrr::is_null(result) & ce < 10) {
-        result <- .wtss_parse_json(.wtss_send_request(request))
-        ce <- ce + 1
-        # if the server does not answer any item, return NULL
-        if (purrr::is_null(result)) {
-            message("WTSS - coverage information not available")
-            return(wtss.obj)
-        }
-    }
+  
+    # build a "describe_coverage" request
+    request <- paste(URL,"/describe_coverage?name=", name, sep = "")
     # convert the coverage description into a tibble
-
-    cov.tb <- .wtss_coverage_description(wtss.obj, result)
+    result <- .wtss_process_request(request)
     
-    # print the content of the coverage
-    if (.print)
-      .wtss_print_coverage(cov.tb)
-
-    # check if the description is already associated to the WTSS object
-    if (length(wtss.obj$description) != 0) {
-        if (!(name %in% wtss.obj$description$name)) {
-            # add the coverage description
-            cov.tb       <- dplyr::bind_rows(wtss.obj$description, cov.tb)
-            # export the description
-            eval.parent(substitute(wtss.obj$description <- cov.tb))  
-        }
+    # if the coverage list is NULL, the wtss.obj is invalid
+    if (purrr::is_null(result)) {
+        message(paste0("WTSS service at URL ", URL, "not responding"))
+        return(NULL)
     }
-    else
-        # description list empty 
-        # export the description
-        eval.parent(substitute(wtss.obj$description <- cov.tb))  
+    else {
+        cov.tb <- .wtss_coverage_description(URL, result)
+        # print the content of the coverage
+        if (.print)
+          .wtss_print_coverage(cov.tb)
+    }
+    return(invisible(cov.tb))
+}
+#' @title Get time series
+#' @name time_series
+#' @author  Gilberto Camara
+#' @description Retrieves the time series for a pair of coordinates 
+#' 
+#' @param URL           URL of the server
+#' @param name          Coverage name.
+#' @param attributes    Vector of band names.
+#' @param longitude     Longitude in WGS84 coordinate system.
+#' @param latitude      Latitude in WGS84 coordinate system.
+#' @param start_date    Start date in the format yyyy-mm-dd or yyyy-mm 
+#'                      depending on the coverage.
+#' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
+#'                      depending on the coverage.
+#' @return              time series in a tibble format (NULL )
+#' @examples
+#' \dontrun{
+#' # connect to a WTSS server
+#' wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
+#' # retrieve a time series
+#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
+#'                              latitude = -10.408, longitude = -53.495)
+#' # plot the time series
+#' plot(ndvi_ts)
+#' }
+#'@export
+time_series <- function(URL,
+                        name,
+                        attributes = NULL,
+                        longitude,
+                        latitude,
+                        start_date = NULL,
+                        end_date   = NULL) {
+  
+
+    # clean the URL
+    URL <- .wtss_remove_trailing_dash(URL)
+  
+    # have we described the coverage before?
+    # if not, get the coverage description
+    # if the description of the coverage is available, skip this part
+    if (purrr::is_null(wtss.env$desc) || wtss.env$desc$name != name) {
+        wtss.env$desc <-  wtss::describe_coverage(URL, name, .print = FALSE)
+        # if describe_coverage fails, return a default time series
+        
+        if(purrr::is_null(wtss.env$desc)) {
+          message(paste0("WTSS - could not retrieve description of coverage ",
+                         name, " from WTSS server"))
+          message(paste0("WTSS - retrieving backup time series"))
+          
+          ts.tb <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
+                                              package = "wtss"))
+          return(ts.tb)
+        }      
+    }
+  
+    # check if the selected attributes are available
+    cov_bands <- wtss.env$desc$bands[[1]]
+    if (purrr::is_null(attributes))
+        attributes <- cov_bands
+    if (!all(attributes %in% cov_bands)) {
+        message("WTSS - attributes not available.")
+        return(NULL)
+    }
+  
+    # check bounds for latitude and longitude
+    if (longitude < wtss.env$desc$xmin || longitude > wtss.env$desc$xmax) {
+        message("WTSS - invalid longitude value") 
+        return(NULL)
+    }
+    if (latitude < wtss.env$desc$ymin || latitude > wtss.env$desc$ymax) {
+        message("WTSS - invalid latitude value")
+        return(NULL)
+    }
+  
+    # check start and end date
+    timeline <- wtss.env$desc$timeline[[1]]
+    n_dates  <- length(timeline)
+  
+    if (purrr::is_null(start_date))
+        start_date <-  lubridate::as_date(timeline[1])
+    if (purrr::is_null(end_date))
+        end_date <-  lubridate::as_date(timeline[n_dates])
+  
+    # test is start date is valid
+    if (lubridate::as_date(start_date) < lubridate::as_date(timeline[1]) ||
+      lubridate::as_date(start_date) > lubridate::as_date(timeline[n_dates])) {
+          message("WTSS - invalid start date")
+          return(NULL)
+    }
+  
+    # test if end date is valid
+    if (lubridate::as_date(end_date) <  lubridate::as_date(timeline[1]) ||
+        lubridate::as_date(end_date) >  lubridate::as_date(timeline[n_dates]) ||
+        lubridate::as_date(end_date) <  lubridate::as_date(start_date)) {
+        message("WTSS - invalid end date")
+        return(NULL)
+    }
+    items <- NULL
+    ce <- 0
+  
+    # try to retrieve the time series 
+    request <- paste(URL,"/time_series?coverage=", name, "&attributes=", 
+                    paste(attributes, collapse = ","),
+                   "&longitude=", longitude, "&latitude=", latitude,
+                   "&start_date=", start_date, 
+                   "&end_date=", end_date, sep = "")
+  
+    # send a request to the WTSS server
+    response <- .wtss_send_request(request)
+    # parse the response 
+    items <- .wtss_parse_json(response)
+  
+    # if the server does not answer any item
+    if(purrr::is_null(items)){
       
-    # inform uses that WTSS object has the description
-    if (.print)
-      message("Coverage description saved in WTSS object")
-    
-    return(invisible(wtss.obj))
+        ts.tb <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
+                                          package = "wtss"))
+        return(ts.tb)
+    }
+  
+    # process the response         
+    result <- list(.wtss_time_series_processing(items))
+  
+    names(result) <- name
+    # convert to tibble 
+    ts.tb <- .wtss_to_tibble(result, name, attributes, longitude, latitude, 
+                             start_date, end_date, wtss.env$desc)
+    #append class         
+    class(ts.tb) <- append(class(ts.tb), c("wtss"), after = 0)
+  
+    return(ts.tb)
 }

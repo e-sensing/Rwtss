@@ -56,3 +56,20 @@
         
     return(json_response)
 }
+#' @title Process a request to the WTSS server
+#' @name .wtss_process_request
+#'
+#' @description Process a request 
+#'
+#' @param request   valid request to the WTSS service
+#' @return  parsed JSON document
+.wtss_process_request <- function(request){
+    ce <- 0
+    result <-  NULL
+    # avoid time out connection 
+    while (purrr::is_null(result) & ce < 10) {
+        result <- .wtss_parse_json(.wtss_send_request(request))
+        ce <- ce + 1
+    }
+    return (result)
+}
