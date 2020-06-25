@@ -20,13 +20,8 @@ list_coverages <- function(URL) {
     if (purrr::is_null(coverages)) {
         message(paste0("WTSS server at URL ", URL, "not responding"))
     }
-    else {
-      # print coverages
-      cat("Coverages: ")
-      cat(paste(coverages), " ")
-    } 
   
-    return(invisible(coverages))
+    return(coverages)
 }
 
 #' @title Retrieves the list of cubes from the URL server
