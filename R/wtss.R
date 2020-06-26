@@ -27,7 +27,7 @@ list_coverages <- function(URL) {
 #' @title Retrieves the list of cubes from the URL server
 #' @name  describe_coverage
 #'
-#' @description Contacts the WTSS server to describe one  coverages
+#' @description Contacts the WTSS server to describe one coverage
 #' @param URL         URL of the server
 #' @param name        name of coverage
 #' @param .print      Print the coverage description
@@ -63,6 +63,7 @@ describe_coverage <- function(URL, name, .print = TRUE) {
     }
     return(invisible(cov.tb))
 }
+
 #' @title Get time series
 #' @name time_series
 #' @author  Gilberto Camara
@@ -77,13 +78,13 @@ describe_coverage <- function(URL, name, .print = TRUE) {
 #'                      depending on the coverage.
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
 #'                      depending on the coverage.
-#' @return              time series in a tibble format (NULL )
+#' @return              time series in a tibble format (NULL)
 #' @examples
 #' \dontrun{
 #' # connect to a WTSS server
 #' wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
 #' # retrieve a time series
-#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
+#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = "ndvi", 
 #'                              latitude = -10.408, longitude = -53.495)
 #' # plot the time series
 #' plot(ndvi_ts)
@@ -97,7 +98,6 @@ time_series <- function(URL,
                         start_date = NULL,
                         end_date   = NULL) {
   
-
     # clean the URL
     URL <- .wtss_remove_trailing_dash(URL)
   
