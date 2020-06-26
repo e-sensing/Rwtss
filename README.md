@@ -1,6 +1,10 @@
 WTSS - R interface to Web Time Series Service
 ================
 
+[![CRAN/METACRAN
+Version](https://www.r-pkg.org/badges/version/wtss)](https://CRAN.R-project.org/package=wtss)
+[![CRAN/METACRAN Total
+downloads](http://cranlogs.r-pkg.org/badges/grand-total/wtss?color=blue)](https://CRAN.R-project.org/package=wtss)
 [![Travis-CI Build
 Status](https://travis-ci.com/e-sensing/wtss.svg?branch=master)](https://travis-ci.com/e-sensing/wtss)
 [![Codecov test
