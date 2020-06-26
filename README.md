@@ -2,7 +2,7 @@ WTSS - R interface to Web Time Series Service
 ================
 
 [![Travis-CI Build
-Status](https://travis-ci.org/e-sensing/wtss.svg?branch=master)](https://travis-ci.org/e-sensing/wtss)
+Status](https://travis-ci.com/e-sensing/wtss.svg?branch=master)](https://travis-ci.com/e-sensing/wtss)
 [![Codecov test
 coverage](https://codecov.io/gh/e-sensing/wtss/branch/master/graph/badge.svg)](https://codecov.io/gh/e-sensing/wtss?branch=master)
 
