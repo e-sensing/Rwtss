@@ -1,0 +1,27 @@
+http_interactions:
+- request:
+    method: get
+    uri: http://www.esensing.dpi.inpe.br/wtss/list_coverages
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Fri, 22 Jan 2021 23:27:01 GMT
+      server: nginx/1.10.3 (Ubuntu)
+      content-type: application/json; charset=utf-8
+      content-length: '37'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"coverages":["MOD13Q1","MOD13Q1_M"]}'
+  recorded_at: 2021-01-22 23:27:01 GMT
+  recorded_with: vcr/0.6.0, webmockr/0.7.4
