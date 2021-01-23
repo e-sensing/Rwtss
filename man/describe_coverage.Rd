@@ -17,7 +17,7 @@ describe_coverage(URL, name, .print = TRUE)
 tibble with coverage description
 }
 \description{
-Contacts the WTSS server to describe one  coverages
+Contacts the WTSS server to describe one coverage
 }
 \examples{
 describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")

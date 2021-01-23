@@ -32,7 +32,7 @@ depending on the coverage.}
 depending on the coverage.}
 }
 \value{
-time series in a tibble format (NULL )
+time series in a tibble format (NULL)
 }
 \description{
 Retrieves the time series for a pair of coordinates
@@ -42,7 +42,7 @@ Retrieves the time series for a pair of coordinates
 # connect to a WTSS server
 wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
 # retrieve a time series
-ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = c("ndvi"), 
+ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = "ndvi", 
                              latitude = -10.408, longitude = -53.495)
 # plot the time series
 plot(ndvi_ts)
