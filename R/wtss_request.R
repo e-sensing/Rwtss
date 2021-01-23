@@ -27,12 +27,17 @@
 .wtss_get_response <- function(request) {
     # check if URL exists and perform the request
     response <- NULL
-
-    tryCatch(response <- RCurl::getURL(request), 
-             error = function(e) {
-                 return(NULL)
-             })
-
+    
+    tryCatch({
+        response <- httr::GET(request)
+        httr::stop_for_status(response)
+    }, 
+    error = function(e) {
+        return(NULL)
+    })
+    
+    if (!purrr::is_null(response))
+        response <- httr::content(response, "text", encoding = "UTF-8")
     return(response)
 }
 

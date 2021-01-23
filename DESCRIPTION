@@ -32,16 +32,17 @@ Imports:
     lubridate,
     magrittr,
     purrr,
-    RCurl,
+    httr,
     stats,
     stringr,
     tibble,
     zoo
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     bfast,
     knitr,
     rmarkdown,
     roxygen2,
-    testthat
+    testthat,
+    vcr
 VignetteBuilder: knitr
