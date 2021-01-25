@@ -1,21 +1,20 @@
-citHeader("To cite WTSS in publications use: ")
+citHeader("To cite Rwtss in publications use: ")
 
 citEntry(entry = "Manual",
-         title        = "{WTSS} - R interface to Web Time Series Service",
+         title        = "{Rwtss} - R Interface to Web Time Series Service",
          author       = personList(as.person("Gilberto Queiroz"),
                                    as.person("Gilberto Camara"),
                                    as.person("Pedro Andrade"),
-                                   as.person("Luiz Assis"),
-                                   as.person("Rolf Simoes"),
-                                   as.person("Alber Sanchez"),
-                                   as.person("Victor Maus")),
+                                   as.person("Felipe Souza"),
+                                   as.person("Luiz Assis")
+                                   ),
          organization = "INPE - Brazilian National Institute for Space Research",
          address      = "Sao Jose dos Campos, Brazil",
-         year         = "2019",
-         url          = "https://github.com/e-sensing/wtss",
+         year         = "2021",
+         url          = "https://github.com/e-sensing/Rwtss",
          
          textVersion  =
-             paste("Gilberto Queiroz, Gilberto Camara, Pedro Andrade, Rolf Simoes, Luiz Assis, Victor Maus, (2019).",
-                   "WTSS: R interface to Web Time Series Service.",
-                   "URL https://github.com/e-sensing/wtss")
+             paste("Gilberto Queiroz, Gilberto Camara, Pedro Andrade, Felipe Souza, Luiz Assis, Rolf Simoes, Victor Maus, (2021), ",
+                   "Rwtss: R interface to Web Time Series Service",
+                   "URL https://github.com/e-sensing/Rwtss")
 )

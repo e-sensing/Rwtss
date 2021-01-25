@@ -1,11 +1,11 @@
 # On load
 .onAttach <- function(lib, pkg){
-    packageStartupMessage("wtss - R interface to Web Time Series Service.")
+    packageStartupMessage("Rwtss - R interface to Web Time Series Service.")
     packageStartupMessage(
-        sprintf("Loaded wtss v%s.
-        See ?wtss for help, citation(\"wtss\") for use in publication.
-        See demo(package = \"wtss\") for examples.",
-                utils::packageDescription("wtss")$Version) )
+        sprintf("Loaded Rwtss v%s.
+        See ?Rwtss for help, citation(\"Rwtss\") for use in publication.
+        See demo(package = \"Rwtss\") for examples.",
+                utils::packageDescription("Rwtss")$Version) )
 }
 
 .onLoad <- function(lib, pkg) {

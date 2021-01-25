@@ -16,5 +16,8 @@ vector with coverage name
 Lists coverages available in the WTSS service
 }
 \examples{
+\donttest{
+# Using external server 
 list_coverages("http://www.esensing.dpi.inpe.br/wtss")
+}
 }

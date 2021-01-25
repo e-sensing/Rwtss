@@ -1,7 +1,7 @@
-#' @title wtss
+#' @title Rwtss
 #' @description An R client to the web time series service (WTSS)
 #' 
-#' @section WTSS API:
+#' @section Rwtss API:
 #' 
 #' Implements an R interface to a web time series service (WTSS) 
 #' that offers time series of remote sensing data using a simple API. 
@@ -19,7 +19,7 @@
 #' }
 #' 
 #' @docType package
-#' @name wtss-package
-#' @aliases wtss
+#' @name Rwtss-package
+#' @aliases Rwtss
 "_PACKAGE"
 NULL

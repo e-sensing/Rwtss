@@ -7,26 +7,26 @@
 
 # installing and loading packages
 library(bfast)
-library(wtss)
+library(Rwtss)
 
 # choose a WTSS server
 server <-  "http://www.esensing.dpi.inpe.br/wtss"
 
 # Get the list of coverages provided by the service
-coverages <-  wtss::list_coverages(server)
+coverages <-  Rwtss::list_coverages(server)
 
 # Get the description of the third coverage
-cv <- wtss::describe_coverage(server,c("MOD13Q1"))
+cv <- Rwtss::describe_coverage(server,c("MOD13Q1"))
 
 # get a time series for the "ndvi" attribute
-ndvi_wtss <- wtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
+ndvi_wtss <- Rwtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
                          latitude = -10.408, longitude = -53.495)
 
 # plot the time-series
 plot(ndvi_wtss)
 
 # transform time series to the TS format
-ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss)
+ndvi_ts <- Rwtss::wtss_to_ts(ndvi_wtss)
 
 # use BFAST01 for checking for one major break in the time series
 one_break <-  bfast::bfast01(ndvi_ts)

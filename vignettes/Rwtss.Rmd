@@ -1,5 +1,5 @@
 ---
-title: "WTSS - R interface to Web Time Series Service"
+title: "Rwtss - R interface to Web Time Series Service"
 author:
 - affiliation: National Institute for Space Research (INPE), Brazil
   name: Gilberto Queiroz
@@ -10,11 +10,11 @@ author:
 - affiliation: National Institute for Space Research (INPE), Brazil
   name: Pedro Andrade
 - affiliation: National Institute for Space Research (INPE), Brazil
-  name: Karine Ferreira
-- affiliation: University of Vienna, Austria
-  name: Victor Maus
+  name: Felipe Souza
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
+  html_document:
+    df_print: paged
   pdf_document:
     citation_package: natbib
     df_print: tibble
@@ -28,7 +28,7 @@ fontsize: 11pt
 graphics: yes
 mathtools: yes
 bibliography: ../inst/extdata/markdown/references-bigdata.bib
-abstract: The WTSS-R package is a front-end to the Web Time Series Service \\ (WTSS)
+abstract: The Rwtss package is a front-end to the Web Time Series Service \\ (WTSS)
   that offers time series of remote sensing data using a simple API. A WTSS server
   takes as input a n Earth observation data cube, that has a spatial and a temporal
   dimension and can have multiple bands attributes. The WTSS API has three commands,
@@ -38,7 +38,7 @@ abstract: The WTSS-R package is a front-end to the Web Time Series Service \\ (W
 vignette: |
   %\VignetteEncoding{UTF-8} 
   %\VignetteEngine{knitr::rmarkdown} 
-  %\VignetteIndexEntry{SITS: Data Analysis and Machine Learning using Satellite Image Time Series}
+  %\VignetteIndexEntry{Rwtss - R interface to Web Time Series Service}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -51,7 +51,7 @@ Recently, the concept of *data cubes* has emerged as a relevant paradigm for org
 Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time. Let $S = \{s_{1}, s_{2},\dotsc, s_{n}\}$ be a set of remote sensing images which shows the same region at \emph{n} consecutive times $T = \{t_{1}, t_{2}, \dotsc, t_{n}\}$. Each location \emph{[x, y, t]} of a pixel in an image (latitude, longitude, time) maps to a \emph{[i, j, k]} position in a 3D array. Each array position \emph{[i, j, k]} will be associated to a set of attributes values $A = \{a_{1}, a_{2}, \dotsc, a_{m}\}$ which are the sensor measurements at each location in space-time (see figure below}). For optical sensors, these observations are proportional to Earth's reflexion of the incoming solar radiation at different wavelengths of the electromagnetic spectrum. 
 
 ```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
-knitr::include_graphics(system.file("extdata/markdown/figures", "arrays.jpg", package = "wtss"))
+knitr::include_graphics(system.file("extdata/markdown/figures", "arrays.jpg", package = "Rwtss"))
 ```
 
 In what follows, we use the term "coverage" in the same sense as the definition of a "data cube", proposed from Appel and Pebesma [@Appel2019]: *A regular, dense Earth observation (EO) data cube is a four-dimensional array with dimensions x (longitude or easting), y (latitude or northing), and time, with the following properties:*
@@ -78,7 +78,7 @@ Given the different designs of Earth observation data cubes, and their inherent 
 Given a series of remote sensing snapshots, we can reorganise them into a set of time series.  A satellite image time series is obtained by taking measurements in the same pixel location $(x,y)$ in consecutive times $t_1,...,t_m$, as shown in the figure below.
 
 ```{r, echo = FALSE, fig.align="center", fig.height=3, fig.width=5, fig.cap="Events associated to a time series"}
-knitr::include_graphics(system.file("extdata/markdown/figures", "time_series.png", package = "wtss"))
+knitr::include_graphics(system.file("extdata/markdown/figures", "time_series.png", package = "Rwtss"))
 ```
 
 Recent results in the literature show that analysis of satellite image times series enables extracting long-term trends of land change \citep[@Pasquarella2016]. Such information which would be harder to obtain by processing 2D images separately. These analysis are supported by algorithms such as TWDTW [@Maus2016], TIMESTAT [@Jonsson2004] and BFAST [@Verbesselt2010]. These algorithms process individual time-series and combine the results for selected periods to generate classified maps. 
@@ -95,7 +95,7 @@ The WTSS API has three commands: (a) *list_coverages* that returns a list of cov
 
 The first step towards using the service is connecting to a server that supports the WTSS protocol. Currently, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. So, the first procedure is to find the URL of a WTSS service.
 
-```{r}
+```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
 wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
 ```
@@ -104,26 +104,35 @@ wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
 
 This operation allows clients to retrieve the capabilities provided by any server that implements WTSS. It returns a list of coverage names available in a server instance.
 
-```{r}
+```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-wtss::list_coverages(wtss_inpe)
+Rwtss::list_coverages(wtss_inpe)
+```
+```{r, echo = FALSE}
+paste(c("MOD13Q1", "MOD13Q1_M"))
 ```
 
 ## Describing a coverage from the WTSS server
 
 This operation returns the metadata for a given coverage identified by its name. It includes its range in the spatial and temporal dimensions.
 
-```{r}
+```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-desc <- wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+```
+
+
+```{r, echo = FALSE}
+# Coverage description available in the wtss object
+cat("---------------------------------------------------------------------")
+cat("WTSS server URL = http://www.esensing.dpi.inpe.br/wtss")
+cat("Cube (coverage) = MOD13Q1")
+cat("Timeline - 452 time steps")
+cat("start_date: 2000-02-18 end_date: 2019-09-30")
+cat("---------------------------------------------------------------------")
 ```
 
 The coverage description is also saved as a tibble in the wtss object, to be used whenever required.
-
-```{r}
-# Coverage description available in the wtss object
-desc
-```
 
 
 ## Obtaining a time series 
@@ -131,54 +140,27 @@ desc
 This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *URL*: a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
 *end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
 
-```{r}
+```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage
-ts   <- wtss::time_series(wtss_inpe, name = "MOD13Q1", 
+ndvi_ts   <- Rwtss::time_series(wtss_inpe, name = "MOD13Q1", 
         attributes = c("ndvi","evi"), longitude = -45.00, latitude  = -12.00,
         start_date = "2000-02-18", end_date = "2016-12-18")
-ts
 ```
 
+```{r, echo = FALSE}
+ndvi_ts <- readRDS(file = system.file("extdata/ndvi_ts.rds", package = "Rwtss"))
+class(ndvi_ts) <- c("wtss", class(ndvi_ts))
+```
+
+```{r}
+ndvi_ts
+```
 
 The result of the operation is a `tibble`, which is a generalization of a `data.frame`, the usual way in *R* to organise data in tables. Tibbles are part of the `tidyverse`, a collection of R packages designed to work together in data manipulation [@Wickham2017]. The tibble contains data and metadata. The first six columns contain the metadata: satellite, sensor, spatial and temporal information, and the coverage from where the data has been extracted. The spatial location is given in longitude and latitude coordinates for the "WGS84" ellipsoid. The `time_series` column contains the time series data for each spatiotemporal location. This data is also organized as a tibble, with a column with the dates and the other columns with the values for each spectral band. 
 
 ```{r}
 # Showing the contents of a time series
-if(!is.null(ts))
-  ts$time_series[[1]]
+ndvi_ts$time_series[[1]]
 ```
 
-## Plotting the time series 
-
-For convenience, the **WTSS** package provides a convenience funtion for plotting the time series.
-
-```{r, fig.align="center", fig.height=3, fig.width=5, fig.cap="A Normalized Difference Vegetation Index (NDVI) time series"}
-# Plotting the contents of a time series
-if(!is.null(ts))
-  plot(ts)
-```
-
-
-## Conversion to "zoo" and "ts" formats
-
-Since many time series analysis functions in R require data to be made available in the "zoo" and "ts" formats, the *wtss* package provides two convenience functions: *wtss_to_zoo* and "*wtss_to_ts*. The example below shows the detection of trends in a series converted to the "ts" format using  the BFAST package [@Verbesselt2010].
-
-
-```{r, fig.align="center", fig.height=3, fig.width=5, fig.cap="Breaks on an NDVI time series detected by BFAST"}
-library(bfast)
-
-# get a time series for the "ndvi" attribute
-ndvi_wtss <- wtss::time_series(wtss_inpe, "MOD13Q1", attributes = c("ndvi"), 
-                         latitude = -10.408, longitude = -53.495, 
-                         start = "2000-02-18", end = "2016-01-01")
-
-if(!is.null(ndvi_wtss)){
-  # convert to ts
-  ndvi_ts <- wtss::wtss_to_ts(ndvi_wtss, band = "ndvi")
-  
-  # detect trends
-  bf <- bfast::bfast01(ndvi_ts)
-  # plot the result
-  plot(bf)
-}
-```
+## References

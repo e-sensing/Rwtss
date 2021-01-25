@@ -26,16 +26,6 @@
     # convert string into date format
     timeline <- unlist(strsplit(items$result$timeline, split = " "))
     
-    # # check date format
-    # format <- lubridate::guess_formats(timeline[1], c("%Y-%m-%d", "%Y-%m"))
-    # 
-    # # if monthly date
-    # if (any(format == "%Y-%m"))
-    #     timeline <- as.Date(zoo::as.yearmon(timeline))
-    # else # if weekly or daily date
-    #     if (any(format == "%Y-%m-%d"))
-    #         timeline <- as.Date(timeline, format)
-    
     timeline <- lubridate::as_date(timeline)
     
     return(list(center_coordinate = 
@@ -55,18 +45,20 @@
 #'                    (if NULL all bands are exported).
 #' @return            List of time series in zoo format.
 #' @examples
+#' \donttest{
 #' # retrieve a time series
-#' ts_wtss  <- wtss::time_series("http://www.esensing.dpi.inpe.br/wtss", 
+#' ts_wtss  <- Rwtss::time_series("http://www.esensing.dpi.inpe.br/wtss", 
 #'                 "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to zoo
-#' zoo.lst <- wtss::wtss_to_zoo(ts_wtss)
+#' zoo.lst <- Rwtss::wtss_to_zoo(ts_wtss)
+#' }
 #' @export
 wtss_to_zoo <- function(data, band = NULL){
     # only convert one row at a time
-    if (nrow(data) > 1){
-        message ("Conversion to ts only accepts one time series at a time.")  
+    if (nrow(data) > 1) {
+        message("Conversion to ts only accepts one time series at a time.")  
         data <- data[1,]
     }
 
@@ -87,7 +79,7 @@ wtss_to_zoo <- function(data, band = NULL){
 #' A WTSS tibble contains data retrieved from a WTSS server. 
 #' These data sets are time series with irregular intervals. Given that
 #' of many functions that use the R "ts" format, this function converts 
-#' a WTSS time series (a tibble with data and metadata) to the "ts" format. 
+#' a time series (a tibble with data and metadata) to the "ts" format. 
 #' Since  "ts" requires regular time series, it interpolates 
 #' the original irregular time series to a regular time series. To do this, the 
 #' user needs to specify a period which is recognised by the "ts" format. 
@@ -105,19 +97,21 @@ wtss_to_zoo <- function(data, band = NULL){
 #'                       c(12, 52, 365)
 #' @return               A time series in the ts format.
 #' @examples
+#' \donttest{
 #' # connect to a WTSS server
 #' wtss <- "http://www.esensing.dpi.inpe.br/wtss"
 #' # retrieve a time series
-#' ts_wtss  <- wtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+#' ts_wtss  <- Rwtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
 #'                 longitude = -45.00, latitude  = -12.00,
 #'                 start_date = "2000-02-18", end_date = "2016-12-18")
 #' # convert to ts
-#' ts <- wtss::wtss_to_ts(ts_wtss, band = "ndvi")
+#' ts <- Rwtss::wtss_to_ts(ts_wtss, band = "ndvi")
+#' }
 #' @export
 wtss_to_ts <- function(data, band  = NULL, period = "week"){
     # only convert one row at a time
-    if(nrow(data) > 1) {
-        message ("Conversion to ts only accepts one time series at a time.")
+    if (nrow(data) > 1) {
+        message("Conversion to ts only accepts one time series at a time.")
         data <- data[1,]
     }
     # retrieve the time series
@@ -132,7 +126,7 @@ wtss_to_ts <- function(data, band  = NULL, period = "week"){
         band <- names(ts_wtss[,2])
     }
     # more than one band?
-    if (length(band) > 1){
+    if (length(band) > 1) {
         message("WTSS - Conversion to ts only accepts one band at a time.")
         message("using the first available band")
         band <- band[1]
@@ -160,7 +154,7 @@ wtss_to_ts <- function(data, band  = NULL, period = "week"){
         ts_frequency  <- period
     }
     else {
-        message("WTSS - Invalid period for conversion to ts")
+        message("Rwtss - Invalid period for conversion to ts")
         return(NULL)
     }
     
@@ -169,7 +163,7 @@ wtss_to_ts <- function(data, band  = NULL, period = "week"){
     end_date   <- lubridate::as_date(data$end_date)
     
     # convert to zoo
-    ts_zoo <-  wtss::wtss_to_zoo(data)
+    ts_zoo <-  Rwtss::wtss_to_zoo(data)
     
     # create a regular zoo time series 
     # create a timeline with regular interval

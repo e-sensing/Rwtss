@@ -1,13 +1,11 @@
-Package: wtss
+Package: Rwtss
 Title: An R Client for Web Time-Series Service
-Version: 2.2.0
+Version: 0.8.0
 Authors@R: c(person("Gilberto", "Queiroz", role = c("aut"), email ="gilberto.queiroz@inpe.br"),
              person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"),
              person("Pedro", "Andrade", role = c("aut"), email = "pedro.andrade@inpe.br"), 
-             person("Luiz Fernando", "Assis", role = c("aut"), email ="luizffga@dpi.inpe.br"),
-             person("Rolf", "Simoes", role = c("aut"), email ="rolf.simoes@dpi.inpe.br"),          
-             person("Alber", "Sanchez", role = c("aut"), email ="alber.ipia@inpe.br"), 
-             person("Victor", "Maus", role = c("aut"), email ="vwmaus1@gmail.com")
+             person("Felipe", "Souza", role = c('aut'), email = 'felipe.carvalho@inpe.br'),
+             person("Luiz Fernando", "Assis", role = c("aut"), email ="luiz.assis@inpe.br")
              )
 Maintainer: Gilberto Camara <gilberto.camara@inpe.br>
 Description: An R client that provides remote access to satellite image time 
@@ -15,8 +13,8 @@ Description: An R client that provides remote access to satellite image time
     users to obtain time series. The functions include listing the data sets 
     available in the server, describing the contents of a data set, and 
     retrieving a time series based on spatial location and temporal filters.
-URL: https://github.com/e-sensing/wtss/
-BugReports: https://github.com/e-sensing/wtss/issues
+URL: https://github.com/e-sensing/Rwtss/
+BugReports: https://github.com/e-sensing/Rwtss/issues
 ByteCompile: true
 LazyData: true
 License: GPL-3
@@ -44,5 +42,7 @@ Suggests:
     rmarkdown,
     roxygen2,
     testthat,
+    spelling,
     vcr
 VignetteBuilder: knitr
+Language: en-US

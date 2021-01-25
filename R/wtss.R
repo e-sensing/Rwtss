@@ -6,7 +6,10 @@
 #' @param URL       URL of the server
 #' @return          vector with coverage name
 #' @examples
+#' \donttest{
+#' # Using external server 
 #' list_coverages("http://www.esensing.dpi.inpe.br/wtss")
+#' }
 #' @export
 list_coverages <- function(URL) {
     
@@ -18,7 +21,7 @@ list_coverages <- function(URL) {
    
     # if the coverage list is NULL, the wtss.obj is invalid
     if (purrr::is_null(coverages)) {
-        message(paste0("WTSS server at URL ", URL, "not responding"))
+        message(paste0("WTSS server at URL ", URL, " not responding"))
     }
   
     return(coverages)
@@ -34,7 +37,10 @@ list_coverages <- function(URL) {
 #' @return            tibble with coverage description
 #' 
 #' @examples
+#' \donttest{
+#' # Using external server 
 #' describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")
+#' }
 #' @export
 describe_coverage <- function(URL, name, .print = TRUE) {
   
@@ -42,7 +48,7 @@ describe_coverage <- function(URL, name, .print = TRUE) {
     URL <- .wtss_remove_trailing_dash(URL)
     # only one coverage at a time
     assertthat::assert_that(length(name) == 1, 
-                msg = "WTSS - select only one coverage to describe")
+                msg = "Rwtss - select only one coverage to describe")
     result <- NULL
   
     # build a "describe_coverage" request
@@ -80,11 +86,11 @@ describe_coverage <- function(URL, name, .print = TRUE) {
 #'                      depending on the coverage.
 #' @return              time series in a tibble format (NULL)
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # connect to a WTSS server
 #' wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
 #' # retrieve a time series
-#' ndvi_ts <- wtss::time_series(wtss_server, "MOD13Q1", attributes = "ndvi", 
+#' ndvi_ts <- Rwtss::time_series(wtss_server, "MOD13Q1", attributes = "ndvi", 
 #'                              latitude = -10.408, longitude = -53.495)
 #' # plot the time series
 #' plot(ndvi_ts)
@@ -105,16 +111,16 @@ time_series <- function(URL,
     # if not, get the coverage description
     # if the description of the coverage is available, skip this part
     if (purrr::is_null(wtss.env$desc) || wtss.env$desc$name != name) {
-        wtss.env$desc <-  wtss::describe_coverage(URL, name, .print = FALSE)
+        wtss.env$desc <-  Rwtss::describe_coverage(URL, name, .print = FALSE)
         # if describe_coverage fails, return a default time series
         
         if(purrr::is_null(wtss.env$desc)) {
-          message(paste0("WTSS - could not retrieve description of coverage ",
+          message(paste0("Rwtss - could not retrieve description of coverage ",
                          name, " from WTSS server"))
-          message(paste0("WTSS - retrieving backup time series"))
+          message(paste0("Rwtss - retrieving backup time series"))
           
           ts.tb <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
-                                              package = "wtss"))
+                                              package = "Rwtss"))
           return(ts.tb)
         }      
     }
@@ -124,17 +130,17 @@ time_series <- function(URL,
     if (purrr::is_null(attributes))
         attributes <- cov_bands
     if (!all(attributes %in% cov_bands)) {
-        message("WTSS - attributes not available.")
+        message("Rwtss - attributes not available.")
         return(NULL)
     }
   
     # check bounds for latitude and longitude
     if (longitude < wtss.env$desc$xmin || longitude > wtss.env$desc$xmax) {
-        message("WTSS - invalid longitude value") 
+        message("Rwtss - invalid longitude value") 
         return(NULL)
     }
     if (latitude < wtss.env$desc$ymin || latitude > wtss.env$desc$ymax) {
-        message("WTSS - invalid latitude value")
+        message("Rwtss - invalid latitude value")
         return(NULL)
     }
   
@@ -150,7 +156,7 @@ time_series <- function(URL,
     # test is start date is valid
     if (lubridate::as_date(start_date) < lubridate::as_date(timeline[1]) ||
       lubridate::as_date(start_date) > lubridate::as_date(timeline[n_dates])) {
-          message("WTSS - invalid start date")
+          message("Rwtss - invalid start date")
           return(NULL)
     }
   
@@ -158,7 +164,7 @@ time_series <- function(URL,
     if (lubridate::as_date(end_date) <  lubridate::as_date(timeline[1]) ||
         lubridate::as_date(end_date) >  lubridate::as_date(timeline[n_dates]) ||
         lubridate::as_date(end_date) <  lubridate::as_date(start_date)) {
-        message("WTSS - invalid end date")
+        message("Rwtss - invalid end date")
         return(NULL)
     }
     items <- NULL
@@ -177,7 +183,7 @@ time_series <- function(URL,
     items <- .wtss_parse_json(response)
   
     # if the server does not answer any item
-    if(purrr::is_null(items)){
+    if (purrr::is_null(items)) {
       
         ts.tb <- readRDS(file = system.file("extdata/ndvi_ts.rds", 
                                           package = "wtss"))

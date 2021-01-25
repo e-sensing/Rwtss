@@ -1,6 +1,6 @@
 ---
-title: "WTSS - R interface to Web Time Series Service"
-authors: Gilberto Ribeiro, Gilberto Camara, Luiz Assis, Karine Ferreira, Rolf Simões, Victor Maus
+title: "Rwtss - R interface to Web Time Series Service"
+authors: Gilberto Ribeiro, Gilberto Camara, Luiz Assis, Pedro Andrade, Felipe Souza
 output: 
     github_document
 ---
@@ -21,43 +21,68 @@ knitr::opts_chunk$set(
 
 ## About the package
 
-The WTSS-R package is a front-end to the Web Time Series Service (WTSS) that offers time series of remote sensing data using a simple API. A WTSS server takes as input an Earth observation data cube, that has a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The WTSS API has three commands, which are are (a) *list_coverages*, that returns a list of coverages available in the server; (b) *describe_coverage*, that that returns the metadata for a given coverage; (c) *time_series*, that returns a time series for a spatio-temporal location.
+The Rwtss package is a front-end to the Web Time Series Service (WTSS) that offers time series of remote sensing data using a simple API. A WTSS server takes as input an Earth observation data cube, that has a spatial and a temporal dimension and can be multidimensional in terms of its attributes.  The WTSS API has three commands, which are are (a) *list_coverages*, that returns a list of coverages available in the server; (b) *describe_coverage*, that that returns the metadata for a given coverage; (c) *time_series*, that returns a time series for a spatio-temporal location.
 
 The R interface to WTSS services considers that "coverages" are equivalent to "data cubes". Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
 
 The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a WTSS service
 in the address below.
 
-```{r}
-wtss_inpe <- "http://www.esensing.dpi.inpe.br/wtss"
+```{r, eval = FALSE}
+# Connect to the WTSS server at INPE Brazil
+wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
 ```
 
 ## Listing coverages available at the WTSS server
 
 This operation allows clients to retrieve the capabilities provided by any server that implements WTSS. It returns a list of coverage names available in a server instance.
 
-```{r}
+```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-wtss::list_coverages(wtss_inpe)
+Rwtss::list_coverages(wtss_inpe)
+```
+```{r, echo = FALSE}
+paste(c("MOD13Q1", "MOD13Q1_M"))
 ```
 
 ## Describing a coverage from the WTSS server
 
 This operation returns the metadata for a given coverage identified by its name. It includes its range in the spatial and temporal dimensions.
 
-```{r}
+```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-wtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
 ```
+
+
+```{r, echo = FALSE}
+# Coverage description available in the wtss object
+cat("---------------------------------------------------------------------")
+cat("WTSS server URL = http://www.esensing.dpi.inpe.br/wtss")
+cat("Cube (coverage) = MOD13Q1")
+cat("Timeline - 452 time steps")
+cat("start_date: 2000-02-18 end_date: 2019-09-30")
+cat("---------------------------------------------------------------------")
+```
+
 ## Obtaining a time series 
 
 This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
 *end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
 
-```{r}
+```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage
-ndvi_ts <- wtss::time_series(wtss_inpe, "MOD13Q1", attributes = c("ndvi"), latitude = -10.408, longitude = -53.495)
+ndvi_ts   <- Rwtss::time_series(wtss_inpe, name = "MOD13Q1", 
+        attributes = c("ndvi","evi"), longitude = -45.00, latitude  = -12.00,
+        start_date = "2000-02-18", end_date = "2016-12-18")
+```
 
+```{r, echo = FALSE}
+library(tibble)
+ndvi_ts <- readRDS(file = system.file("extdata/ndvi_ts.rds", package = "Rwtss"))
+```
+
+```{r}
 ndvi_ts
 ```
 
@@ -70,30 +95,3 @@ For compatibility with the **sits** suite of packages for satellite image time s
 # Showing the contents of a time series
 ndvi_ts$time_series[[1]]
 ```
-
-## Plotting the time series 
-
-For convenience, the **WTSS** package provides a convenience funtion for plotting the time series.
-
-```{r}
-# Plotting the contents of a time series
-plot(ndvi_ts)
-```
-
-## Conversion to "zoo" and "ts" formats
-
-Since many time series analysis functions in R require data to be made available in the "zoo" and "ts" formats, the *wtss* package provides two convenience functions: *wtss_to_zoo* and "*wtss_to_ts*. The example below shows the detection of trends in a series converted to the "ts" format using  the BFAST package [@Verbesselt2010].
-
-
-```{r}
-library(bfast)
-
-# convert to ts
-ts <- wtss::wtss_to_ts(ndvi_ts, band = "ndvi")
-
-# detect trends
-bf <- bfast::bfast01(ts)
-# plot the result
-plot(bf)
-```
-

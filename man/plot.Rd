@@ -24,14 +24,17 @@ Input  tibble (useful for chaining functions).
 Given a tibble with a set of time series, plot them.
 }
 \examples{
+\donttest{
+# Access to external service
 # Read one time series from the WTSS server
 # plot one time series
 wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
-ts   <- wtss::time_series(wtss_server, name = "MOD13Q1", 
+ts   <- Rwtss::time_series(wtss_server, name = "MOD13Q1", 
                 attributes = c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,
                 start_date = "2000-02-18", end_date = "2016-12-18")
 plot(ts)
+}
 }
 \author{
 Gilberto Camara, \email{gilberto.camara@inpe.br}
