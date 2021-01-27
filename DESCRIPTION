@@ -1,18 +1,37 @@
 Package: Rwtss
-Title: An R Client for Web Time-Series Service
+Title: Client for Web Time-Series Service
 Version: 0.8.0
-Authors@R: c(person("Gilberto", "Queiroz", role = c("aut"), email ="gilberto.queiroz@inpe.br"),
-             person("Gilberto", "Camara", role = c("aut", "cre"), email = "gilberto.camara@inpe.br"),
-             person("Pedro", "Andrade", role = c("aut"), email = "pedro.andrade@inpe.br"), 
-             person("Felipe", "Souza", role = c('aut'), email = 'felipe.carvalho@inpe.br'),
-             person("Luiz Fernando", "Assis", role = c("aut"), email ="luiz.assis@inpe.br")
+Authors@R: c(person(given = "Gilberto", 
+                    family = "Queiroz", 
+                    role = c("aut"), 
+                    email ="gilberto.queiroz@inpe.br",
+                    comment = c(ORCID = "0000-0001-7534-0219")),
+             person(given = "Gilberto", 
+                    family = "Camara", 
+                    role = c("aut", "cre"), 
+                    email = "gilberto.camara@inpe.br",
+                    comment = c(ORCID = "0000-0002-3681-487X")),
+             person(given = "Pedro", 
+                    family = "Andrade", 
+                    role = c("aut"), 
+                    email = "pedro.andrade@inpe.br",
+                    comment = c(ORCID = "0000-0001-8675-4046")), 
+             person(given = "Felipe", 
+                    family = "Souza", 
+                    role = c('aut'), 
+                    email = 'felipe.carvalho@inpe.br'),
+             person(given = "Luiz", 
+                    family = "Assis", 
+                    role = c("aut"), 
+                    email ="luiz.assis@inpe.br")
              )
 Maintainer: Gilberto Camara <gilberto.camara@inpe.br>
-Description: An R client that provides remote access to satellite image time 
-    series using a web time series service. The client allows Earth observation 
-    users to obtain time series. The functions include listing the data sets 
-    available in the server, describing the contents of a data set, and 
-    retrieving a time series based on spatial location and temporal filters.
+Description: Allows remote access to satellite image time 
+    series provided by the web time series service (WTSS) available 
+    at servers such as <http://www.esensing.dpi.inpe.br/wtss/>. 
+    The functions include listing the data sets available in WTSS servers, 
+    describing the contents of a data set, and retrieving a time series 
+    based on spatial location and temporal filters.
 URL: https://github.com/e-sensing/Rwtss/
 BugReports: https://github.com/e-sensing/Rwtss/issues
 ByteCompile: true
