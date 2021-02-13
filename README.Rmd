@@ -13,10 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-[![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/wtss)](https://CRAN.R-project.org/package=wtss)
-[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/wtss?color=blue)](https://CRAN.R-project.org/package=wtss)
-[![Travis-CI Build Status](https://travis-ci.com/e-sensing/wtss.svg?branch=master)](https://travis-ci.com/e-sensing/wtss)
-[![Codecov test coverage](https://codecov.io/gh/e-sensing/wtss/branch/master/graph/badge.svg)](https://codecov.io/gh/e-sensing/wtss?branch=master)
+[![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/Rwtss)](https://CRAN.R-project.org/package=Rwtss)
+[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/Rwtss?color=blue)](https://CRAN.R-project.org/package=Rwtss)
+[![Build Status](https://drone.dpi.inpe.br/api/badges/e-sensing/Rwtss/status.svg)](https://drone.dpi.inpe.br/e-sensing/Rwtss)
+[![codecov](https://codecov.io/gh/e-sensing/Rwtss/branch/master/graph/badge.svg?token=gDsvUHhLmI)](https://codecov.io/gh/e-sensing/Rwtss)
 
 
 ## About the package
