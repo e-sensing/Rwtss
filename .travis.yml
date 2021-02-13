@@ -1,7 +1,0 @@
-language: r
-
-r_github_packages:
-  - r-lib/covr
-
-after_success:
- - Rscript -e 'covr::codecov(token = "e37ad435-50cc-44ba-bc75-300d974f1fac")'
