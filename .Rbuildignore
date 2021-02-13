@@ -9,4 +9,4 @@ Rprofile$
 ^doc$
 ^Meta$
 ^man/figures/*$
-.travis.yml
+^\.drone\.yml$
