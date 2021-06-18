@@ -29,7 +29,8 @@ test_that("Time Series", {
         
         ts    <- Rwtss::time_series(wtss5, "MOD13Q1", c("ndvi","evi"), 
                                    longitude = -45.00, latitude  = -12.00,
-                                   start_date = "2000-02-18", end_date = "2016-12-18")
+                                   start_date = "2000-02-18", 
+                                   end_date = "2016-12-18")
         expect_true(nrow(ts$time_series[[1]]) == 388)
         expect_true(ncol(ts$time_series[[1]]) == 3)
     })
