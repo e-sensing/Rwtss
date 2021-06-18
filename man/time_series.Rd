@@ -11,7 +11,8 @@ time_series(
   longitude,
   latitude,
   start_date = NULL,
-  end_date = NULL
+  end_date = NULL,
+  token = NULL
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ depending on the coverage.}
 
 \item{end_date}{End date in the format yyyy-mm-dd or yyyy-mm 
 depending on the coverage.}
+
+\item{token}{A character with token to be add in URL.}
 }
 \value{
 time series in a tibble format (NULL)

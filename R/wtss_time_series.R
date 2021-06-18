@@ -61,7 +61,7 @@ wtss_to_zoo <- function(data, band = NULL){
         message("Conversion to ts only accepts one time series at a time.")  
         data <- data[1,]
     }
-
+    
     ts <- data$time_series[[1]]
     if (purrr::is_null(band))
         band <-  colnames(ts[-1:0])

@@ -58,7 +58,7 @@
     }
     else
         json_response <- NULL
-        
+    
     return(json_response)
 }
 #' @title Process a request to the WTSS server
@@ -76,5 +76,5 @@
         result <- .wtss_parse_json(.wtss_send_request(request))
         ce <- ce + 1
     }
-    return (result)
+    return(result)
 }
