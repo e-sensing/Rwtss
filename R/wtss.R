@@ -150,9 +150,9 @@ time_series <- function(URL,
   n_dates  <- length(timeline)
   
   if (purrr::is_null(start_date))
-    start_date <-  lubridate::as_date(timeline[1])
+    start_date <- lubridate::as_date(timeline[1])
   if (purrr::is_null(end_date))
-    end_date <-  lubridate::as_date(timeline[n_dates])
+    end_date <- lubridate::as_date(timeline[n_dates])
   
   # test is start date is valid
   if (lubridate::as_date(start_date) < lubridate::as_date(timeline[1]) ||
@@ -171,13 +171,16 @@ time_series <- function(URL,
   items <- NULL
   ce <- 0
   # try to retrieve the time series 
-  request <- paste(URL,"/time_series?coverage=", name, "&attributes=", 
-                   paste(attributes, collapse = ","),
-                   "&longitude=", longitude, "&latitude=", latitude,
+  request <- paste(URL,"/time_series?coverage=", name, 
+                   "&attributes=", paste(attributes, collapse = ","),
+                   "&longitude=", longitude, 
+                   "&latitude=", latitude,
                    "&start_date=", start_date, 
                    "&end_date=", end_date, sep = "")
+  
   if (!is.null(token))
     request <- paste(request, "&access_token=", token, sep = "")
+  
   # send a request to the WTSS server
   response <- .wtss_send_request(request)
   # parse the response 
