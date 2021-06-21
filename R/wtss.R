@@ -194,6 +194,10 @@ time_series <- function(URL,
     return(ts.tb)
   }
   
+  if (length(items$result$attributes) == 0)
+    stop(paste("The requisition returns zero attributes as result.",
+    "Please check your request or contact the server maintenance."))
+  
   # process the response         
   result <- list(.wtss_time_series_processing(items))
   
