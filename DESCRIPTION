@@ -19,16 +19,16 @@ Authors@R: c(person(given = "Gilberto",
              person(given = "Felipe", 
                     family = "Souza", 
                     role = c('aut'), 
-                    email = 'felipe.carvalho@inpe.br'),
+                    email = 'lipecaso@gmail.com'),
              person(given = "Luiz", 
                     family = "Assis", 
                     role = c("aut"), 
                     email ="luiz.assis@inpe.br")
              )
-Maintainer: Gilberto Camara <gilberto.camara@inpe.br>
+Maintainer: Felipe Souza <lipecaso@gmail.com>
 Description: Allows remote access to satellite image time 
     series provided by the web time series service (WTSS) available 
-    at servers such as <http://www.esensing.dpi.inpe.br/wtss/>. 
+    at servers such as <https://brazildatacube.dpi.inpe.br/wtss/>. 
     The functions include listing the data sets available in WTSS servers, 
     describing the contents of a data set, and retrieving a time series 
     based on spatial location and temporal filters.

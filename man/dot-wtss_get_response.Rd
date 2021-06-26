@@ -4,10 +4,12 @@
 \alias{.wtss_get_response}
 \title{Get a response to the WTSS server}
 \usage{
-.wtss_get_response(request)
+.wtss_get_response(request, ...)
 }
 \arguments{
 \item{request}{valid request according to the WTSS protocol}
+
+\item{...}{additional parameters that can be added in httr.}
 }
 \value{
 response from the server

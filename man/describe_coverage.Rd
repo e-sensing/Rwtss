@@ -20,8 +20,9 @@ tibble with coverage description
 Contacts the WTSS server to describe one coverage
 }
 \examples{
-\donttest{
+\dontrun{
 # Using external server 
-describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")
+describe_coverage("https://brazildatacube.dpi.inpe.br/wtss/", 
+                  "LC8_30_16D_STK-1")
 }
 }
