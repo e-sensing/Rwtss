@@ -6,9 +6,9 @@
 #' @param URL       URL of the server
 #' @return          vector with coverage name
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Using external server 
-#' list_coverages("http://www.esensing.dpi.inpe.br/wtss")
+#' list_coverages("https://brazildatacube.dpi.inpe.br/wtss/")
 #' }
 #' @export
 list_coverages <- function(URL) {
@@ -37,9 +37,10 @@ list_coverages <- function(URL) {
 #' @return            tibble with coverage description
 #' 
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Using external server 
-#' describe_coverage("http://www.esensing.dpi.inpe.br/wtss", "MOD13Q1")
+#' describe_coverage("https://brazildatacube.dpi.inpe.br/wtss/", 
+#'                   "LC8_30_16D_STK-1")
 #' }
 #' @export
 describe_coverage <- function(URL, name, .print = TRUE) {
@@ -85,14 +86,19 @@ describe_coverage <- function(URL, name, .print = TRUE) {
 #' @param end_date      End date in the format yyyy-mm-dd or yyyy-mm 
 #'                      depending on the coverage.
 #' @param token         A character with token to be add in URL.
+#' @param ...           Additional parameters that can be added in httr.
 #' @return              time series in a tibble format (NULL)
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # connect to a WTSS server
-#' wtss_server <- "http://www.esensing.dpi.inpe.br/wtss"
+#' wtss_server <- "https://brazildatacube.dpi.inpe.br/wtss/"
 #' # retrieve a time series
-#' ndvi_ts <- Rwtss::time_series(wtss_server, "MOD13Q1", attributes = "ndvi", 
-#'                              latitude = -10.408, longitude = -53.495)
+#' ndvi_ts <- Rwtss::time_series(wtss_server, 
+#'                               "LC8_30_16D_STK-1", 
+#'                               attributes = "NDVI", 
+#'                               latitude = -14.31, 
+#'                               longitude = -51.16,
+#'                               token = "YOUR-BDC-TOKEN")
 #' # plot the time series
 #' plot(ndvi_ts)
 #' }
@@ -104,7 +110,8 @@ time_series <- function(URL,
                         latitude,
                         start_date = NULL,
                         end_date   = NULL,
-                        token = NULL) {
+                        token = NULL,
+                        ...) {
   # clean the URL
   URL <- .wtss_remove_trailing_dash(URL)
   
@@ -182,7 +189,7 @@ time_series <- function(URL,
     request <- paste(request, "&access_token=", token, sep = "")
   
   # send a request to the WTSS server
-  response <- .wtss_send_request(request)
+  response <- .wtss_send_request(request, ...)
   # parse the response 
   items <- .wtss_parse_json(response)
   

@@ -4,13 +4,14 @@
 #' @description Sends a request to the WTSS server and times out after 10 tries
 #'
 #' @param request   valid request according to the WTSS protocol
+#' @param ...       additional parameters that can be added in httr.
 #' @return  response from the server
-.wtss_send_request <- function(request) {
+.wtss_send_request <- function(request, ...) {
     response <- NULL 
     ce <- 0
     # try 10 times (avoid time out connection)
     while (purrr::is_null(response) & ce < 10) {
-        response <- .wtss_get_response(request)
+        response <- .wtss_get_response(request, ...)
         ce <- ce + 1
     }
     
@@ -23,13 +24,14 @@
 #' @description Sends a request to the WTSS server and gets a response
 #'
 #' @param request   valid request according to the WTSS protocol
+#' @param ...       additional parameters that can be added in httr.
 #' @return  response from the server
-.wtss_get_response <- function(request) {
+.wtss_get_response <- function(request, ...) {
     # check if URL exists and perform the request
     response <- NULL
     
     tryCatch({
-        response <- httr::GET(request)
+        response <- httr::GET(request, ...)
         httr::stop_for_status(response)
     }, 
     error = function(e) {
