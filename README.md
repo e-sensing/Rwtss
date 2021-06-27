@@ -30,12 +30,12 @@ organised in regular intervals, so that each measure from sensor is
 mapped into a three dimensional multivariate array in space-time.
 
 The first step towards using the service is connecting to a server that
-supports the WTSS protocol. Currenlty, Brazil’s National Insitute for
+supports the WTSS protocol. Currently, Brazil’s National Institute for
 Space Research (INPE) runs such a WTSS service in the address below.
 
 ``` r
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
+wtss_inpe <-  "https://brazildatacube.dpi.inpe.br/wtss/"
 ```
 
 ## Listing coverages available at the WTSS server
@@ -49,7 +49,13 @@ available in a server instance.
 Rwtss::list_coverages(wtss_inpe)
 ```
 
-    #> [1] "MOD13Q1"   "MOD13Q1_M"
+    #>  [1] "MOD13Q1-6"               "MYD13Q1-6"              
+    #>  [3] "S2_10_16D_STK-1"         "S2-SEN2COR_10_16D_STK-1"
+    #>  [5] "S2_10-1"                 "CB4MUX_20-1"            
+    #>  [7] "CB4MUX_20_1M_STK-1"      "LC8_30-1"               
+    #>  [9] "LC8_30_16D_STK-1"        "CB4_20_1M_STK-1"        
+    #> [11] "LC8_30_6M_MEDSTK-1"      "CB4_64_16D_STK-1"       
+    #> [13] "CB4_64-1"                "LANDSAT-MOZ_30_1M_STK-1"
 
 ## Describing a coverage from the WTSS server
 
@@ -58,14 +64,14 @@ its name. It includes its range in the spatial and temporal dimensions.
 
 ``` r
 # Connect to the WTSS server at INPE Brazil
-desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1-6")
 ```
 
     #> ---------------------------------------------------------------------
-    #> WTSS server URL = http://www.esensing.dpi.inpe.br/wtss
+    #> WTSS server URL = https://brazildatacube.dpi.inpe.br/wtss
     #> Cube (coverage) = MOD13Q1
-    #> Timeline - 452 time steps
-    #> start_date: 2000-02-18 end_date: 2019-09-30
+    #> Timeline - 486 time steps
+    #> start_date: 2000-02-18 end_date: 2021-03-22
     #> ---------------------------------------------------------------------
 
 ## Obtaining a time series
@@ -85,9 +91,13 @@ used.
 
 ``` r
 # Request a time series from the "MOD13Q1" coverage
-ndvi_ts   <- Rwtss::time_series(wtss_inpe, name = "MOD13Q1", 
-        attributes = c("ndvi","evi"), longitude = -45.00, latitude  = -12.00,
-        start_date = "2000-02-18", end_date = "2016-12-18")
+ndvi_ts   <- Rwtss::time_series(wtss_inpe, 
+                                name = "MOD13Q1-6", 
+                                attributes = c("NDVI", "EVI"), 
+                                longitude = -45.00, 
+                                latitude  = -12.00,
+                                start_date = "2000-02-18", 
+                                end_date = "2016-12-18")
 ```
 
 ``` r

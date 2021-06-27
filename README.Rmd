@@ -25,12 +25,12 @@ The Rwtss package is a front-end to the Web Time Series Service (WTSS) that offe
 
 The R interface to WTSS services considers that "coverages" are equivalent to "data cubes". Data cubes rely on the fact that Earth observation satellites revisit the same place at regular intervals. Thus measures can be calibrated so that observations of the same place in different times are comparable. These calibrated observations can be organised in regular intervals, so that each measure from sensor is mapped into a three dimensional multivariate array in space-time.
 
-The first step towards using the service is connecting to a server that supports the WTSS protocol. Currenlty, Brazil's National Insitute for Space Research (INPE) runs such a WTSS service
+The first step towards using the service is connecting to a server that supports the WTSS protocol. Currently, Brazil's National Institute for Space Research (INPE) runs such a WTSS service
 in the address below.
 
 ```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
+wtss_inpe <-  "https://brazildatacube.dpi.inpe.br/wtss/"
 ```
 
 ## Listing coverages available at the WTSS server
@@ -42,7 +42,20 @@ This operation allows clients to retrieve the capabilities provided by any serve
 Rwtss::list_coverages(wtss_inpe)
 ```
 ```{r, echo = FALSE}
-paste(c("MOD13Q1", "MOD13Q1_M"))
+paste(c("MOD13Q1-6",
+        "MYD13Q1-6",
+        "S2_10_16D_STK-1",
+        "S2-SEN2COR_10_16D_STK-1",
+        "S2_10-1",
+        "CB4MUX_20-1",
+        "CB4MUX_20_1M_STK-1",
+        "LC8_30-1",
+        "LC8_30_16D_STK-1",
+        "CB4_20_1M_STK-1",
+        "LC8_30_6M_MEDSTK-1",
+        "CB4_64_16D_STK-1",
+        "CB4_64-1",
+        "LANDSAT-MOZ_30_1M_STK-1"))
 ```
 
 ## Describing a coverage from the WTSS server
@@ -51,17 +64,17 @@ This operation returns the metadata for a given coverage identified by its name.
 
 ```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1-6")
 ```
 
 
 ```{r, echo = FALSE}
 # Coverage description available in the wtss object
 cat("---------------------------------------------------------------------")
-cat("WTSS server URL = http://www.esensing.dpi.inpe.br/wtss")
+cat("WTSS server URL = https://brazildatacube.dpi.inpe.br/wtss")
 cat("Cube (coverage) = MOD13Q1")
-cat("Timeline - 452 time steps")
-cat("start_date: 2000-02-18 end_date: 2019-09-30")
+cat("Timeline - 486 time steps")
+cat("start_date: 2000-02-18 end_date: 2021-03-22")
 cat("---------------------------------------------------------------------")
 ```
 
@@ -72,12 +85,16 @@ This operation requests the time series of values of a coverage attribute at a g
 
 ```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage
-ndvi_ts   <- Rwtss::time_series(wtss_inpe, name = "MOD13Q1", 
-        attributes = c("ndvi","evi"), longitude = -45.00, latitude  = -12.00,
-        start_date = "2000-02-18", end_date = "2016-12-18")
+ndvi_ts   <- Rwtss::time_series(wtss_inpe, 
+                                name = "MOD13Q1-6", 
+                                attributes = c("NDVI", "EVI"), 
+                                longitude = -45.00, 
+                                latitude  = -12.00,
+                                start_date = "2000-02-18", 
+                                end_date = "2016-12-18")
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE}
 library(tibble)
 ndvi_ts <- readRDS(file = system.file("extdata/ndvi_ts.rds", package = "Rwtss"))
 ```
