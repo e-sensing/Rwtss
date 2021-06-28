@@ -14,3 +14,5 @@
 #' contains the time series data for each spatiotemporal location.
 #'
 #' @usage data("ndvi_ts")
+#'
+NULL
