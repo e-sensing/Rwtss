@@ -87,7 +87,8 @@ retrieved; (d) *longitude*: longitude in WGS84 coordinate system;
 the coverage. If omitted, the first date on the timeline is used; (g)
 *end\_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm
 depending on the coverage. If omitted, the last date of the timeline is
-used.
+used; (h) To access the BDC time series it is necessary to provide a
+token, provide the token through the `token` parameter.
 
 ``` r
 # Request a time series from the "MOD13Q1" coverage

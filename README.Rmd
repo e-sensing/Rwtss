@@ -81,7 +81,7 @@ cat("---------------------------------------------------------------------")
 ## Obtaining a time series 
 
 This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
-*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
+*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used; (h) To access the BDC time series it is necessary to provide a token, provide the token through the `token` parameter. 
 
 ```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage
