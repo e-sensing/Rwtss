@@ -105,9 +105,9 @@ ndvi_ts   <- Rwtss::time_series(wtss_inpe,
 ``` r
 ndvi_ts
 #> # A tibble: 1 x 7
-#>   longitude latitude start_date end_date   label   cube    time_series       
-#>       <dbl>    <dbl> <date>     <date>     <chr>   <chr>   <list>            
-#> 1     -53.5    -10.4 2000-02-18 2019-09-30 NoClass MOD13Q1 <tibble [452 × 2]>
+#>   longitude latitude start_date end_date   label   cube      time_series       
+#>       <dbl>    <dbl> <date>     <date>     <chr>   <chr>     <list>            
+#> 1       -45      -12 2000-02-18 2016-12-18 NoClass MOD13Q1-6 <tibble [388 × 3]>
 ```
 
 The result of the operation is a `tibble` which contains data and
@@ -129,18 +129,18 @@ classifiers.
 ``` r
 # Showing the contents of a time series
 ndvi_ts$time_series[[1]]
-#> # A tibble: 452 x 2
-#>    Index       ndvi
-#>    <date>     <dbl>
-#>  1 2000-02-18 0.884
-#>  2 2000-03-05 0.691
-#>  3 2000-03-21 0.853
-#>  4 2000-04-06 0.854
-#>  5 2000-04-22 0.879
-#>  6 2000-05-08 0.861
-#>  7 2000-05-24 0.853
-#>  8 2000-06-09 0.864
-#>  9 2000-06-25 0.880
-#> 10 2000-07-11 0.870
-#> # … with 442 more rows
+#> # A tibble: 388 x 3
+#>    Index       NDVI   EVI
+#>    <date>     <dbl> <dbl>
+#>  1 2000-02-18 0.374 0.302
+#>  2 2000-03-05 0.820 0.497
+#>  3 2000-03-21 0.802 0.481
+#>  4 2000-04-06 0.809 0.432
+#>  5 2000-04-22 0.749 0.409
+#>  6 2000-05-08 0.727 0.394
+#>  7 2000-05-24 0.698 0.374
+#>  8 2000-06-09 0.654 0.325
+#>  9 2000-06-25 0.608 0.310
+#> 10 2000-07-11 0.583 0.291
+#> # … with 378 more rows
 ```
