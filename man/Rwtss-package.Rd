@@ -37,13 +37,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Gilberto Camara \email{gilberto.camara@inpe.br} (\href{https://orcid.org/0000-0002-3681-487X}{ORCID})
+\strong{Maintainer}: Felipe Souza \email{lipecaso@gmail.com}
 
 Authors:
 \itemize{
   \item Gilberto Queiroz \email{gilberto.queiroz@inpe.br} (\href{https://orcid.org/0000-0001-7534-0219}{ORCID})
+  \item Gilberto Camara \email{gilberto.camara@inpe.br} (\href{https://orcid.org/0000-0002-3681-487X}{ORCID})
   \item Pedro Andrade \email{pedro.andrade@inpe.br} (\href{https://orcid.org/0000-0001-8675-4046}{ORCID})
-  \item Felipe Souza \email{lipecaso@gmail.com}
   \item Luiz Assis \email{luiz.assis@inpe.br}
 }
 
