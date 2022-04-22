@@ -9,8 +9,8 @@
 .wtss_send_request <- function(request, ...) {
     response <- NULL 
     ce <- 0
-    # try 10 times (avoid time out connection)
-    while (purrr::is_null(response) & ce < 10) {
+    # try 5 times (avoid time out connection)
+    while (purrr::is_null(response) & ce < 5) {
         response <- .wtss_get_response(request, ...)
         ce <- ce + 1
     }
@@ -71,12 +71,9 @@
 #' @param request   valid request to the WTSS service
 #' @return  parsed JSON document
 .wtss_process_request <- function(request){
-    ce <- 0
-    result <-  NULL
-    # avoid time out connection 
-    while (purrr::is_null(result) & ce < 10) {
-        result <- .wtss_parse_json(.wtss_send_request(request))
-        ce <- ce + 1
-    }
+    
+    # avoid time out connection
+    result <- .wtss_parse_json(.wtss_send_request(request))
+    
     return(result)
 }
