@@ -1,6 +1,6 @@
 Package: Rwtss
 Title: Client for Web Time-Series Service
-Version: 0.9.1-1
+Version: 0.9.2
 Authors@R: c(person(given = "Gilberto", 
                     family = "Queiroz", 
                     role = c("aut"), 
