@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/Rwtss)](https://CRAN.R-project.org/package=Rwtss)
 [![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/Rwtss?color=blue)](https://CRAN.R-project.org/package=Rwtss)
-[![Build Status](https://drone.dpi.inpe.br/api/badges/e-sensing/Rwtss/status.svg)](https://drone.dpi.inpe.br/e-sensing/Rwtss)
+[![Build Status](https://cloud.drone.io/api/badges/e-sensing/Rwtss/status.svg)](https://cloud.drone.io/e-sensing/Rwtss)
 [![codecov](https://codecov.io/gh/e-sensing/Rwtss/branch/master/graph/badge.svg?token=gDsvUHhLmI)](https://codecov.io/gh/e-sensing/Rwtss)
 
 

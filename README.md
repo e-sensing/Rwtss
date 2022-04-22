@@ -6,7 +6,7 @@ Version](https://www.r-pkg.org/badges/version/Rwtss)](https://CRAN.R-project.org
 [![CRAN/METACRAN Total
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/Rwtss?color=blue)](https://CRAN.R-project.org/package=Rwtss)
 [![Build
-Status](https://drone.dpi.inpe.br/api/badges/e-sensing/Rwtss/status.svg)](https://drone.dpi.inpe.br/e-sensing/Rwtss)
+Status](https://cloud.drone.io/api/badges/e-sensing/Rwtss/status.svg)](https://cloud.drone.io/e-sensing/Rwtss)
 [![codecov](https://codecov.io/gh/e-sensing/Rwtss/branch/master/graph/badge.svg?token=gDsvUHhLmI)](https://codecov.io/gh/e-sensing/Rwtss)
 
 ## About the package
@@ -104,7 +104,7 @@ ndvi_ts   <- Rwtss::time_series(wtss_inpe,
 
 ``` r
 ndvi_ts
-#> # A tibble: 1 x 7
+#> # A tibble: 1 × 7
 #>   longitude latitude start_date end_date   label   cube      time_series       
 #>       <dbl>    <dbl> <date>     <date>     <chr>   <chr>     <list>            
 #> 1       -45      -12 2000-02-18 2016-12-18 NoClass MOD13Q1-6 <tibble [388 × 3]>
@@ -129,7 +129,7 @@ classifiers.
 ``` r
 # Showing the contents of a time series
 ndvi_ts$time_series[[1]]
-#> # A tibble: 388 x 3
+#> # A tibble: 388 × 3
 #>    Index       NDVI   EVI
 #>    <date>     <dbl> <dbl>
 #>  1 2000-02-18 0.374 0.302
