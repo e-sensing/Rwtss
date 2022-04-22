@@ -37,13 +37,19 @@ from the "zoo" package (zoo::na.spline).
 \examples{
 \dontrun{
 # connect to a WTSS server
-wtss <- "https://brazildatacube.dpi.inpe.br/wtss/"
+wtss_service <- "https://brazildatacube.dpi.inpe.br/wtss/"
 # retrieve a time series
-ts_wtss  <- Rwtss::time_series(wtss, "MOD13Q1-6", c("ndvi","evi"), 
-                longitude = -45.00, latitude  = -12.00,
-                start_date = "2000-02-18", end_date = "2016-12-18")
+ts_wtss  <- Rwtss::time_series(
+                 wtss_service,
+                 "MOD13Q1-6", 
+                 c("NDVI","EVI"),
+                 longitude = -45.00, 
+                 latitude  = -12.00,
+                 start_date = "2000-02-18", 
+                 end_date = "2016-12-18",
+                 token = "YOUR-BDC-TOKEN")
 # convert to ts
-ts <- Rwtss::wtss_to_ts(ts_wtss, band = "ndvi")
+ts <- Rwtss::wtss_to_ts(ts_wtss, band = "NDVI")
 }
 }
 \author{
