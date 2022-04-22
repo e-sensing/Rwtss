@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/Rwtss)](https://CRAN.R-project.org/package=Rwtss)
 [![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/Rwtss?color=blue)](https://CRAN.R-project.org/package=Rwtss)
-[![Build Status](https://drone.dpi.inpe.br/api/badges/e-sensing/Rwtss/status.svg)](https://drone.dpi.inpe.br/e-sensing/Rwtss)
+[![Build Status](https://cloud.drone.io/api/badges/e-sensing/Rwtss/status.svg)](https://cloud.drone.io/e-sensing/Rwtss)
 [![codecov](https://codecov.io/gh/e-sensing/Rwtss/branch/master/graph/badge.svg?token=gDsvUHhLmI)](https://codecov.io/gh/e-sensing/Rwtss)
 
 
@@ -44,17 +44,11 @@ Rwtss::list_coverages(wtss_inpe)
 ```{r, echo = FALSE}
 paste(c("MOD13Q1-6",
         "MYD13Q1-6",
-        "S2_10_16D_STK-1",
         "S2-SEN2COR_10_16D_STK-1",
-        "S2_10-1",
-        "CB4MUX_20-1",
-        "CB4MUX_20_1M_STK-1",
-        "LC8_30-1",
         "LC8_30_16D_STK-1",
-        "CB4_20_1M_STK-1",
+        "CB4MUX_20_1M_STK-1",
         "LC8_30_6M_MEDSTK-1",
         "CB4_64_16D_STK-1",
-        "CB4_64-1",
         "LANDSAT-MOZ_30_1M_STK-1"))
 ```
 
@@ -72,9 +66,9 @@ desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1-6")
 # Coverage description available in the wtss object
 cat("---------------------------------------------------------------------")
 cat("WTSS server URL = https://brazildatacube.dpi.inpe.br/wtss")
-cat("Cube (coverage) = MOD13Q1")
-cat("Timeline - 486 time steps")
-cat("start_date: 2000-02-18 end_date: 2021-03-22")
+cat("Cube (coverage) = MOD13Q1-6")
+cat("Timeline - 508 time steps")
+cat("start_date: 2000-02-18 end_date: 2022-03-22")
 cat("---------------------------------------------------------------------")
 ```
 
@@ -82,6 +76,7 @@ cat("---------------------------------------------------------------------")
 
 This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
 *end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used; (h) To access the BDC time series it is necessary to provide a token, provide the token through the `token` parameter. 
+To create a new BDC token, please see this [tutorial](https://brazil-data-cube.github.io/applications/dc_explorer/token-module.html).
 
 ```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage

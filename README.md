@@ -6,7 +6,7 @@ Version](https://www.r-pkg.org/badges/version/Rwtss)](https://CRAN.R-project.org
 [![CRAN/METACRAN Total
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/Rwtss?color=blue)](https://CRAN.R-project.org/package=Rwtss)
 [![Build
-Status](https://drone.dpi.inpe.br/api/badges/e-sensing/Rwtss/status.svg)](https://drone.dpi.inpe.br/e-sensing/Rwtss)
+Status](https://cloud.drone.io/api/badges/e-sensing/Rwtss/status.svg)](https://cloud.drone.io/e-sensing/Rwtss)
 [![codecov](https://codecov.io/gh/e-sensing/Rwtss/branch/master/graph/badge.svg?token=gDsvUHhLmI)](https://codecov.io/gh/e-sensing/Rwtss)
 
 ## About the package
@@ -49,13 +49,10 @@ available in a server instance.
 Rwtss::list_coverages(wtss_inpe)
 ```
 
-    #>  [1] "MOD13Q1-6"               "MYD13Q1-6"              
-    #>  [3] "S2_10_16D_STK-1"         "S2-SEN2COR_10_16D_STK-1"
-    #>  [5] "S2_10-1"                 "CB4MUX_20-1"            
-    #>  [7] "CB4MUX_20_1M_STK-1"      "LC8_30-1"               
-    #>  [9] "LC8_30_16D_STK-1"        "CB4_20_1M_STK-1"        
-    #> [11] "LC8_30_6M_MEDSTK-1"      "CB4_64_16D_STK-1"       
-    #> [13] "CB4_64-1"                "LANDSAT-MOZ_30_1M_STK-1"
+    #> [1] "MOD13Q1-6"               "MYD13Q1-6"              
+    #> [3] "S2-SEN2COR_10_16D_STK-1" "LC8_30_16D_STK-1"       
+    #> [5] "CB4MUX_20_1M_STK-1"      "LC8_30_6M_MEDSTK-1"     
+    #> [7] "CB4_64_16D_STK-1"        "LANDSAT-MOZ_30_1M_STK-1"
 
 ## Describing a coverage from the WTSS server
 
@@ -69,9 +66,9 @@ desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1-6")
 
     #> ---------------------------------------------------------------------
     #> WTSS server URL = https://brazildatacube.dpi.inpe.br/wtss
-    #> Cube (coverage) = MOD13Q1
-    #> Timeline - 486 time steps
-    #> start_date: 2000-02-18 end_date: 2021-03-22
+    #> Cube (coverage) = MOD13Q1-6
+    #> Timeline - 508 time steps
+    #> start_date: 2000-02-18 end_date: 2022-03-22
     #> ---------------------------------------------------------------------
 
 ## Obtaining a time series
@@ -88,7 +85,9 @@ the coverage. If omitted, the first date on the timeline is used; (g)
 *end\_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm
 depending on the coverage. If omitted, the last date of the timeline is
 used; (h) To access the BDC time series it is necessary to provide a
-token, provide the token through the `token` parameter.
+token, provide the token through the `token` parameter. To create a new
+BDC token, please see this
+[tutorial](https://brazil-data-cube.github.io/applications/dc_explorer/token-module.html).
 
 ``` r
 # Request a time series from the "MOD13Q1" coverage
@@ -104,7 +103,7 @@ ndvi_ts   <- Rwtss::time_series(wtss_inpe,
 
 ``` r
 ndvi_ts
-#> # A tibble: 1 x 7
+#> # A tibble: 1 × 7
 #>   longitude latitude start_date end_date   label   cube      time_series       
 #>       <dbl>    <dbl> <date>     <date>     <chr>   <chr>     <list>            
 #> 1       -45      -12 2000-02-18 2016-12-18 NoClass MOD13Q1-6 <tibble [388 × 3]>
@@ -129,7 +128,7 @@ classifiers.
 ``` r
 # Showing the contents of a time series
 ndvi_ts$time_series[[1]]
-#> # A tibble: 388 x 3
+#> # A tibble: 388 × 3
 #>    Index       NDVI   EVI
 #>    <date>     <dbl> <dbl>
 #>  1 2000-02-18 0.374 0.302

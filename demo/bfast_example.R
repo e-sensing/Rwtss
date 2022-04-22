@@ -10,17 +10,24 @@ library(bfast)
 library(Rwtss)
 
 # choose a WTSS server
-server <-  "http://www.esensing.dpi.inpe.br/wtss"
+server <-  "https://brazildatacube.dpi.inpe.br/wtss/"
 
 # Get the list of coverages provided by the service
 coverages <-  Rwtss::list_coverages(server)
 
 # Get the description of the third coverage
-cv <- Rwtss::describe_coverage(server,c("MOD13Q1"))
+cv <- Rwtss::describe_coverage(server, "MOD13Q1-6")
 
 # get a time series for the "ndvi" attribute
-ndvi_wtss <- Rwtss::time_series(server, "MOD13Q1", attributes = c("ndvi"), 
-                         latitude = -10.408, longitude = -53.495)
+# To create a token in BDC, please see: https://brazil-data-cube.github.io/applications/dc_explorer/token-module.html
+ndvi_wtss <- Rwtss::time_series(
+    URL = server, 
+    name = "MOD13Q1-6", 
+    attributes = "NDVI",
+    latitude = -10.408, 
+    longitude = -53.495,
+    token = "YOUR-BDC-TOKEN"
+)
 
 # plot the time-series
 plot(ndvi_wtss)
