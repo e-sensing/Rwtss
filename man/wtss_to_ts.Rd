@@ -35,11 +35,11 @@ frequency and intepolates the missing values using spline interpolation
 from the "zoo" package (zoo::na.spline).
 }
 \examples{
-\donttest{
+\dontrun{
 # connect to a WTSS server
-wtss <- "http://www.esensing.dpi.inpe.br/wtss"
+wtss <- "https://brazildatacube.dpi.inpe.br/wtss/"
 # retrieve a time series
-ts_wtss  <- Rwtss::time_series(wtss, "MOD13Q1", c("ndvi","evi"), 
+ts_wtss  <- Rwtss::time_series(wtss, "MOD13Q1-6", c("ndvi","evi"), 
                 longitude = -45.00, latitude  = -12.00,
                 start_date = "2000-02-18", end_date = "2016-12-18")
 # convert to ts
