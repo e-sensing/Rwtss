@@ -93,11 +93,11 @@ The WTSS API has three commands: (a) *list_coverages* that returns a list of cov
 
 ## Connecting to a WTSS server
 
-The first step towards using the service is connecting to a server that supports the WTSS protocol. Currently, Brazil's National Insitute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. So, the first procedure is to find the URL of a WTSS service.
+The first step towards using the service is connecting to a server that supports the WTSS protocol. Currently, Brazil's National Institute for Space Research (INPE) runs such a service. In the package, the connection is enabled by using the URL of the service. So, the first procedure is to find the URL of a WTSS service.
 
 ```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-wtss_inpe <-  "http://www.esensing.dpi.inpe.br/wtss"
+wtss_inpe <-  "https://brazildatacube.dpi.inpe.br/wtss/"
 ```
 
 ## Listing coverages available at the WTSS server
@@ -109,7 +109,7 @@ This operation allows clients to retrieve the capabilities provided by any serve
 Rwtss::list_coverages(wtss_inpe)
 ```
 ```{r, echo = FALSE}
-paste(c("MOD13Q1", "MOD13Q1_M"))
+paste(c("MOD13Q1-6", "MYD13Q1-6"))
 ```
 
 ## Describing a coverage from the WTSS server
@@ -118,17 +118,17 @@ This operation returns the metadata for a given coverage identified by its name.
 
 ```{r, eval = FALSE}
 # Connect to the WTSS server at INPE Brazil
-desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1")
+desc <- Rwtss::describe_coverage(wtss_inpe, name = "MOD13Q1-6")
 ```
 
 
 ```{r, echo = FALSE}
 # Coverage description available in the wtss object
 cat("---------------------------------------------------------------------")
-cat("WTSS server URL = http://www.esensing.dpi.inpe.br/wtss")
-cat("Cube (coverage) = MOD13Q1")
-cat("Timeline - 452 time steps")
-cat("start_date: 2000-02-18 end_date: 2019-09-30")
+cat("WTSS server URL = https://brazildatacube.dpi.inpe.br/wtss")
+cat("Cube (coverage) = MOD13Q1-6")
+cat("Timeline - 508 time steps")
+cat("start_date: 2000-02-18 end_date: 2022-03-22")
 cat("---------------------------------------------------------------------")
 ```
 
@@ -137,14 +137,22 @@ The coverage description is also saved as a tibble in the wtss object, to be use
 
 ## Obtaining a time series 
 
-This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *URL*: a valid WTSS server URL; (b) *name*: Coverage name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
-*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used.
+This operation requests the time series of values of a coverage attribute at a given location. Its parameters are: (a) *wtss.obj*: either a WTSS object (created by the operation wtss::WTSS as shown above) or a valid WTSS server URL; (b) *name*: Cube (coverage) name; (c) *attributes*: vector of band names (optional). If omitted, all bands are retrieved; (d) *longitude*: longitude in WGS84 coordinate system; (e)*latitude*:   Latitude in WGS84 coordinate system; (f)*start_date* (optional):  Start date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the first date on the timeline is used; (g)
+*end_date*(optional): End date in the format yyyy-mm-dd or yyyy-mm depending on the coverage. If omitted, the last date of the timeline is used; (h) To access the BDC time series it is necessary to provide a token, provide the token through the `token` parameter. 
+To create a new BDC token, please see this [tutorial](https://brazil-data-cube.github.io/applications/dc_explorer/token-module.html).
 
 ```{r, eval = FALSE}
 # Request a time series from the "MOD13Q1" coverage
-ndvi_ts   <- Rwtss::time_series(wtss_inpe, name = "MOD13Q1", 
-        attributes = c("ndvi","evi"), longitude = -45.00, latitude  = -12.00,
-        start_date = "2000-02-18", end_date = "2016-12-18")
+ndvi_ts   <- Rwtss::time_series(
+  URL = wtss_inpe, 
+  name = "MOD13Q1",
+  attributes = c("NDVI","EVI"), 
+  longitude = -45.00, 
+  latitude  = -12.00,
+  start_date = "2000-02-18", 
+  end_date = "2016-12-18",
+  token = "YOUR-BDC-TOKEN"
+)
 ```
 
 ```{r, echo = FALSE}
