@@ -54,7 +54,7 @@ Imports:
     stringr,
     tibble,
     zoo
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     bfast,
     knitr,
